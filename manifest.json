@@ -1,0 +1,640 @@
+{
+  "source_base_path": "/home/runner/work/ProItemsRepeater/ProItemsRepeater/docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ElementFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ElementFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ElementFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ElementFactoryGetArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ElementFactoryGetArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ElementFactoryGetArgs",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ElementFactoryGetArgs.yml\" sourcestartlinenumber=\"1\">Represents the optional arguments to use when calling an implementation of the\n<xref href=\"Avalonia.Controls.IElementFactory\" data-throw-if-not-resolved=\"false\"></xref>'s <xref href=\"Avalonia.Controls.IElementFactory.GetElement(Avalonia.Controls.ElementFactoryGetArgs)\" data-throw-if-not-resolved=\"false\"></xref> method.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ElementFactoryRecycleArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ElementFactoryRecycleArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ElementFactoryRecycleArgs",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ElementFactoryRecycleArgs.yml\" sourcestartlinenumber=\"1\">Represents the optional arguments to use when calling an implementation of the\n<xref href=\"Avalonia.Controls.IElementFactory\" data-throw-if-not-resolved=\"false\"></xref>'s <xref href=\"Avalonia.Controls.IElementFactory.GetElement(Avalonia.Controls.ElementFactoryGetArgs)\" data-throw-if-not-resolved=\"false\"></xref> method.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IElementFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IElementFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IElementFactory",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.IElementFactory.yml\" sourcestartlinenumber=\"1\">A data template that supports creating and recycling elements for an <xref href=\"Avalonia.Controls.ItemsRepeater\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ItemsRepeater.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ItemsRepeater.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ItemsRepeater",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ItemsRepeater.yml\" sourcestartlinenumber=\"1\">Represents a data-driven collection control that incorporates a flexible layout system,\ncustom views, and virtualization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ItemsRepeaterElementClearingEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ItemsRepeaterElementClearingEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ItemsRepeaterElementClearingEventArgs",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ItemsRepeaterElementClearingEventArgs.yml\" sourcestartlinenumber=\"1\">Provides data for the <xref href=\"Avalonia.Controls.ItemsRepeater.ElementClearing\" data-throw-if-not-resolved=\"false\"></xref> event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ItemsRepeaterElementIndexChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ItemsRepeaterElementIndexChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ItemsRepeaterElementIndexChangedEventArgs",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ItemsRepeaterElementIndexChangedEventArgs.yml\" sourcestartlinenumber=\"1\">Provides data for the <xref href=\"Avalonia.Controls.ItemsRepeater.ElementIndexChanged\" data-throw-if-not-resolved=\"false\"></xref> event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.ItemsRepeaterElementPreparedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.ItemsRepeaterElementPreparedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.ItemsRepeaterElementPreparedEventArgs",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.ItemsRepeaterElementPreparedEventArgs.yml\" sourcestartlinenumber=\"1\">Provides data for the <xref href=\"Avalonia.Controls.ItemsRepeater.ElementPrepared\" data-throw-if-not-resolved=\"false\"></xref> event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RecyclePool.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RecyclePool.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RecyclePool",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RecyclingElementFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RecyclingElementFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RecyclingElementFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.SelectTemplateEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.SelectTemplateEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.SelectTemplateEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.SelectingItemsRepeater.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.SelectingItemsRepeater.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.SelectingItemsRepeater",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.SelectingItemsRepeater.yml\" sourcestartlinenumber=\"1\">An <xref href=\"Avalonia.Controls.ItemsRepeater\" data-throw-if-not-resolved=\"false\"></xref> that maintains a selection.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.AttachedLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.AttachedLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.AttachedLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.AttachedLayout.yml\" sourcestartlinenumber=\"1\">Represents the base class for an object that sizes and arranges child elements for a host.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.ElementRealizationOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.ElementRealizationOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.ElementRealizationOptions",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.ElementRealizationOptions.yml\" sourcestartlinenumber=\"1\">Defines constants that specify whether to suppress automatic recycling of the retrieved\nelement or force creation of a new element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.LayoutContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.LayoutContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.LayoutContext",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.LayoutContext.yml\" sourcestartlinenumber=\"1\">Represents the base class for an object that facilitates communication between an attached\nlayout and its host container.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.NonVirtualizingLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.NonVirtualizingLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.NonVirtualizingLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.NonVirtualizingLayout.yml\" sourcestartlinenumber=\"1\">Represents the base class for an object that sizes and arranges child elements for a host\nand and does not support virtualization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.NonVirtualizingLayoutContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.NonVirtualizingLayoutContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.NonVirtualizingLayoutContext",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.NonVirtualizingLayoutContext.yml\" sourcestartlinenumber=\"1\">Represents the base class for layout context types that do not support virtualization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.NonVirtualizingStackLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.NonVirtualizingStackLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.NonVirtualizingStackLayout",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.StackLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.StackLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.StackLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.StackLayout.yml\" sourcestartlinenumber=\"1\">Arranges elements into a single line (with spacing) that can be oriented horizontally or vertically.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.StackLayoutState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.StackLayoutState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.StackLayoutState",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.StackLayoutState.yml\" sourcestartlinenumber=\"1\">Represents the state of a StackLayout.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.UniformGridLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.UniformGridLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.UniformGridLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.UniformGridLayout.yml\" sourcestartlinenumber=\"1\">Positions elements sequentially from left to right or top to bottom in a wrapping layout.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.UniformGridLayoutItemsJustification.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.UniformGridLayoutItemsJustification.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.UniformGridLayoutItemsJustification",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.UniformGridLayoutItemsJustification.yml\" sourcestartlinenumber=\"1\">Defines constants that specify how items are aligned on the non-scrolling or non-virtualizing axis.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.UniformGridLayoutItemsStretch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.UniformGridLayoutItemsStretch.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.UniformGridLayoutItemsStretch",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.UniformGridLayoutItemsStretch.yml\" sourcestartlinenumber=\"1\">Defines constants that specify how items are sized to fill the available space.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.UniformGridLayoutState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.UniformGridLayoutState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.UniformGridLayoutState",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.UniformGridLayoutState.yml\" sourcestartlinenumber=\"1\">Represents the state of a <xref href=\"Avalonia.Layout.UniformGridLayout\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.VirtualLayoutContextAdapter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.VirtualLayoutContextAdapter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.VirtualLayoutContextAdapter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.VirtualizingLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.VirtualizingLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.VirtualizingLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.VirtualizingLayout.yml\" sourcestartlinenumber=\"1\">Represents the base class for an object that sizes and arranges child elements for a host\nand supports virtualization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.VirtualizingLayoutContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.VirtualizingLayoutContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.VirtualizingLayoutContext",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.VirtualizingLayoutContext.yml\" sourcestartlinenumber=\"1\">Represents the base class for layout context types that support virtualization.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.WrapLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.WrapLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout.WrapLayout",
+      "Summary": "<p sourcefile=\"api/Avalonia.Layout.WrapLayout.yml\" sourcestartlinenumber=\"1\">Arranges elements by wrapping them to fit the available space.\nWhen <xref href=\"Avalonia.Layout.WrapLayout.Orientation\" data-throw-if-not-resolved=\"false\"></xref> is set to Orientation.Horizontal, element are arranged in rows until the available width is reached and then to a new row.\nWhen <xref href=\"Avalonia.Layout.WrapLayout.Orientation\" data-throw-if-not-resolved=\"false\"></xref> is set to Orientation.Vertical, element are arranged in columns until the available height is reached.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Layout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Layout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Layout",
+      "Summary": null
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/custom-layouts.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/custom-layouts.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/diagnostics.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/diagnostics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/element-lifecycle.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/element-lifecycle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/items-source.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/items-source.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layouts.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layouts.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/license.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/license.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/migration.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/migration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/performance.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/performance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/samples.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/samples.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/selection.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/selection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/templates-and-recycling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/templates-and-recycling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/virtualization.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/virtualization.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

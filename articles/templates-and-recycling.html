@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Templates and Recycling | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Templates and Recycling | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/templates-and-recycling.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="templates-and-recycling">Templates and Recycling</h1>
+
+<p>ItemsRepeater uses <code>ItemTemplate</code> to build item visuals. If the template implements <code>IElementFactory</code>, ItemsRepeater uses it directly and can recycle elements efficiently.</p>
+<h2 id="basic-itemtemplate">Basic ItemTemplate</h2>
+<pre><code class="lang-xml">&lt;ItemsRepeater ItemsSource=&quot;{Binding Items}&quot;&gt;
+  &lt;ItemsRepeater.ItemTemplate&gt;
+    &lt;DataTemplate&gt;
+      &lt;TextBlock Text=&quot;{Binding}&quot; /&gt;
+    &lt;/DataTemplate&gt;
+  &lt;/ItemsRepeater.ItemTemplate&gt;
+&lt;/ItemsRepeater&gt;
+</code></pre>
+<h2 id="recycling-with-recyclingelementfactory">Recycling with RecyclingElementFactory</h2>
+<p><code>RecyclingElementFactory</code> selects templates by key and stores elements in a <code>RecyclePool</code> for reuse.</p>
+<pre><code class="lang-xml">&lt;UserControl.Resources&gt;
+  &lt;RecyclePool x:Key=&quot;RecyclePool&quot; /&gt;
+
+  &lt;DataTemplate x:Key=&quot;odd&quot;&gt;
+    &lt;Border Background=&quot;#FDE68A&quot; Padding=&quot;6&quot;&gt;
+      &lt;TextBlock Text=&quot;{Binding}&quot; /&gt;
+    &lt;/Border&gt;
+  &lt;/DataTemplate&gt;
+  &lt;DataTemplate x:Key=&quot;even&quot;&gt;
+    &lt;Border Background=&quot;#FEF3C7&quot; Padding=&quot;6&quot;&gt;
+      &lt;TextBlock Text=&quot;{Binding}&quot; /&gt;
+    &lt;/Border&gt;
+  &lt;/DataTemplate&gt;
+
+  &lt;RecyclingElementFactory x:Key=&quot;elementFactory&quot;
+                           RecyclePool=&quot;{StaticResource RecyclePool}&quot;
+                           SelectTemplateKey=&quot;OnSelectTemplateKey&quot;&gt;
+    &lt;RecyclingElementFactory.Templates&gt;
+      &lt;StaticResource x:Key=&quot;odd&quot; ResourceKey=&quot;odd&quot; /&gt;
+      &lt;StaticResource x:Key=&quot;even&quot; ResourceKey=&quot;even&quot; /&gt;
+    &lt;/RecyclingElementFactory.Templates&gt;
+  &lt;/RecyclingElementFactory&gt;
+&lt;/UserControl.Resources&gt;
+
+&lt;ItemsRepeater ItemsSource=&quot;{Binding Items}&quot;
+               ItemTemplate=&quot;{StaticResource elementFactory}&quot; /&gt;
+</code></pre>
+<pre><code class="lang-csharp">private void OnSelectTemplateKey(object? sender, SelectTemplateEventArgs e)
+{
+    if (e.DataContext is ItemModel item)
+    {
+        e.TemplateKey = item.IsOdd ? &quot;odd&quot; : &quot;even&quot;;
+    }
+}
+</code></pre>
+<h3 id="notes">Notes</h3>
+<ul>
+<li><code>Templates</code> is a dictionary of template keys to <code>IDataTemplate</code> instances.</li>
+<li><code>RecyclePool</code> can be shared across repeaters to reuse elements across views.</li>
+<li>If you only use a single template, you can skip <code>SelectTemplateKey</code> and provide one template entry.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/templates-and-recycling.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

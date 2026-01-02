@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NonVirtualizingLayout | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NonVirtualizingLayout | ProItemsRepeater for Avalonia ">
+      
+      <meta name="description" content="Represents the base class for an object that sizes and arranges child elements for a host and and does not support virtualization.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/new/main/apiSpec/new?filename=Avalonia_Layout_NonVirtualizingLayout.md&amp;value=---%0Auid%3A%20Avalonia.Layout.NonVirtualizingLayout%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Avalonia.Layout.NonVirtualizingLayout">
+
+
+
+  <h1 id="Avalonia_Layout_NonVirtualizingLayout" data-uid="Avalonia.Layout.NonVirtualizingLayout" class="text-break">
+Class NonVirtualizingLayout  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Avalonia.html">Avalonia</a>.<a class="xref" href="Avalonia.Layout.html">Layout</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Avalonia.Controls.ItemsRepeater.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Represents the base class for an object that sizes and arranges child elements for a host
+and and does not support virtualization.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class NonVirtualizingLayout : AttachedLayout, INotifyPropertyChanged</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">AvaloniaObject</span></div>
+      <div><a class="xref" href="Avalonia.Layout.AttachedLayout.html">AttachedLayout</a></div>
+      <div><span class="xref">NonVirtualizingLayout</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Avalonia.Layout.NonVirtualizingStackLayout.html">NonVirtualizingStackLayout</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_LayoutId">AttachedLayout.LayoutId</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_MeasureInvalidated">AttachedLayout.MeasureInvalidated</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_MeasureInvalidatedWeakEvent">AttachedLayout.MeasureInvalidatedWeakEvent</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_ArrangeInvalidated">AttachedLayout.ArrangeInvalidated</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_ArrangeInvalidatedWeakEvent">AttachedLayout.ArrangeInvalidatedWeakEvent</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_InitializeForContext_Avalonia_Layout_LayoutContext_">AttachedLayout.InitializeForContext(LayoutContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_UninitializeForContext_Avalonia_Layout_LayoutContext_">AttachedLayout.UninitializeForContext(LayoutContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_Measure_Avalonia_Layout_LayoutContext_Avalonia_Size_">AttachedLayout.Measure(LayoutContext, Size)</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_Arrange_Avalonia_Layout_LayoutContext_Avalonia_Size_">AttachedLayout.Arrange(LayoutContext, Size)</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_InvalidateMeasure">AttachedLayout.InvalidateMeasure()</a>
+    </div>
+    <div>
+      <a class="xref" href="Avalonia.Layout.AttachedLayout.html#Avalonia_Layout_AttachedLayout_InvalidateArrange">AttachedLayout.InvalidateArrange()</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.CheckAccess()</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.VerifyAccess()</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.ClearValue(AvaloniaProperty)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.ClearValue&lt;T&gt;(AvaloniaProperty&lt;T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.ClearValue&lt;T&gt;(StyledProperty&lt;T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.ClearValue&lt;T&gt;(DirectPropertyBase&lt;T&gt;)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">AvaloniaObject.Equals(object)</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.GetValue(AvaloniaProperty)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.GetValue&lt;T&gt;(StyledProperty&lt;T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.GetValue&lt;T&gt;(DirectPropertyBase&lt;T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.GetBaseValue&lt;T&gt;(StyledProperty&lt;T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.IsAnimating(AvaloniaProperty)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.IsSet(AvaloniaProperty)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">AvaloniaObject.SetValue(AvaloniaProperty, object, BindingPriority)</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.SetValue&lt;T&gt;(StyledProperty&lt;T&gt;, T, BindingPriority)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.SetValue&lt;T&gt;(DirectPropertyBase&lt;T&gt;, T)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">AvaloniaObject.SetCurrentValue(AvaloniaProperty, object)</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.SetCurrentValue&lt;T&gt;(StyledProperty&lt;T&gt;, T)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind(AvaloniaProperty, IObservable&lt;object&gt;, BindingPriority)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(StyledProperty&lt;T&gt;, IObservable&lt;object&gt;, BindingPriority)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(StyledProperty&lt;T&gt;, IObservable&lt;T&gt;, BindingPriority)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(StyledProperty&lt;T&gt;, IObservable&lt;BindingValue&lt;T&gt;&gt;, BindingPriority)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(DirectPropertyBase&lt;T&gt;, IObservable&lt;object&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(DirectPropertyBase&lt;T&gt;, IObservable&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iobservable-1">AvaloniaObject.Bind&lt;T&gt;(DirectPropertyBase&lt;T&gt;, IObservable&lt;BindingValue&lt;T&gt;&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.CoerceValue(AvaloniaProperty)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">AvaloniaObject.UpdateDataValidation(AvaloniaProperty, BindingValueType, Exception)</a>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.OnPropertyChangedCore(AvaloniaPropertyChangedEventArgs)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.OnPropertyChanged(AvaloniaPropertyChangedEventArgs)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.RaisePropertyChanged&lt;T&gt;(DirectPropertyBase&lt;T&gt;, T, T)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.SetAndRaise&lt;T&gt;(DirectPropertyBase&lt;T&gt;, ref T, T)</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.InheritanceParent</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.this[AvaloniaProperty]</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.this[IndexerDescriptor]</span>
+    </div>
+    <div>
+      <span class="xref">AvaloniaObject.PropertyChanged</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Avalonia_Layout_NonVirtualizingLayout_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>NonVirtualizingLayout is the base class for layouts that do not support virtualization. You
+can inherit from it to create your own layout.</p>
+<p>A non-virtualizing layout can measure and arrange child elements.</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Avalonia_Layout_NonVirtualizingLayout_ArrangeOverride_" data-uid="Avalonia.Layout.NonVirtualizingLayout.ArrangeOverride*"></a>
+
+  <h3 id="Avalonia_Layout_NonVirtualizingLayout_ArrangeOverride_Avalonia_Layout_NonVirtualizingLayoutContext_Avalonia_Size_" data-uid="Avalonia.Layout.NonVirtualizingLayout.ArrangeOverride(Avalonia.Layout.NonVirtualizingLayoutContext,Avalonia.Size)">
+  ArrangeOverride(NonVirtualizingLayoutContext, Size)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When implemented in a derived class, provides the behavior for the &quot;Arrange&quot; pass of
+layout. Classes can override this method to define their own &quot;Arrange&quot; pass behavior.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Size ArrangeOverride(NonVirtualizingLayoutContext context, Size finalSize)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <a class="xref" href="Avalonia.Layout.NonVirtualizingLayoutContext.html">NonVirtualizingLayoutContext</a></dt>
+    <dd><p>The context object that facilitates communication between the layout and its host
+container.</p>
+</dd>
+    <dt><code>finalSize</code> <span class="xref">Size</span></dt>
+    <dd><p>The final area within the container that this object should use to arrange itself and
+its children.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Size</span></dt>
+    <dd><p>The actual size that is used after the element is arranged in layout.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Layout_NonVirtualizingLayout_InitializeForContextCore_" data-uid="Avalonia.Layout.NonVirtualizingLayout.InitializeForContextCore*"></a>
+
+  <h3 id="Avalonia_Layout_NonVirtualizingLayout_InitializeForContextCore_Avalonia_Layout_LayoutContext_" data-uid="Avalonia.Layout.NonVirtualizingLayout.InitializeForContextCore(Avalonia.Layout.LayoutContext)">
+  InitializeForContextCore(LayoutContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When overridden in a derived class, initializes any per-container state the layout
+requires when it is attached to an ILayoutable container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void InitializeForContextCore(LayoutContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <a class="xref" href="Avalonia.Layout.LayoutContext.html">LayoutContext</a></dt>
+    <dd><p>The context object that facilitates communication between the layout and its host
+container.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Layout_NonVirtualizingLayout_MeasureOverride_" data-uid="Avalonia.Layout.NonVirtualizingLayout.MeasureOverride*"></a>
+
+  <h3 id="Avalonia_Layout_NonVirtualizingLayout_MeasureOverride_Avalonia_Layout_NonVirtualizingLayoutContext_Avalonia_Size_" data-uid="Avalonia.Layout.NonVirtualizingLayout.MeasureOverride(Avalonia.Layout.NonVirtualizingLayoutContext,Avalonia.Size)">
+  MeasureOverride(NonVirtualizingLayoutContext, Size)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Provides the behavior for the &quot;Measure&quot; pass of the layout cycle. Classes can override
+this method to define their own &quot;Measure&quot; pass behavior.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract Size MeasureOverride(NonVirtualizingLayoutContext context, Size availableSize)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <a class="xref" href="Avalonia.Layout.NonVirtualizingLayoutContext.html">NonVirtualizingLayoutContext</a></dt>
+    <dd><p>The context object that facilitates communication between the layout and its host
+container.</p>
+</dd>
+    <dt><code>availableSize</code> <span class="xref">Size</span></dt>
+    <dd><p>The available size that this object can give to child objects. Infinity can be
+specified as a value to indicate that the object will size to whatever content is
+available.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Size</span></dt>
+    <dd><p>The size that this object determines it needs during layout, based on its calculations
+of the allocated sizes for child objects or based on other considerations such as a
+fixed container size.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Layout_NonVirtualizingLayout_UninitializeForContextCore_" data-uid="Avalonia.Layout.NonVirtualizingLayout.UninitializeForContextCore*"></a>
+
+  <h3 id="Avalonia_Layout_NonVirtualizingLayout_UninitializeForContextCore_Avalonia_Layout_LayoutContext_" data-uid="Avalonia.Layout.NonVirtualizingLayout.UninitializeForContextCore(Avalonia.Layout.LayoutContext)">
+  UninitializeForContextCore(LayoutContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When overridden in a derived class, removes any state the layout previously stored on
+the ILayoutable container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void UninitializeForContextCore(LayoutContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>context</code> <a class="xref" href="Avalonia.Layout.LayoutContext.html">LayoutContext</a></dt>
+    <dd><p>The context object that facilitates communication between the layout and its host
+container.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Layout/NonVirtualizingLayout.cs/#L18" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
