@@ -299,6 +299,20 @@ namespace Avalonia.Controls
 
             _viewportManager.OnOwnerMeasuring();
 
+            var layout = Layout;
+            var layoutId = GetLayoutId();
+            var itemCount = ItemsSourceView?.Count ?? 0;
+            var realizationWindow = _viewportManager.GetLayoutRealizationWindow();
+            var visibleWindow = _viewportManager.GetLayoutVisibleWindow();
+            using var activity = ItemsRepeaterDiagnostics.StartMeasure(
+                layoutId,
+                itemCount,
+                availableSize,
+                realizationWindow,
+                visibleWindow);
+            var measureTimestamp = ItemsRepeaterDiagnostics.GetTimestamp();
+            var measureCompleted = false;
+
             _isLayoutInProgress = true;
 
             try
@@ -306,7 +320,6 @@ namespace Avalonia.Controls
                 _viewManager.PrunePinnedElements();
                 var extent = new Rect();
                 var desiredSize = new Size();
-                var layout = Layout;
 
                 if (layout != null)
                 {
@@ -332,11 +345,21 @@ namespace Avalonia.Controls
                 }
 
                 _viewportManager.SetLayoutExtent(extent);
+                measureCompleted = true;
                 return desiredSize;
             }
             finally
             {
                 _isLayoutInProgress = false;
+                if (measureCompleted)
+                {
+                    var realizedCount = GetRealizedCountForDiagnostics(layout);
+                    ItemsRepeaterDiagnostics.RecordMeasure(
+                        ItemsRepeaterDiagnostics.GetElapsedMilliseconds(measureTimestamp),
+                        layoutId,
+                        itemCount,
+                        realizedCount);
+                }
             }
         }
 
@@ -353,11 +376,18 @@ namespace Avalonia.Controls
                 throw new NotSupportedException("Cannot run layout in the middle of a collection change.");
             }
 
+            var layout = Layout;
+            var layoutId = GetLayoutId();
+            var itemCount = ItemsSourceView?.Count ?? 0;
+            using var activity = ItemsRepeaterDiagnostics.StartArrange(layoutId, itemCount, finalSize);
+            var arrangeTimestamp = ItemsRepeaterDiagnostics.GetTimestamp();
+            var arrangeCompleted = false;
+
             _isLayoutInProgress = true;
 
             try
             {
-                var arrangeSize = Layout?.Arrange(LayoutContext, finalSize) ?? default;
+                var arrangeSize = layout?.Arrange(LayoutContext, finalSize) ?? default;
 
                 // The view manager might clear elements during this call.
                 // That's why we call it before arranging cleared elements
@@ -390,11 +420,21 @@ namespace Avalonia.Controls
 
                 _viewportManager.OnOwnerArranged();
 
+                arrangeCompleted = true;
                 return arrangeSize;
             }
             finally
             {
                 _isLayoutInProgress = false;
+                if (arrangeCompleted)
+                {
+                    var realizedCount = GetRealizedCountForDiagnostics(layout);
+                    ItemsRepeaterDiagnostics.RecordArrange(
+                        ItemsRepeaterDiagnostics.GetElapsedMilliseconds(arrangeTimestamp),
+                        layoutId,
+                        itemCount,
+                        realizedCount);
+                }
             }
         }
 
@@ -469,6 +509,7 @@ namespace Avalonia.Controls
                     _processingItemsSourceChange.Action == NotifyCollectionChangedAction.Replace ||
                     _processingItemsSourceChange.Action == NotifyCollectionChangedAction.Reset);
 
+            ItemsRepeaterDiagnostics.RecordElementRecycled(1);
             _viewManager.ClearElement(element, isClearedDueToCollectionChange);
             _viewportManager.OnElementCleared(element, GetVirtualizationInfo(element));
         }
@@ -532,6 +573,7 @@ namespace Avalonia.Controls
             }
 
             _viewportManager.OnMakeAnchor(element, isAnchorOutsideRealizedRange);
+            ItemsRepeaterDiagnostics.RecordMakeAnchor(GetLayoutId(), index);
             InvalidateMeasure();
 
             return element!;
@@ -787,6 +829,33 @@ namespace Avalonia.Controls
         private void OnRequestBringIntoView(RequestBringIntoViewEventArgs e)
         {
             _viewportManager.OnBringIntoViewRequested(e);
+        }
+
+        private string? GetLayoutId() => Layout?.LayoutId ?? Layout?.GetType().Name;
+
+        private int GetRealizedCountForDiagnostics(AttachedLayout? layout)
+        {
+            if (layout == null)
+            {
+                return 0;
+            }
+
+            if (layout is NonVirtualizingLayout)
+            {
+                return Children.Count;
+            }
+
+            var count = 0;
+            foreach (var child in Children)
+            {
+                var info = TryGetVirtualizationInfo(child);
+                if (info?.IsRealized == true)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
