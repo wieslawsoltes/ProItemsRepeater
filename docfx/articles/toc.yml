@@ -4,16 +4,57 @@
   href: getting-started.md
 - name: Layouts
   href: layouts.md
+- name: Layout Internals
+  items:
+  - name: Layout Infrastructure
+    href: layout-infrastructure.md
+  - name: StackLayout Architecture
+    href: layout-architecture-stacklayout.md
+  - name: WrapLayout Architecture
+    href: layout-architecture-wraplayout.md
+  - name: UniformGridLayout Architecture
+    href: layout-architecture-uniformgridlayout.md
+  - name: NonVirtualizingStackLayout Architecture
+    href: layout-architecture-nonvirtualizingstacklayout.md
 - name: ItemsSource and Views
   href: items-source.md
+  items:
+  - name: Keyed Items and Resets
+    href: keyed-items-and-resets.md
 - name: Virtualization and Scrolling
   href: virtualization.md
+- name: Virtualization Algorithms
+  href: virtualization-algorithms.md
+  items:
+  - name: Prefix Sums and Fenwick Trees
+    href: virtualization-prefix-sums.md
+- name: Scrolling Internals
+  href: scrolling-internals.md
 - name: Templates and Recycling
   href: templates-and-recycling.md
+  items:
+  - name: ItemTemplate Resolution and DataContext
+    href: item-template-resolution.md
+  - name: Element Factories
+    href: element-factories.md
 - name: Element Lifecycle
   href: element-lifecycle.md
+- name: Repeater Internals
+  items:
+  - name: ViewManager and Element Ownership
+    href: view-manager-internals.md
+  - name: Recycling Pools and Template Reuse
+    href: recycling-pools-internals.md
+  - name: Viewport Anchoring and Shifts
+    href: viewportmanager-anchoring-internals.md
+  - name: SelectingItemsRepeater Internals
+    href: selecting-itemsrepeater-internals.md
+  - name: Diagnostics Internals
+    href: diagnostics-internals.md
 - name: Selection
   href: selection.md
+- name: Focus and Navigation
+  href: focus-and-navigation.md
 - name: Custom Layouts
   href: custom-layouts.md
 - name: Performance
