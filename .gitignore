@@ -397,3 +397,10 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea
+
+
+# DocFX output
+/_site
+docfx/api/*.yml
+docfx/api/*.manifest
+
