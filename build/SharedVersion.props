@@ -1,11 +1,12 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Product>Avalonia.Controls.ItemsRepeater</Product>
-    <Version>11.1.1-alpha1</Version>
-    <Copyright>Copyright 2022-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; The AvaloniaUI Project</Copyright>
-    <Company>AvaloniaUI</Company>
+    <Product>ProItemsRepeater</Product>
+    <VersionPrefix>11.3.9</VersionPrefix>
+    <VersionSuffix>preview.0</VersionSuffix>
+    <Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) &#169; Wiesław Šoltés</Copyright>
+    <Authors>Wiesław Šoltés</Authors>
     <Description>ItemsRepeater is a light-weight control to generate and present a collection of items.</Description>
-    <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater/</RepositoryUrl>
+    <RepositoryUrl>https://github.com/wieslawsoltes/ProItemsRepeater/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)\avalonia.snk</AssemblyOriginatorKeyFile>

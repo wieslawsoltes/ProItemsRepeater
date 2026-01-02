@@ -1,20 +1,66 @@
-[![NuGet](https://img.shields.io/nuget/v/Avalonia.Controls.ItemsRepeater.svg)](https://www.nuget.org/packages/Avalonia.Controls.ItemsRepeater/)
-# Avalonia `ItemsRepeater`
+[![NuGet](https://img.shields.io/nuget/v/ProItemsRepeater.svg)](https://www.nuget.org/packages/ProItemsRepeater/)
+#  `ProItemsRepeater` - ItemsRepeater control for Avalonia
 
 ## Introduction
 
 `ItemsRepeater` control and associated infrastructure ported from the WinUI library: https://github.com/microsoft/microsoft-ui-xaml
-Previously this port was part of the Avalonia package itself, but we gradually detach it into separated package and now - separated repository.
+Previously this port was part of the Avalonia package itself.
+`ProItemsRepeater` is a hard fork of `Avalonia.Controls.ItemsRepeater` that was retired.
 
-## Current Status
+## Quick Start
 
-The control is currently *retired*.
-If possible, it is recommended to use build-in ItemsControl based controls from Avalonia package.
-We are still accepting fixes and pull requests for ItemsRepeater controls, and we planning to keep it compatible with latest version of Avalonia up to 12.0 release.
-After 12.0 release, this repository will be archived.
+Install the package:
 
-## Backporting
+```bash
+dotnet add package ProItemsRepeater
+```
 
-ItemsRepeater is still part of 11.0 and 11.1 release branches of the main Avalonia repository.
-This package is independent and starts with 11.2 version number, while being usable with any Avalonia from 11.0 version.
-If necessary, we can backport any fixes from this repository to 11.1 release branch of the main Avalonia, but second PR needs to be opened in second repo.
+Or add a package reference:
+
+```xml
+<ItemGroup>
+  <PackageReference Include="ProItemsRepeater" Version="x.y.z" />
+</ItemGroup>
+```
+
+The control lives in the default Avalonia XAML namespace and works with Avalonia 11.0+.
+
+## Basic Usage
+
+```xml
+<ScrollViewer>
+  <ItemsRepeater ItemsSource="{Binding Items}">
+    <ItemsRepeater.Layout>
+      <StackLayout Orientation="Vertical" Spacing="8" />
+    </ItemsRepeater.Layout>
+    <ItemsRepeater.ItemTemplate>
+      <DataTemplate>
+        <Border Padding="8" Background="#1F2937" CornerRadius="6">
+          <TextBlock Text="{Binding}" />
+        </Border>
+      </DataTemplate>
+    </ItemsRepeater.ItemTemplate>
+  </ItemsRepeater>
+</ScrollViewer>
+```
+
+Swap in `WrapLayout` or `UniformGridLayout` when you need wrapping or tile layouts.
+Virtualizing layouts only realize items inside the viewport plus cache lengths.
+
+## Layouts
+
+ItemsRepeater delegates measure and arrange to the attached layout.
+Virtualizing layouts realize only items inside the realization window and reuse elements as you scroll.
+Non-virtualizing layouts measure and arrange all items.
+
+| Layout | Type | How it works | Use cases |
+| --- | --- | --- | --- |
+| `StackLayout` | Virtualizing | Single line along `Orientation` with `Spacing`; virtualizes by viewport. | Long lists, chat/logs, horizontal or vertical lists. |
+| `WrapLayout` | Virtualizing | Wraps items into rows or columns based on available space; uses `HorizontalSpacing` and `VerticalSpacing`. | Variable-size tiles, tags, flowing item grids. |
+| `UniformGridLayout` | Virtualizing | Uniform cells using min item size and spacing with optional stretch/justification. | Photo grids, dashboards, icon tiles. |
+| `NonVirtualizingStackLayout` | Non-virtualizing | Single line layout without virtualization; measures all items. | Small collections, size-to-content, animation scenarios. |
+
+## License
+
+This repository is licensed under the MIT License; see `licence.md`.
+Some files originate from the old Avalonia repository and remain under the Avalonia MIT license text; see `LICENSE-AVALONIA`.
