@@ -2,10 +2,12 @@
   <PropertyGroup>
     <Product>ProItemsRepeater</Product>
     <VersionPrefix>11.3.9</VersionPrefix>
-    <VersionSuffix>preview.0</VersionSuffix>
+    <VersionSuffix>preview.1</VersionSuffix>
     <Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) &#169; Wiesław Šoltés</Copyright>
     <Authors>Wiesław Šoltés</Authors>
     <Description>ItemsRepeater is a light-weight control to generate and present a collection of items.</Description>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/wieslawsoltes/ProItemsRepeater/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
@@ -14,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup Label="PackageIcon">
+    <None Include="$(MSBuildThisFileDirectory)/../readme.md" Pack="true" PackagePath="" Visible="false" />
     <None Include="$(MSBuildThisFileDirectory)/Assets/Icon.png" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
 </Project>
