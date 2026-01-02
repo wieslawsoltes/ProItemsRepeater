@@ -39,6 +39,7 @@ namespace Avalonia.Controls
         public Control GetElement(int index, bool forceCreate, bool suppressAutoRecycle)
         {
             var element = forceCreate ? null : GetElementIfAlreadyHeldByLayout(index);
+            var wasHeldByLayout = element != null;
             if (element == null)
             {
                 // check if this is the anchor made through repeater in preparation 
@@ -56,6 +57,14 @@ namespace Avalonia.Controls
             if (element == null) { element = GetElementFromUniqueIdResetPool(index); }
             if (element == null) { element = GetElementFromPinnedElements(index); }
             if (element == null) { element = GetElementFromElementFactory(index); }
+
+            if (!wasHeldByLayout)
+            {
+                var layout = _owner.Layout;
+                ItemsRepeaterDiagnostics.RecordElementRealized(
+                    layout?.LayoutId ?? layout?.GetType().Name,
+                    1);
+            }
 
             var virtInfo = ItemsRepeater.TryGetVirtualizationInfo(element);
             if (suppressAutoRecycle)

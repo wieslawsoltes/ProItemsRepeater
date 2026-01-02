@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Specialized;
+using Avalonia.Controls;
 using Avalonia.Logging;
 
 namespace Avalonia.Layout
@@ -341,7 +342,10 @@ namespace Avalonia.Layout
             bool disableVirtualization,
             string? layoutId)
         {
-            int count = 0;
+            var directionLabel = direction == GenerateDirection.Forward ? "forward" : "backward";
+            using var activity = ItemsRepeaterDiagnostics.StartGenerate(layoutId, directionLabel, isWrapping, anchorIndex);
+            var generateTimestamp = ItemsRepeaterDiagnostics.GetTimestamp();
+            var measuredCount = 0;
 
             if (anchorIndex != -1)
             {
@@ -367,7 +371,7 @@ namespace Avalonia.Layout
                     _elementManager.EnsureElementRealized(direction == GenerateDirection.Forward, currentIndex, layoutId);
                     var currentElement = _elementManager.GetRealizedElement(currentIndex);
                     var desiredSize = MeasureElement(currentElement!, currentIndex, availableSize, _context!);
-                    ++count;
+                    measuredCount++;
 
                     // Lay it out.
                     var previousElement = _elementManager.GetRealizedElement(previousIndex);
@@ -490,7 +494,10 @@ namespace Avalonia.Layout
                 _elementManager.DiscardElementsOutsideWindow(direction == GenerateDirection.Forward, currentIndex);
             }
 
+            ItemsRepeaterDiagnostics.RecordGenerate(
+                ItemsRepeaterDiagnostics.GetElapsedMilliseconds(generateTimestamp),
                 layoutId,
+                directionLabel,
                 measuredCount,
                 _elementManager.GetRealizedElementCount(),
                 isWrapping,
@@ -503,6 +510,7 @@ namespace Avalonia.Layout
             Size availableSize,
             string? layoutId)
         {
+            ItemsRepeaterDiagnostics.RecordMakeAnchor(layoutId, index);
             _elementManager.ClearRealizedRange();
             // FlowLayout requires that the anchor is the first element in the row.
             var internalAnchor = _algorithmCallbacks!.Algorithm_GetAnchorForTargetElement(index, availableSize, context);
