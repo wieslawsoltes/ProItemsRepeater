@@ -3,6 +3,7 @@
     <TargetFrameworks>net6.0;net8.0;net10.0;netstandard2.0</TargetFrameworks>
     <RootNamespace>Avalonia</RootNamespace>
     <IsPackable>true</IsPackable>
+    <PackageId>ProItemsRepeater</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
