@@ -6,5 +6,12 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonia.Controls.Samples.MainWindow"
         Title="Avalonia.Controls.Samples">
-  <local:ItemsRepeaterPage />
+  <TabControl>
+    <TabItem Header="ItemsRepeater">
+      <local:ItemsRepeaterPage />
+    </TabItem>
+    <TabItem Header="SelectingItemsRepeater">
+      <local:SelectingItemsRepeaterPage />
+    </TabItem>
+  </TabControl>
 </Window>
