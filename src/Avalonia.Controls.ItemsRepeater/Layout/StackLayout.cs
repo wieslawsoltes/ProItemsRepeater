@@ -91,23 +91,26 @@ namespace Avalonia.Layout
             // Constants
             int itemsCount = context.ItemCount;
             var stackState = (StackLayoutState)context.LayoutState!;
-            double averageElementSize = GetAverageElementSize(availableSize, context, stackState) + Spacing;
+            double estimatedSize = Math.Max(1.0, GetAverageElementSize(availableSize, context, stackState));
+            double estimatedElementWithSpacing = estimatedSize + Spacing;
 
             _orientation.SetMinorSize(ref extent, stackState.MaxArrangeBounds);
-            _orientation.SetMajorSize(ref extent, Math.Max(0.0f, itemsCount * averageElementSize - Spacing));
+            _orientation.SetMajorSize(ref extent, Math.Max(0.0f, stackState.GetEstimatedTotalSize(estimatedSize, Spacing, itemsCount)));
             if (itemsCount > 0)
             {
                 if (firstRealized != null)
                 {
+                    var estimatedOffset = stackState.GetEstimatedOffsetForIndex(firstRealizedItemIndex, estimatedSize, Spacing);
                     _orientation.SetMajorStart(
                         ref extent,
-                        _orientation.MajorStart(firstRealizedLayoutBounds) - firstRealizedItemIndex * averageElementSize);
+                        _orientation.MajorStart(firstRealizedLayoutBounds) - estimatedOffset);
                     var remainingItems = itemsCount - lastRealizedItemIndex - 1;
                     _orientation.SetMajorSize(
                         ref extent,
-                        _orientation.MajorEnd(lastRealizedLayoutBounds) -
-                            _orientation.MajorStart(extent) + 
-                            (remainingItems * averageElementSize));
+                        Math.Max(
+                            _orientation.MajorSize(extent),
+                            _orientation.MajorEnd(lastRealizedLayoutBounds) -
+                            _orientation.MajorStart(extent)));
                 }
                 else
                 {
@@ -116,8 +119,8 @@ namespace Avalonia.Layout
                 }
             }
 
-            Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Extent is ({Size}). Based on average {Average}",
-                LayoutId, extent.Size, averageElementSize);
+            Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Extent is ({Size}). Based on estimated {Average}",
+                LayoutId, extent.Size, estimatedElementWithSpacing);
             return extent;
         }
 
@@ -179,8 +182,16 @@ namespace Avalonia.Layout
             {
                 index = targetIndex;
                 var state = (StackLayoutState)context.LayoutState!;
-                double averageElementSize = GetAverageElementSize(availableSize, context, state) + Spacing;
-                offset = index * averageElementSize + _orientation.MajorStart(state.FlowAlgorithm.LastExtent);
+                if (state.FlowAlgorithm.TryGetLayoutBoundsForDataIndex(targetIndex, out var bounds))
+                {
+                    offset = _orientation.MajorStart(bounds);
+                }
+                else
+                {
+                    double estimatedSize = GetAverageElementSize(availableSize, context, state);
+                    var estimatedOffset = state.GetEstimatedOffsetForIndex(index, Math.Max(1.0, estimatedSize), Spacing);
+                    offset = estimatedOffset + _orientation.MajorStart(state.FlowAlgorithm.LastExtent);
+                }
             }
 
             return new FlowLayoutAnchorInfo { Index = index, Offset = offset };
@@ -238,22 +249,20 @@ namespace Avalonia.Layout
                 var state = (StackLayoutState)context.LayoutState!;
                 var lastExtent = state.FlowAlgorithm.LastExtent;
 
-                double averageElementSize = GetAverageElementSize(availableSize, context, state) + Spacing;
+                double estimatedSize = GetAverageElementSize(availableSize, context, state);
+                var estimatedItemSize = Math.Max(1.0, estimatedSize);
+                var spacing = Spacing;
                 double realizationWindowOffsetInExtent = _orientation.MajorStart(realizationRect) - _orientation.MajorStart(lastExtent);
-                double majorSize = _orientation.MajorSize(lastExtent) == 0 ? Math.Max(0.0, averageElementSize * itemsCount - Spacing) : _orientation.MajorSize(lastExtent);
-                if (itemsCount > 0 &&
-                    _orientation.MajorSize(realizationRect) >= 0 &&
-                    // MajorSize = 0 will account for when a nested repeater is outside the realization rect but still being measured. Also,
-                    // note that if we are measuring this repeater, then we are already realizing an element to figure out the size, so we could
-                    // just keep that element alive. It also helps in XYFocus scenarios to have an element realized for XYFocus to find a candidate
-                    // in the navigating direction.
-                    realizationWindowOffsetInExtent + _orientation.MajorSize(realizationRect) >= 0 && realizationWindowOffsetInExtent <= majorSize)
-                {
-                    anchorIndex = (int) (realizationWindowOffsetInExtent / averageElementSize);
-                    anchorIndex = Math.Max(0, Math.Min(itemsCount - 1, anchorIndex));
-                    offset = anchorIndex* averageElementSize + _orientation.MajorStart(lastExtent);
-                }
-        }
+                double estimatedTotalSize = state.GetEstimatedTotalSize(estimatedItemSize, spacing, itemsCount);
+                // Clamp to the estimated extent so we always return a usable anchor.
+                double clampedOffset = estimatedTotalSize > 0
+                    ? Math.Max(0.0, Math.Min(estimatedTotalSize, realizationWindowOffsetInExtent))
+                    : 0.0;
+
+                anchorIndex = state.EstimateIndexForOffset(clampedOffset, estimatedItemSize, spacing, itemsCount);
+                anchorIndex = Math.Max(0, Math.Min(itemsCount - 1, anchorIndex));
+                offset = _orientation.MajorStart(realizationRect);
+            }
 
             return new FlowLayoutAnchorInfo { Index = anchorIndex, Offset = offset, };
         }
@@ -286,7 +295,11 @@ namespace Avalonia.Layout
 
         protected internal override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
-            ((StackLayoutState)context.LayoutState!).OnMeasureStart();
+            var stackState = (StackLayoutState)context.LayoutState!;
+            stackState.EnsureLineCacheParameters(Orientation, Spacing);
+            stackState.EnsureItemCount(context.ItemCount);
+            stackState.ClearLineCache();
+            stackState.OnMeasureStart();
 
             var desiredSize = GetFlowAlgorithm(context).Measure(
                 availableSize,
@@ -317,6 +330,8 @@ namespace Avalonia.Layout
         protected internal override void OnItemsChangedCore(VirtualizingLayoutContext context, object? source, NotifyCollectionChangedEventArgs args)
         {
             GetFlowAlgorithm(context).OnItemsSourceChanged(source, args, context);
+            ((StackLayoutState)context.LayoutState!).ClearLineCache();
+            ((StackLayoutState)context.LayoutState!).ClearSizeCache();
             // Always invalidate layout to keep the view accurate.
             InvalidateLayout();
         }
@@ -345,6 +360,11 @@ namespace Avalonia.Layout
 
             if (context.ItemCount > 0)
             {
+                if (stackLayoutState.TryGetMeasuredAverage(out var measuredAverage))
+                {
+                    return measuredAverage;
+                }
+
                 if (stackLayoutState.TotalElementsMeasured == 0)
                 {
                     var tmpElement = context.GetOrCreateElementAt(0, ElementRealizationOptions.ForceCreate | ElementRealizationOptions.SuppressAutoRecycle);
@@ -352,7 +372,7 @@ namespace Avalonia.Layout
                     context.RecycleElement(tmpElement);
                 }
 
-                averageElementSize = Math.Round(stackLayoutState.TotalElementSize / stackLayoutState.TotalElementsMeasured);
+                averageElementSize = stackLayoutState.TotalElementSize / stackLayoutState.TotalElementsMeasured;
             }
 
             return averageElementSize;

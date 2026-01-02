@@ -62,6 +62,16 @@ public class ItemsRepeaterPageViewModel : INotifyPropertyChanged
         }
     }
 
+    public void RandomizeWidths()
+    {
+        var random = new Random();
+
+        foreach (var i in Items)
+        {
+            i.Width = random.Next(240) + 10;
+        }
+    }
+
     public void ResetItems()
     {
         Items = CreateItems();
@@ -81,6 +91,7 @@ public class ItemsRepeaterPageViewModel : INotifyPropertyChanged
 public class ItemsRepeaterPageViewModelItem : INotifyPropertyChanged
 {
     private double _height = double.NaN;
+    private double _width = double.NaN;
 
     public ItemsRepeaterPageViewModelItem(int index, string text)
     {
@@ -99,6 +110,19 @@ public class ItemsRepeaterPageViewModelItem : INotifyPropertyChanged
             {
                 _height = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Height)));
+            }
+        }
+    }
+
+    public double Width
+    {
+        get => _width;
+        set
+        {
+            if (_width != value)
+            {
+                _width = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Width)));
             }
         }
     }

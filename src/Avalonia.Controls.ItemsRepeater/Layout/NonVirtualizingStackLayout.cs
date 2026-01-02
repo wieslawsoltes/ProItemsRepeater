@@ -51,6 +51,7 @@ namespace Avalonia.Layout
             var childCount = context.Children.Count;
             var isVertical = Orientation == Orientation.Vertical;
             var spacing = Spacing;
+            var visibleCount = 0;
             var constraint = isVertical ?
                 availableSize.WithHeight(double.PositiveInfinity) :
                 availableSize.WithWidth(double.PositiveInfinity);
@@ -62,6 +63,11 @@ namespace Avalonia.Layout
                 if ((element as Visual)?.IsVisible == false)
                 {
                     continue;
+                }
+
+                if (visibleCount > 0)
+                {
+                    extentU += spacing;
                 }
 
                 element.Measure(constraint);
@@ -77,10 +83,7 @@ namespace Avalonia.Layout
                     extentV = Math.Max(extentV, element.DesiredSize.Height);
                 }
 
-                if (i < childCount - 1)
-                {
-                    extentU += spacing;
-                }
+                visibleCount++;
             }
 
             return isVertical ? new Size(extentV, extentU) : new Size(extentU, extentV);
