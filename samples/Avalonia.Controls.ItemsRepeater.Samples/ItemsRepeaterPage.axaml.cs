@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -10,17 +11,18 @@ public partial class ItemsRepeaterPage : UserControl
 {
     private readonly ItemsRepeaterPageViewModel _viewModel;
     private int _selectedIndex;
-    private Random _random = new Random(0);
+    private readonly Random _random = new Random(0);
 
     public ItemsRepeaterPage()
     {
-        this.InitializeComponent();
+        InitializeComponent();
         repeater.PointerPressed += RepeaterClick;
         repeater.KeyDown += RepeaterOnKeyDown;
-        scrollToLast.Click += scrollToLast_Click;
-        scrollToRandom.Click += scrollToRandom_Click;
-        scrollToSelected.Click += scrollToSelected_Click;
+        scrollToLast.Click += ScrollToLast_Click;
+        scrollToRandom.Click += ScrollToRandom_Click;
+        scrollToSelected.Click += ScrollToSelected_Click;
         DataContext = _viewModel = new ItemsRepeaterPageViewModel();
+        ApplyLayout(layout.SelectedIndex);
     }
 
     public void OnSelectTemplateKey(object sender, SelectTemplateEventArgs e)
@@ -33,14 +35,18 @@ public partial class ItemsRepeaterPage : UserControl
 
     private void LayoutChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (repeater == null)
+        if (repeater is null || scroller is null)
         {
             return;
         }
 
         var comboBox = (ComboBox)sender;
+        ApplyLayout(comboBox.SelectedIndex);
+    }
 
-        switch (comboBox.SelectedIndex)
+    private void ApplyLayout(int selectedIndex)
+    {
+        switch (selectedIndex)
         {
             case 0:
                 scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -54,6 +60,16 @@ public partial class ItemsRepeaterPage : UserControl
                 break;
             case 2:
                 scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                repeater.Layout = new NonVirtualizingStackLayout { Orientation = Orientation.Vertical };
+                break;
+            case 3:
+                scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                repeater.Layout = new NonVirtualizingStackLayout { Orientation = Orientation.Horizontal };
+                break;
+            case 4:
+                scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
                 scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 repeater.Layout = new UniformGridLayout
                 {
@@ -62,7 +78,7 @@ public partial class ItemsRepeaterPage : UserControl
                     MinItemHeight = 200,
                 };
                 break;
-            case 3:
+            case 5:
                 scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 repeater.Layout = new UniformGridLayout
@@ -72,7 +88,7 @@ public partial class ItemsRepeaterPage : UserControl
                     MinItemHeight = 200,
                 };
                 break;
-            case 4:
+            case 6:
                 scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
                 scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 repeater.Layout = new WrapLayout
@@ -82,7 +98,7 @@ public partial class ItemsRepeaterPage : UserControl
                     VerticalSpacing = 20
                 };
                 break;
-            case 5:
+            case 7:
                 scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 repeater.Layout = new WrapLayout
@@ -97,7 +113,11 @@ public partial class ItemsRepeaterPage : UserControl
 
     private void ScrollTo(int index)
     {
-        System.Diagnostics.Debug.WriteLine("Scroll to " + index);
+        if (index < 0)
+        {
+            return;
+        }
+
         var element = repeater.GetOrCreateElement(index);
         UpdateLayout();
         element.BringIntoView();
@@ -120,18 +140,24 @@ public partial class ItemsRepeaterPage : UserControl
         }
     }
 
-    private void scrollToLast_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void ScrollToLast_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         ScrollTo(_viewModel.Items.Count - 1);
     }
 
-    private void scrollToRandom_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void ScrollToRandom_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        ScrollTo(_random.Next(_viewModel.Items.Count - 1));
+        ScrollTo(GetRandomIndex());
     }
 
-    private void scrollToSelected_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void ScrollToSelected_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         ScrollTo(_selectedIndex);
+    }
+
+    private int GetRandomIndex()
+    {
+        var count = _viewModel.Items.Count;
+        return count == 0 ? -1 : _random.Next(count);
     }
 }

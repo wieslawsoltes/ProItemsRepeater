@@ -36,13 +36,18 @@ namespace Avalonia.Controls
         private double _maximumVerticalCacheLength = 2.0;
         private double _horizontalCacheBufferPerSide;
         private double _verticalCacheBufferPerSide;
+        private int _pendingShiftCount;
+        private bool _invalidateMeasureScheduled;
         private bool _isBringIntoViewInProgress;
+        private bool _disableScrollAnchoring;
         // For non-virtualizing layouts, we do not need to keep
         // updating viewports and invalidating measure often. So when
         // a non virtualizing layout is used, we stop doing all that work.
         private bool _managingViewportDisabled;
         private bool _effectiveViewportChangedSubscribed;
         private bool _layoutUpdatedSubscribed;
+
+        private bool IsScrollAnchoringDisabled => _disableScrollAnchoring || _owner.Layout is Avalonia.Layout.WrapLayout;
 
         public ViewportManager(ItemsRepeater owner)
         {
@@ -59,6 +64,11 @@ namespace Avalonia.Controls
 
                 if (suggestedAnchor == null)
                 {
+                    if (IsScrollAnchoringDisabled)
+                    {
+                        return null;
+                    }
+
                     var anchorElement = _scroller?.CurrentAnchor;
 
                     if (anchorElement != null)
@@ -73,7 +83,11 @@ namespace Avalonia.Controls
                         {
                             if (parent == owner)
                             {
-                                suggestedAnchor = child;
+                                var virtInfo = ItemsRepeater.GetVirtualizationInfo(child);
+                                if (virtInfo?.IsRegisteredAsAnchorCandidate == true)
+                                {
+                                    suggestedAnchor = child;
+                                }
                                 break;
                             }
 
@@ -158,12 +172,40 @@ namespace Avalonia.Controls
 
         public void SetLayoutExtent(Rect extent)
         {
+            if (IsScrollAnchoringDisabled)
+            {
+                _layoutExtent = extent;
+                _expectedViewportShift = default;
+                _pendingViewportShift = default;
+                _unshiftableShift = default;
+                _pendingShiftCount = 0;
+                ((Control?)_scroller)?.InvalidateArrange();
+                return;
+            }
+
+            var deltaX = _layoutExtent.X - extent.X;
+            var deltaY = _layoutExtent.Y - extent.Y;
+            if (Math.Abs(deltaX) <= 1)
+            {
+                deltaX = 0;
+            }
+            if (Math.Abs(deltaY) <= 1)
+            {
+                deltaY = 0;
+            }
+
             _expectedViewportShift = new Point(
-                _expectedViewportShift.X + _layoutExtent.X - extent.X,
-                _expectedViewportShift.Y + _layoutExtent.Y - extent.Y);
+                _expectedViewportShift.X + deltaX,
+                _expectedViewportShift.Y + deltaY);
 
             // We tolerate viewport imprecisions up to 1 pixel to avoid invalidating layout too much.
-            if (Math.Abs(_expectedViewportShift.X) > 1 || Math.Abs(_expectedViewportShift.Y) > 1)
+            var expectsShift = Math.Abs(_expectedViewportShift.X) > 1 || Math.Abs(_expectedViewportShift.Y) > 1;
+            if (!expectsShift)
+            {
+                _pendingShiftCount = 0;
+            }
+
+            if (expectsShift)
             {
                 Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Expecting viewport shift of ({Shift})",
                     _owner.Layout?.LayoutId, _expectedViewportShift);
@@ -286,6 +328,19 @@ namespace Avalonia.Controls
             // that can scroll in the direction where the shift is expected.
             if (_pendingViewportShift.X != 0 || _pendingViewportShift.Y != 0)
             {
+                _pendingShiftCount++;
+                if (_pendingShiftCount >= 2 && _owner.Layout is Avalonia.Layout.WrapLayout)
+                {
+                    _disableScrollAnchoring = true;
+                    _expectedViewportShift = default;
+                    _pendingViewportShift = default;
+                    _unshiftableShift = default;
+                    _pendingShiftCount = 0;
+                    UnregisterAllAnchorCandidates();
+                    ScheduleInvalidateMeasure();
+                    return;
+                }
+
                 Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Layout Updated with pending shift {Shift}- invalidating measure",
                     _owner.Layout?.LayoutId,
                     _pendingViewportShift);
@@ -297,7 +352,17 @@ namespace Avalonia.Controls
                 _pendingViewportShift = default;
                 _expectedViewportShift = default;
 
-                TryInvalidateMeasure();
+                if (Math.Abs(_unshiftableShift.X) > 1 || Math.Abs(_unshiftableShift.Y) > 1)
+                {
+                    if (_owner.Layout is Avalonia.Layout.WrapLayout)
+                    {
+                        ScheduleInvalidateMeasure();
+                    }
+                    else
+                    {
+                        TryInvalidateMeasure();
+                    }
+                }
             }
         }
 
@@ -359,6 +424,11 @@ namespace Avalonia.Controls
 
         public void RegisterScrollAnchorCandidate(Control element, VirtualizationInfo virtInfo)
         {
+            if (IsScrollAnchoringDisabled && element != _makeAnchorElement)
+            {
+                return;
+            }
+
             if (!virtInfo.IsRegisteredAsAnchorCandidate)
             {
                 _scroller?.RegisterAnchorCandidate(element);
@@ -432,6 +502,8 @@ namespace Avalonia.Controls
             _owner.EffectiveViewportChanged -= OnEffectiveViewportChanged;
             _effectiveViewportChangedSubscribed = false;
             _ensuredScroller = false;
+            _disableScrollAnchoring = false;
+            _pendingShiftCount = 0;
         }
 
         private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
@@ -441,6 +513,7 @@ namespace Avalonia.Controls
 
             _pendingViewportShift = default;
             _unshiftableShift = default;
+            _pendingShiftCount = 0;
             if (_visibleWindow.Width == 0 && _visibleWindow.Height == 0)
             {
                 // We got cleared.
@@ -512,7 +585,84 @@ namespace Avalonia.Controls
                     _owner.Layout?.LayoutId,
                     previousVisibleWindow,
                     currentVisibleWindow);
-                TryInvalidateMeasure();
+                UpdateScrollAnchoring(previousVisibleWindow, _visibleWindow);
+                if (_owner.Layout is Avalonia.Layout.WrapLayout)
+                {
+                    if (IsSmallViewportDelta(previousVisibleWindow, _visibleWindow))
+                    {
+                        TryInvalidateMeasure();
+                    }
+                    else
+                    {
+                        ScheduleInvalidateMeasure();
+                    }
+                }
+                else
+                {
+                    TryInvalidateMeasure();
+                }
+            }
+        }
+
+        private void UpdateScrollAnchoring(Rect previous, Rect current)
+        {
+            if (_owner.Layout is Avalonia.Layout.WrapLayout)
+            {
+                if (!_disableScrollAnchoring)
+                {
+                    _disableScrollAnchoring = true;
+                    UnregisterAllAnchorCandidates();
+                }
+
+                return;
+            }
+
+            if (!HasScroller)
+            {
+                return;
+            }
+
+            if ((previous.Width == 0 && previous.Height == 0) || (current.Width == 0 && current.Height == 0))
+            {
+                return;
+            }
+
+            var verticalDelta = Math.Abs(current.Y - previous.Y);
+            var horizontalDelta = Math.Abs(current.X - previous.X);
+            var thresholdMultiplier = _owner.Layout is Avalonia.Layout.WrapLayout ? 0.25 : 0.5;
+            var verticalThreshold = Math.Max(previous.Height, current.Height) * thresholdMultiplier;
+            var horizontalThreshold = Math.Max(previous.Width, current.Width) * thresholdMultiplier;
+
+            var disableAnchoring = (verticalThreshold > 0 && verticalDelta > verticalThreshold) ||
+                (horizontalThreshold > 0 && horizontalDelta > horizontalThreshold);
+
+            if (_disableScrollAnchoring == disableAnchoring)
+            {
+                return;
+            }
+
+            _disableScrollAnchoring = disableAnchoring;
+            if (_disableScrollAnchoring)
+            {
+                UnregisterAllAnchorCandidates();
+            }
+        }
+
+        private void UnregisterAllAnchorCandidates()
+        {
+            if (_scroller is null)
+            {
+                return;
+            }
+
+            foreach (var child in _owner.Children)
+            {
+                var info = ItemsRepeater.GetVirtualizationInfo(child);
+                if (info.IsRegisteredAsAnchorCandidate)
+                {
+                    _scroller.UnregisterAnchorCandidate(child);
+                    info.IsRegisteredAsAnchorCandidate = false;
+                }
             }
         }
 
@@ -535,6 +685,46 @@ namespace Avalonia.Controls
                 Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Invalidating measure due to viewport change", _owner.Layout?.LayoutId);
                 _owner.InvalidateMeasure();
             }
+        }
+
+        private void ScheduleInvalidateMeasure()
+        {
+            if (_invalidateMeasureScheduled)
+            {
+                return;
+            }
+
+            _invalidateMeasureScheduled = true;
+            Dispatcher.UIThread.Post(() =>
+            {
+                _invalidateMeasureScheduled = false;
+                TryInvalidateMeasure();
+            }, DispatcherPriority.Loaded);
+        }
+
+        private static bool IsSmallViewportDelta(Rect previous, Rect current)
+        {
+            if (previous.Width == 0 && previous.Height == 0)
+            {
+                return false;
+            }
+
+            var verticalDelta = Math.Abs(current.Y - previous.Y);
+            var horizontalDelta = Math.Abs(current.X - previous.X);
+            var verticalThreshold = Math.Max(previous.Height, current.Height) * 0.4;
+            var horizontalThreshold = Math.Max(previous.Width, current.Width) * 0.4;
+
+            if (verticalThreshold > 0 && verticalDelta > verticalThreshold)
+            {
+                return false;
+            }
+
+            if (horizontalThreshold > 0 && horizontalDelta > horizontalThreshold)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private class ScrollerInfo

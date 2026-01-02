@@ -26,11 +26,13 @@
     <DataTemplate x:Key="odd" x:DataType="local:ItemsRepeaterPageViewModelItem">
       <TextBlock Classes="oddTemplate"
                  Height="{Binding Height}"
+                 Width="{Binding Width}"
                  Text="{Binding Text}"/>
     </DataTemplate>
     <DataTemplate x:Key="even" x:DataType="local:ItemsRepeaterPageViewModelItem">
       <TextBlock Classes="evenTemplate"
                  Height="{Binding Height}"
+                 Width="{Binding Width}"
                  Text="{Binding Text}"/>
     </DataTemplate>
     <RecyclingElementFactory x:Key="elementFactory"
@@ -42,21 +44,26 @@
       </RecyclingElementFactory.Templates>
     </RecyclingElementFactory>
   </UserControl.Resources>
-  
+
   <DockPanel>
     <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0 0 0 16">
       <TextBlock Classes="h2">A data-driven collection control that incorporates a flexible layout system, custom views, and virtualization.</TextBlock>
     </StackPanel>
     <StackPanel DockPanel.Dock="Right" Margin="8 0" Spacing="4">
-      <ComboBox SelectedIndex="0" SelectionChanged="LayoutChanged">
+      <ComboBox x:Name="layout" SelectedIndex="0" SelectionChanged="LayoutChanged">
         <ComboBoxItem>Stack - Vertical</ComboBoxItem>
         <ComboBoxItem>Stack - Horizontal</ComboBoxItem>
+        <ComboBoxItem>NonVirtualizingStack - Vertical</ComboBoxItem>
+        <ComboBoxItem>NonVirtualizingStack - Horizontal</ComboBoxItem>
         <ComboBoxItem>UniformGrid - Vertical</ComboBoxItem>
         <ComboBoxItem>UniformGrid - Horizontal</ComboBoxItem>
+        <ComboBoxItem>Wrap - Vertical</ComboBoxItem>
+        <ComboBoxItem>Wrap - Horizontal</ComboBoxItem>
       </ComboBox>
       <Button Command="{Binding AddItem}">Add Item</Button>
       <Button Command="{Binding RemoveItem}">Remove Item</Button>
       <Button Command="{Binding RandomizeHeights}">Randomize Heights</Button>
+      <Button Command="{Binding RandomizeWidths}">Randomize Widths</Button>
       <Button Command="{Binding ResetItems}">Reset items</Button>
       <Button x:Name="scrollToLast">Scroll to Last</Button>
       <Button x:Name="scrollToRandom">Scroll to Random</Button>

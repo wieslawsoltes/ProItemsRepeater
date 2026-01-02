@@ -190,7 +190,15 @@ namespace Avalonia.Layout
                     break;
 
                 case NotifyCollectionChangedAction.Move:
-                    throw new NotImplementedException();
+                    int moveCount = args.OldItems?.Count ?? args.NewItems?.Count ?? 1;
+                    bool oldTouchesFirst = args.OldStartingIndex >= 0 &&
+                        args.OldStartingIndex <= 0 &&
+                        args.OldStartingIndex + moveCount - 1 >= 0;
+                    bool newTouchesFirst = args.NewStartingIndex >= 0 &&
+                        args.NewStartingIndex <= 0 &&
+                        args.NewStartingIndex + moveCount - 1 >= 0;
+                    shouldClear = oldTouchesFirst || newTouchesFirst;
+                    break;
                 }
 
                 if (shouldClear)

@@ -25,7 +25,7 @@ namespace Avalonia.Layout
                 if (_context != null)
                 {
                     var rect = _context.RealizationRect;
-                    bool hasInfiniteSize = double.IsInfinity(rect.Height) || double.IsInfinity(rect.Width);
+                    bool hasInfiniteSize = double.IsInfinity(rect.Height) && double.IsInfinity(rect.Width);
                     return !hasInfiniteSize;
                 }
                 return false;
@@ -168,6 +168,24 @@ namespace Avalonia.Layout
         }
 
         public void ClearRealizedRange() => ClearRealizedRange(0, GetRealizedElementCount());
+
+        public bool HasInvalidMeasure()
+        {
+            if (!IsVirtualizingContext)
+            {
+                return false;
+            }
+
+            foreach (var element in _realizedElements)
+            {
+                if (element != null && !element.IsMeasureValid)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public Rect GetLayoutBoundsForDataIndex(int dataIndex)
         {

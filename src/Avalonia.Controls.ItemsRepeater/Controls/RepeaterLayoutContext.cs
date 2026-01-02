@@ -47,6 +47,8 @@ namespace Avalonia.Controls
             }
         }
 
+        internal bool HasMadeAnchor => _owner.MadeAnchor != null;
+
         protected override int ItemCountCore() => _owner.ItemsSourceView?.Count ?? 0;
 
         protected override Layoutable GetOrCreateElementAtCore(int index, ElementRealizationOptions options)

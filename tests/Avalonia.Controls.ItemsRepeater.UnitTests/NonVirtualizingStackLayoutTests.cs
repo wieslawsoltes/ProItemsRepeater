@@ -286,6 +286,28 @@ public class NonVirtualizingStackLayoutTests
     [AvaloniaTheory]
     [InlineData(Orientation.Horizontal)]
     [InlineData(Orientation.Vertical)]
+    public void Spacing_Not_Added_For_Trailing_Invisible_Children(Orientation orientation)
+    {
+        var target = new NonVirtualizingStackLayout
+        {
+            Orientation = orientation,
+            Spacing = 40,
+        };
+
+        var context = CreateContext(new[]
+        {
+            new StackPanel { Width = 10, Height = 10 },
+            new StackPanel { Width = 10, Height = 10, IsVisible = false },
+        });
+
+        var desiredSize = target.Measure(context, Size.Infinity);
+
+        Assert.Equal(new Size(10, 10), desiredSize);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(Orientation.Horizontal)]
+    [InlineData(Orientation.Vertical)]
     public void Only_Arrange_Visible_Children(Orientation orientation)
     {
         var hiddenPanel = new Panel { Width = 10, Height = 10, IsVisible = false };

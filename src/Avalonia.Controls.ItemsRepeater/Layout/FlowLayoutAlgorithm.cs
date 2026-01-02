@@ -21,6 +21,9 @@ namespace Avalonia.Layout
         private Rect _lastExtent;
         private int _firstRealizedDataIndexInsideRealizationWindow = -1;
         private int _lastRealizedDataIndexInsideRealizationWindow = -1;
+        private Rect _lastRealizationRect;
+        private bool _hasValidRealizationRect;
+        private bool _lastMeasureRealizationWindowJumped;
 
         // If the scroll orientation is the same as the follow orientation
         // we will only have one line since we will never wrap. In that case
@@ -31,6 +34,8 @@ namespace Avalonia.Layout
         private bool _scrollOrientationSameAsFlow;
 
         public Rect LastExtent => _lastExtent;
+        internal bool LastMeasureRealizationWindowJumped => _lastMeasureRealizationWindowJumped;
+        internal bool HasInvalidMeasure() => _elementManager.HasInvalidMeasure();
 
         private bool IsVirtualizingContext
         {
@@ -39,7 +44,7 @@ namespace Avalonia.Layout
                 if (_context != null)
                 {
                     var rect = _context.RealizationRect;
-                    bool hasInfiniteSize = double.IsInfinity(rect.Height) || double.IsInfinity(rect.Width);
+                    bool hasInfiniteSize = double.IsInfinity(rect.Height) && double.IsInfinity(rect.Width);
                     return !hasInfiniteSize;
                 }
                 return false;
@@ -93,22 +98,26 @@ namespace Avalonia.Layout
                 var anchorRealized = _elementManager.IsDataIndexRealized(suggestedAnchorIndex);
                 if (!anchorRealized)
                 {
-                    MakeAnchor(_context, suggestedAnchorIndex, availableSize);
+                    bool hasMadeAnchor = _context is RepeaterLayoutContext repeaterContext && repeaterContext.HasMadeAnchor;
+                    if (!IsRealizationWindowJumped() || hasMadeAnchor)
+                    {
+                        MakeAnchor(_context, suggestedAnchorIndex, availableSize, layoutId);
+                    }
                 }
             }
 
             _elementManager.OnBeginMeasure(orientation);
 
             int anchorIndex = GetAnchorIndex(availableSize, isWrapping, minItemSpacing, layoutId);
-            Generate(GenerateDirection.Forward, anchorIndex, availableSize, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
-            Generate(GenerateDirection.Backward, anchorIndex, availableSize, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
+            Generate(GenerateDirection.Forward, anchorIndex, availableSize, isWrapping, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
+            Generate(GenerateDirection.Backward, anchorIndex, availableSize, isWrapping, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
             if (isWrapping && IsReflowRequired())
             {
                 Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Reflow Pass", layoutId);
                 var firstElementBounds = _elementManager.GetLayoutBoundsForRealizedIndex(0);
                 _orientation.SetMinorStart(ref firstElementBounds, 0);
                 _elementManager.SetLayoutBoundsForRealizedIndex(0, firstElementBounds);
-                Generate(GenerateDirection.Forward, 0 /*anchorIndex*/, availableSize, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
+                Generate(GenerateDirection.Forward, 0 /*anchorIndex*/, availableSize, isWrapping, minItemSpacing, lineSpacing, maxItemsPerLine, disableVirtualization, layoutId);
             }
 
             RaiseLineArranged();
@@ -166,6 +175,7 @@ namespace Avalonia.Layout
             int anchorIndex = -1;
             var anchorPosition= new Point();
             var context = _context;
+            _lastMeasureRealizationWindowJumped = false;
 
             if (!IsVirtualizingContext)
             {
@@ -174,7 +184,9 @@ namespace Avalonia.Layout
             }
             else
             {       
-                bool isRealizationWindowConnected = _elementManager.IsWindowConnected(RealizationRect, _orientation.ScrollOrientation, _scrollOrientationSameAsFlow);
+                bool isRealizationWindowJumped = IsRealizationWindowJumped();
+                _lastMeasureRealizationWindowJumped = isRealizationWindowJumped;
+                bool isRealizationWindowConnected = _elementManager.IsWindowConnected(RealizationRect, _orientation.ScrollOrientation, _scrollOrientationSameAsFlow) && !isRealizationWindowJumped;
                 // Item spacing and size in non-virtualizing direction change can cause elements to reflow
                 // and get a new column position. In that case we need the anchor to be positioned in the 
                 // correct column.
@@ -187,6 +199,22 @@ namespace Avalonia.Layout
 
                 var isAnchorSuggestionValid = suggestedAnchorIndex >= 0 &&
                     _elementManager.IsDataIndexRealized(suggestedAnchorIndex);
+
+                bool hasMadeAnchor = _context is RepeaterLayoutContext repeaterContext && repeaterContext.HasMadeAnchor;
+                if (isRealizationWindowJumped && !hasMadeAnchor)
+                {
+                    isAnchorSuggestionValid = false;
+                }
+
+                if (isAnchorSuggestionValid)
+                {
+                    var anchorBounds = _elementManager.GetLayoutBoundsForDataIndex(suggestedAnchorIndex);
+                    if (!anchorBounds.Intersects(RealizationRect))
+                    {
+                        Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Suggested anchor {Anchor} not in realization window", layoutId, suggestedAnchorIndex);
+                        isAnchorSuggestionValid = false;
+                    }
+                }
 
                 if (isAnchorSuggestionValid)
                 {
@@ -231,7 +259,10 @@ namespace Avalonia.Layout
                 else if (needAnchorColumnRevaluation || !isRealizationWindowConnected)
                 {
                     if (needAnchorColumnRevaluation) { Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: NeedAnchorColumnReevaluation", layoutId); }
-                    if (!isRealizationWindowConnected) { Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Disconnected Window", layoutId); }
+                    if (!isRealizationWindowConnected)
+                    {
+                        Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: Disconnected Window", layoutId);
+                    }
 
                     // The anchor is based on the realization window because a connected ItemsRepeater might intersect the realization window
                     // but not the visible window. In that situation, we still need to produce a valid anchor.
@@ -284,6 +315,17 @@ namespace Avalonia.Layout
             // TODO: Perhaps we can track changes in the property setter
             _lastAvailableSize = availableSize;
             _lastItemSpacing = minItemSpacing;
+            if (IsVirtualizingContext)
+            {
+                var realizationRect = RealizationRect;
+                _lastRealizationRect = realizationRect;
+                _hasValidRealizationRect = realizationRect.Width != 0 || realizationRect.Height != 0;
+            }
+            else
+            {
+                _hasValidRealizationRect = false;
+                _lastMeasureRealizationWindowJumped = false;
+            }
 
             return anchorIndex;
         }
@@ -292,12 +334,15 @@ namespace Avalonia.Layout
             GenerateDirection direction,
             int anchorIndex,
             Size availableSize,
+            bool isWrapping,
             double minItemSpacing,
             double lineSpacing,
             int maxItemsPerLine,
             bool disableVirtualization,
             string? layoutId)
         {
+            int count = 0;
+
             if (anchorIndex != -1)
             {
                 int step = (direction == GenerateDirection.Forward) ? 1 : -1;
@@ -313,7 +358,6 @@ namespace Avalonia.Layout
                 var lineOffset = _orientation.MajorStart(anchorBounds);
                 var lineMajorSize = _orientation.MajorSize(anchorBounds);
                 var countInLine = 1;
-                int count = 0;
                 bool lineNeedsReposition = false;
 
                 while (_elementManager.IsIndexValidInData(currentIndex) &&
@@ -445,12 +489,19 @@ namespace Avalonia.Layout
 
                 _elementManager.DiscardElementsOutsideWindow(direction == GenerateDirection.Forward, currentIndex);
             }
+
+                layoutId,
+                measuredCount,
+                _elementManager.GetRealizedElementCount(),
+                isWrapping,
+                disableVirtualization);
         }
 
         private void MakeAnchor(
             VirtualizingLayoutContext context,
             int index,
-            Size availableSize)
+            Size availableSize,
+            string? layoutId)
         {
             _elementManager.ClearRealizedRange();
             // FlowLayout requires that the anchor is the first element in the row.
@@ -508,6 +559,24 @@ namespace Avalonia.Layout
             }
 
             return shouldContinue;
+        }
+
+        private bool IsRealizationWindowJumped()
+        {
+            if (!_hasValidRealizationRect)
+            {
+                return false;
+            }
+
+            var realizationRect = RealizationRect;
+            if (!realizationRect.Intersects(_lastRealizationRect))
+            {
+                return true;
+            }
+
+            var majorDelta = Math.Abs(_orientation.MajorStart(realizationRect) - _orientation.MajorStart(_lastRealizationRect));
+            var majorSize = Math.Max(_orientation.MajorSize(realizationRect), _orientation.MajorSize(_lastRealizationRect));
+            return majorSize > 0 && majorDelta > majorSize * 0.5;
         }
 
         private Rect EstimateExtent(Size availableSize, string? layoutId)
@@ -723,7 +792,12 @@ namespace Avalonia.Layout
         {
             if (IsVirtualizingContext)
             {
-                _context!.LayoutOrigin = new Point(_lastExtent.X, _lastExtent.Y);
+                var origin = new Point(_lastExtent.X, _lastExtent.Y);
+                var current = _context!.LayoutOrigin;
+                if (Math.Abs(current.X - origin.X) > 1 || Math.Abs(current.Y - origin.Y) > 1)
+                {
+                    _context.LayoutOrigin = origin;
+                }
             }
         }
 
@@ -735,6 +809,18 @@ namespace Avalonia.Layout
             }
 
             return null;
+        }
+
+        public bool TryGetLayoutBoundsForDataIndex(int dataIndex, out Rect bounds)
+        {
+            if (_elementManager.IsDataIndexRealized(dataIndex))
+            {
+                bounds = _elementManager.GetLayoutBoundsForDataIndex(dataIndex);
+                return true;
+            }
+
+            bounds = default;
+            return false;
         }
 
         public bool TryAddElement0(Layoutable element)
