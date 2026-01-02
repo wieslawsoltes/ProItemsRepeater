@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Avalonia.Controls.Samples"
+             x:Class="Avalonia.Controls.Samples.SelectingItemsRepeaterPage"
+             x:DataType="local:SelectingItemsRepeaterPageViewModel">
+  <UserControl.Styles>
+    <Style Selector="SelectingItemsRepeater Border">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border.oddTemplate">
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border.oddTemplate TextBlock">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border.evenTemplate">
+      <Setter Property="Background" Value="Wheat" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border.evenTemplate TextBlock">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:nth-child(5n+3) TextBlock">
+      <Setter Property="Foreground" Value="Red" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:nth-last-child(5n+4) TextBlock">
+      <Setter Property="Foreground" Value="Blue" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:selected">
+      <Setter Property="Background" Value="#2563EB" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:selected TextBlock">
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:pointerover">
+      <Setter Property="Background" Value="#93C5FD" />
+    </Style>
+    <Style Selector="SelectingItemsRepeater Border:pointerover:selected">
+      <Setter Property="Background" Value="#1D4ED8" />
+    </Style>
+  </UserControl.Styles>
+  <UserControl.Resources>
+    <RecyclePool x:Key="SelectionRecyclePool" />
+    <DataTemplate x:Key="odd" x:DataType="local:SelectingItemsRepeaterPageViewModelItem">
+      <Border Classes="oddTemplate"
+              Height="{Binding Height}"
+              Width="{Binding Width}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+        <TextBlock Text="{Binding Text}"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   TextAlignment="Center" />
+      </Border>
+    </DataTemplate>
+    <DataTemplate x:Key="even" x:DataType="local:SelectingItemsRepeaterPageViewModelItem">
+      <Border Classes="evenTemplate"
+              Height="{Binding Height}"
+              Width="{Binding Width}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+        <TextBlock Text="{Binding Text}"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   TextAlignment="Center" />
+      </Border>
+    </DataTemplate>
+    <RecyclingElementFactory x:Key="selectionElementFactory"
+                             RecyclePool="{StaticResource SelectionRecyclePool}"
+                             SelectTemplateKey="OnSelectTemplateKey">
+      <RecyclingElementFactory.Templates>
+        <StaticResource x:Key="odd" ResourceKey="odd" />
+        <StaticResource x:Key="even" ResourceKey="even" />
+      </RecyclingElementFactory.Templates>
+    </RecyclingElementFactory>
+  </UserControl.Resources>
+
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0 0 0 16">
+      <TextBlock Classes="h2">SelectingItemsRepeater adds selection support on top of ItemsRepeater.</TextBlock>
+    </StackPanel>
+    <StackPanel DockPanel.Dock="Right" Margin="8 0" Spacing="4">
+      <TextBlock>Click items to toggle selection. Shift selects a range.</TextBlock>
+      <ComboBox x:Name="layout" SelectedIndex="0" SelectionChanged="LayoutChanged">
+        <ComboBoxItem>Stack - Vertical</ComboBoxItem>
+        <ComboBoxItem>Stack - Horizontal</ComboBoxItem>
+        <ComboBoxItem>NonVirtualizingStack - Vertical</ComboBoxItem>
+        <ComboBoxItem>NonVirtualizingStack - Horizontal</ComboBoxItem>
+        <ComboBoxItem>UniformGrid - Vertical</ComboBoxItem>
+        <ComboBoxItem>UniformGrid - Horizontal</ComboBoxItem>
+        <ComboBoxItem>Wrap - Vertical</ComboBoxItem>
+        <ComboBoxItem>Wrap - Horizontal</ComboBoxItem>
+      </ComboBox>
+      <Button Command="{Binding AddItem}">Add Item</Button>
+      <Button Command="{Binding RemoveItem}">Remove Item</Button>
+      <Button Command="{Binding RandomizeHeights}">Randomize Heights</Button>
+      <Button Command="{Binding RandomizeWidths}">Randomize Widths</Button>
+      <Button Command="{Binding ResetItems}">Reset items</Button>
+      <Button x:Name="scrollToLast">Scroll to Last</Button>
+      <Button x:Name="scrollToRandom">Scroll to Random</Button>
+      <Button x:Name="scrollToSelected">Scroll to Selected</Button>
+    </StackPanel>
+    <Border BorderThickness="1" BorderBrush="{DynamicResource CatalogBaseMediumColor}" Margin="0 0 0 16">
+      <ScrollViewer Name="scroller"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+        <SelectingItemsRepeater Name="selectingRepeater" Background="Transparent" ItemsSource="{Binding Items}" SelectionMode="Multiple"
+                                ItemTemplate="{StaticResource selectionElementFactory}"/>
+      </ScrollViewer>
+    </Border>
+  </DockPanel>
+</UserControl>
