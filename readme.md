@@ -1,4 +1,7 @@
+[![Build](https://github.com/wieslawsoltes/ProItemsRepeater/actions/workflows/build.yml/badge.svg)](https://github.com/wieslawsoltes/ProItemsRepeater/actions/workflows/build.yml)
+
 [![NuGet](https://img.shields.io/nuget/v/ProItemsRepeater.svg)](https://www.nuget.org/packages/ProItemsRepeater/)
+
 #  `ProItemsRepeater` - ItemsRepeater control for Avalonia
 
 ## Introduction
