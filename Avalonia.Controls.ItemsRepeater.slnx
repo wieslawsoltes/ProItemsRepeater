@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/Avalonia.Controls.ItemsRepeater.Samples/Avalonia.Controls.ItemsRepeater.Samples.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE-AVALONIA" />
+    <File Path="licence.md" />
+    <File Path="NuGet.config" />
+    <File Path="readme.md" />
+  </Folder>
+  <Folder Name="/Solution Items/build/">
+    <File Path=".github/workflows/ci.yml" />
+    <File Path="build/avalonia.snk" />
+    <File Path="build/NetAnalyzers.props" />
+    <File Path="build/NullableEnable.props" />
+    <File Path="build/SharedVersion.props" />
+    <File Path="build/SourceLink.props" />
+    <File Path="build/TrimmingEnable.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Avalonia.Controls.ItemsRepeater/Avalonia.Controls.ItemsRepeater.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Avalonia.Controls.ItemsRepeater.UnitTests/Avalonia.Controls.ItemsRepeater.UnitTests.csproj" />
+  </Folder>
+</Solution>
