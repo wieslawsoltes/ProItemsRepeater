@@ -48,7 +48,7 @@ namespace Avalonia.Controls
         /// Defines the <see cref="Layout"/> property.
         /// </summary>
         public static readonly StyledProperty<AttachedLayout?> LayoutProperty =
-            AvaloniaProperty.Register<ItemsRepeater, AttachedLayout?>(nameof(Layout), new StackLayout());
+            AvaloniaProperty.Register<ItemsRepeater, AttachedLayout?>(nameof(Layout), null);
 
         /// <summary>
         /// Defines the <see cref="VerticalCacheLength"/> property.
@@ -91,7 +91,7 @@ namespace Avalonia.Controls
             _viewManager = new ViewManager(this);
             _viewportManager = new ViewportManager(this);
             KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Once);
-            OnLayoutChanged(null, Layout);
+            SetCurrentValue(LayoutProperty, new StackLayout());
         }
 
         static ItemsRepeater()
