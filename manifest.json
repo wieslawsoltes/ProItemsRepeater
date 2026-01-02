@@ -457,6 +457,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/diagnostics-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/diagnostics-internals.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/diagnostics.md",
       "output": {
         ".html": {
@@ -467,10 +477,30 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/element-factories.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/element-factories.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/element-lifecycle.md",
       "output": {
         ".html": {
           "relative_path": "articles/element-lifecycle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/focus-and-navigation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/focus-and-navigation.html"
         }
       },
       "version": ""
@@ -497,10 +527,80 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/item-template-resolution.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/item-template-resolution.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/items-source.md",
       "output": {
         ".html": {
           "relative_path": "articles/items-source.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/keyed-items-and-resets.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/keyed-items-and-resets.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layout-architecture-nonvirtualizingstacklayout.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layout-architecture-nonvirtualizingstacklayout.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layout-architecture-stacklayout.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layout-architecture-stacklayout.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layout-architecture-uniformgridlayout.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layout-architecture-uniformgridlayout.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layout-architecture-wraplayout.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layout-architecture-wraplayout.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/layout-infrastructure.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/layout-infrastructure.html"
         }
       },
       "version": ""
@@ -547,10 +647,40 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/recycling-pools-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/recycling-pools-internals.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/samples.md",
       "output": {
         ".html": {
           "relative_path": "articles/samples.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/scrolling-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/scrolling-internals.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/selecting-itemsrepeater-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/selecting-itemsrepeater-internals.html"
         }
       },
       "version": ""
@@ -584,6 +714,46 @@
         },
         ".json": {
           "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/view-manager-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/view-manager-internals.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/viewportmanager-anchoring-internals.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/viewportmanager-anchoring-internals.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/virtualization-algorithms.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/virtualization-algorithms.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/virtualization-prefix-sums.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/virtualization-prefix-sums.html"
         }
       },
       "version": ""

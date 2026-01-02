@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>ViewManager and Element Ownership Internals | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="ViewManager and Element Ownership Internals | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/view-manager-internals.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="viewmanager-and-element-ownership-internals">ViewManager and Element Ownership Internals</h1>
+
+<p>This article documents how <code>ItemsRepeater</code> realizes, clears, and reuses elements through <code>ViewManager</code>, and how ownership is tracked via <code>VirtualizationInfo</code>. It complements <code>element-lifecycle.md</code> with lower-level behavior.</p>
+<h2 id="responsibilities">Responsibilities</h2>
+<p><code>ViewManager</code> is responsible for:</p>
+<ul>
+<li>Realizing elements for a requested index.</li>
+<li>Clearing elements and transferring ownership to pools.</li>
+<li>Tracking realized index ranges for fast lookup.</li>
+<li>Managing pinning (focus and manual pinning).</li>
+<li>Handling stable reset flows with unique IDs.</li>
+</ul>
+<p><code>VirtualizationInfo</code> is the per-element state that records ownership, index, and pin state.</p>
+<h2 id="ownership-model-virtualizationinfo">Ownership model (VirtualizationInfo)</h2>
+<p>Each realized element has an owner state:</p>
+<ul>
+<li><code>ElementFactory</code>: element is owned by the template factory (not realized by layout).</li>
+<li><code>Layout</code>: element is realized and held by the layout.</li>
+<li><code>PinnedPool</code>: element is cleared but pinned (kept alive).</li>
+<li><code>UniqueIdResetPool</code>: element is kept across a stable reset when unique IDs are available.</li>
+<li><code>Animator</code>: reserved for animated remove paths (not actively used in this repo).</li>
+</ul>
+<p>Ownership transitions are explicit in <code>VirtualizationInfo</code> (e.g., <code>MoveOwnershipToLayoutFromElementFactory</code>).</p>
+<h2 id="realization-pipeline">Realization pipeline</h2>
+<p><code>ViewManager.GetElement(index, forceCreate, suppressAutoRecycle)</code> resolves elements in priority order:</p>
+<ol>
+<li><strong>Already held by layout</strong>: return a realized child at that index if available.</li>
+<li><strong>Made anchor</strong>: if a bring-into-view anchor was created, reuse it.</li>
+<li><strong>UniqueId reset pool</strong>: reuse an element from <code>UniqueIdElementPool</code> when a stable reset is pending.</li>
+<li><strong>Pinned pool</strong>: reuse a pinned element with matching index.</li>
+<li><strong>Element factory</strong>: create or recycle via <code>ItemTemplateShim</code> (or default template).</li>
+</ol>
+<p>After obtaining an element:</p>
+<ul>
+<li><code>AutoRecycleCandidate</code> is set unless <code>suppressAutoRecycle</code> is requested.</li>
+<li><code>KeepAlive</code> is set when auto-recycle is enabled so the layout can keep it for the pass.</li>
+</ul>
+<h2 id="element-factory-path-and-datacontext-rules">Element factory path and DataContext rules</h2>
+<p><code>GetElementFromElementFactory</code> handles the template pipeline and DataContext semantics:</p>
+<ol>
+<li>If no template is provided and the data item is a <code>Control</code>, it is returned directly.</li>
+<li>Otherwise, an <code>IElementFactory</code> is used to get an element.</li>
+<li>If the element is not the data item, the DataContext is set to the data and <code>MustClearDataContext</code> is set.</li>
+</ol>
+<p>On clear, <code>MustClearDataContext</code> causes the DataContext to be cleared to avoid leaks when the repeater set it.</p>
+<h2 id="clearing-pipeline">Clearing pipeline</h2>
+<p><code>ViewManager.ClearElement(element, isClearedDueToCollectionChange)</code> routes the element to the correct pool:</p>
+<ol>
+<li><strong>UniqueId reset pool</strong> (if stable reset pending):
+<ul>
+<li>Ownership moves to <code>UniqueIdResetPool</code>.</li>
+</ul>
+</li>
+<li><strong>Pinned pool</strong> (if pinned and not cleared due to a collection change):
+<ul>
+<li>Ownership moves to <code>PinnedPool</code>.</li>
+</ul>
+</li>
+<li><strong>Element factory</strong> (default):
+<ul>
+<li><code>OnElementClearing</code> is raised.</li>
+<li>Element is recycled via <code>ItemTemplateShim</code> or removed from <code>Children</code>.</li>
+<li>DataContext is cleared if <code>MustClearDataContext</code> is set.</li>
+</ul>
+</li>
+</ol>
+<p>Pinned elements are never kept when the clear is due to a Remove/Replace/Reset; they are forced back to the factory.</p>
+<h2 id="pinning-and-focus">Pinning and focus</h2>
+<p>Pinning keeps elements alive across layout passes. <code>ViewManager.UpdatePin</code>:</p>
+<ul>
+<li>Walks up the visual tree to find the owning <code>ItemsRepeater</code>.</li>
+<li>Calls <code>VirtualizationInfo.AddPin</code> or <code>RemovePin</code>.</li>
+<li>If the pin count reaches zero, the repeater invalidates measure so the element can be cleared.</li>
+</ul>
+<p>Focus tracking:</p>
+<ul>
+<li><code>ViewManager</code> listens to <code>GotFocus</code>/<code>LostFocus</code>.</li>
+<li>The focused element is pinned; the previous focus is unpinned.</li>
+<li>If the focused element is cleared, a focus candidate is selected from adjacent realized elements.</li>
+</ul>
+<h2 id="stable-reset-with-unique-ids">Stable reset with unique IDs</h2>
+<p>If the data source supports <code>ItemsSourceView.HasKeyIndexMapping</code>:</p>
+<ol>
+<li>On <code>Reset</code>, <code>_isDataSourceStableResetPending</code> is set.</li>
+<li>Auto-recycle candidates are cleared into <code>UniqueIdElementPool</code>.</li>
+<li>On the next arrange (<code>OnOwnerArranged</code>), elements in the pool are flushed and recycled.</li>
+<li>If an element is requested while reset is pending, <code>GetElementFromUniqueIdResetPool</code> can reuse it by key.</li>
+</ol>
+<p>This reduces churn across resets by reusing containers by unique ID.</p>
+<h2 id="realized-range-caching">Realized range caching</h2>
+<p><code>ViewManager</code> keeps <code>_firstRealizedElementIndexHeldByLayout</code> and <code>_lastRealizedElementIndexHeldByLayout</code> to avoid scanning children on every query. These values are:</p>
+<ul>
+<li>Updated lazily when a realized element is queried.</li>
+<li>Invalidated on collection changes.</li>
+<li>Updated when elements are realized or cleared.</li>
+</ul>
+<h2 id="interactions-with-itemsrepeater">Interactions with ItemsRepeater</h2>
+<p><code>ItemsRepeater</code> calls into <code>ViewManager</code>:</p>
+<ul>
+<li><code>GetElementImpl</code> -&gt; <code>ViewManager.GetElement</code>.</li>
+<li><code>ClearElementImpl</code> -&gt; <code>ViewManager.ClearElement</code>.</li>
+<li><code>OnElementPrepared</code>, <code>OnElementClearing</code>, <code>OnElementIndexChanged</code> are raised by <code>ItemsRepeater</code> to external listeners.</li>
+</ul>
+<p><code>ViewManager</code> is the low-level engine behind the public lifecycle events.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/view-manager-internals.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

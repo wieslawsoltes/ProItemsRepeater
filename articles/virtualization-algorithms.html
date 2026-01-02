@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Virtualization Algorithms | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Virtualization Algorithms | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization-algorithms.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="virtualization-algorithms">Virtualization Algorithms</h1>
+
+<p>This article explains the virtualization algorithms used by <code>ItemsRepeater</code> and its built-in layouts. It focuses on how elements are realized, positioned, recycled, and how anchor selection works during scrolling and collection changes.</p>
+<p>If you only need usage guidance, see <code>virtualization.md</code> and <code>layouts.md</code>.
+For a deep dive into prefix sums used by <code>StackLayout</code>, see <code>virtualization-prefix-sums.md</code>.</p>
+<h2 id="overview">Overview</h2>
+<p><code>ItemsRepeater</code> delegates virtualization to layouts that derive from <code>VirtualizingLayout</code>. The built-in virtualizing layouts are:</p>
+<ul>
+<li><code>StackLayout</code></li>
+<li><code>WrapLayout</code></li>
+<li><code>UniformGridLayout</code></li>
+</ul>
+<p>All three share a common engine, <code>FlowLayoutAlgorithm</code>, and then customize its behavior via <code>IFlowLayoutAlgorithmDelegates</code>. The algorithm consumes a <code>VirtualizingLayoutContext</code>, which provides:</p>
+<ul>
+<li><code>RealizationRect</code>: the viewport plus cache buffer.</li>
+<li><code>RecommendedAnchorIndex</code>: a suggested anchor for stable scrolling.</li>
+<li><code>GetOrCreateElementAt</code> / <code>RecycleElement</code>: element lifecycle APIs.</li>
+<li><code>LayoutOrigin</code>: estimated content origin for large lists.</li>
+</ul>
+<p>Non-virtualizing layouts (such as <code>NonVirtualizingStackLayout</code>) bypass these algorithms and measure all items.</p>
+<h2 id="core-building-blocks">Core building blocks</h2>
+<h3 id="virtualizinglayoutcontext">VirtualizingLayoutContext</h3>
+<p>The context is the contract between <code>ItemsRepeater</code> and the layout. The layout:</p>
+<ul>
+<li>Requests elements in the realization window.</li>
+<li>Recycles elements that fall outside the window.</li>
+<li>Uses <code>LayoutOrigin</code> to correct estimated content offsets as more data is measured.</li>
+</ul>
+<h3 id="flowlayoutalgorithm">FlowLayoutAlgorithm</h3>
+<p><code>FlowLayoutAlgorithm</code> is the shared engine for linear and wrapping layouts. It is responsible for:</p>
+<ul>
+<li>Choosing an anchor index and anchor position.</li>
+<li>Generating elements forward and backward from the anchor.</li>
+<li>Computing layout bounds for each realized element.</li>
+<li>Discarding realized elements that are outside the realization window.</li>
+<li>Estimating the total extent for scrolling.</li>
+<li>Arranging realized elements with optional line alignment.</li>
+</ul>
+<h3 id="elementmanager">ElementManager</h3>
+<p><code>ElementManager</code> tracks the realized range and layout bounds:</p>
+<ul>
+<li>Maintains a contiguous realized range mapped to data indices.</li>
+<li>Stores per-element layout bounds.</li>
+<li>Creates elements on demand and recycles them when they leave the window.</li>
+<li>Uses sentinel null entries for replace operations to preserve the range without creating containers.</li>
+<li>Discards items outside the realization window, while tolerating one extra element beyond the edge to keep anchors stable.</li>
+</ul>
+<h2 id="flowlayoutalgorithm-pipeline">FlowLayoutAlgorithm pipeline</h2>
+<p>The algorithm runs during measure and arrange:</p>
+<ol>
+<li><p><strong>Anchor selection</strong></p>
+<ul>
+<li>If the context is non-virtualizing, use index 0.</li>
+<li>Otherwise, try the <code>RecommendedAnchorIndex</code> if it is realized and inside the realization window.</li>
+<li>If the realization window has &quot;jumped&quot; (no overlap, or a large delta), ignore suggested anchors and pick one based on the realization window.</li>
+<li>For wrapping layouts, re-evaluate the anchor if the minor size or spacing changes, or if a collection change occurred.</li>
+</ul>
+</li>
+<li><p><strong>Anchor realization</strong></p>
+<ul>
+<li>If the chosen anchor is not realized, realize it (and possibly a short range leading to it).</li>
+<li>If the realized range is disconnected from the new window, discard all realized elements and start over from the new anchor.</li>
+</ul>
+</li>
+<li><p><strong>Forward and backward generation</strong></p>
+<ul>
+<li>Generate forward from the anchor until the window is covered.</li>
+<li>Generate backward to cover the window in the opposite direction.</li>
+<li>Each generated element is measured and assigned layout bounds.</li>
+<li>For wrapping layouts, line breaks are controlled by <code>Algorithm_ShouldBreakLine</code>.</li>
+<li>Generation stops once elements fall outside the realization window, unless virtualization is disabled.</li>
+</ul>
+</li>
+<li><p><strong>Reflow (wrapping only)</strong></p>
+<ul>
+<li>If the first realized element is not aligned to the minor start, reflow from index 0 to keep lines aligned.</li>
+</ul>
+</li>
+<li><p><strong>Extent estimation</strong></p>
+<ul>
+<li>The layout provides <code>Algorithm_GetExtent</code>, which combines realized bounds and estimates to compute the scroll extent.</li>
+<li><code>LayoutOrigin</code> is adjusted to keep the extent stable as estimates improve.</li>
+</ul>
+</li>
+<li><p><strong>Arrange and line alignment</strong></p>
+<ul>
+<li>Elements are arranged line-by-line.</li>
+<li>Line alignment (<code>Start</code>, <code>Center</code>, <code>End</code>, <code>SpaceBetween</code>, <code>SpaceAround</code>, <code>SpaceEvenly</code>) is applied for wrapping layouts.</li>
+</ul>
+</li>
+</ol>
+<h2 id="layout-specific-behavior">Layout-specific behavior</h2>
+<h3 id="stacklayout">StackLayout</h3>
+<p><code>StackLayout</code> uses <code>FlowLayoutAlgorithm</code> in non-wrapping mode:</p>
+<ul>
+<li><code>Algorithm_ShouldBreakLine</code> always returns true, so each item is its own line.</li>
+<li>The anchor is chosen using estimated offsets based on measured item sizes.</li>
+<li><code>StackLayoutState</code> caches measured sizes and uses prefix sums (Fenwick trees) to estimate offsets and total extent.</li>
+<li><code>DisableVirtualization</code> forces the algorithm to generate all elements, even outside the realization window.</li>
+</ul>
+<p>For the prefix sum and Fenwick tree details, see <code>virtualization-prefix-sums.md</code>.</p>
+<h3 id="uniformgridlayout">UniformGridLayout</h3>
+<p><code>UniformGridLayout</code> uses <code>FlowLayoutAlgorithm</code> in wrapping mode but with fixed cell sizes:</p>
+<ul>
+<li><code>UniformGridLayoutState</code> determines <code>EffectiveItemWidth</code> and <code>EffectiveItemHeight</code>.
+<ul>
+<li>If <code>MinItemWidth</code> / <code>MinItemHeight</code> are NaN, the first item is measured and cached.</li>
+<li><code>ItemsStretch</code> can expand the effective size to fill the available space.</li>
+</ul>
+</li>
+<li>Items per line are computed from available size, min spacing, and <code>MaximumRowsOrColumns</code>.</li>
+<li>The anchor is chosen by row math: the first index in the row that intersects the realization window.</li>
+<li>Line alignment is driven by <code>ItemsJustification</code>, which maps directly to the algorithm line alignment options.</li>
+</ul>
+<h3 id="wraplayout">WrapLayout</h3>
+<p><code>WrapLayout</code> uses <code>FlowLayoutAlgorithm</code> with variable item sizes:</p>
+<ul>
+<li><code>WrapLayoutState</code> records item sizes and caches line stats (start index, item count, position, size).</li>
+<li>Anchor selection favors cached lines near the viewport for stability and performance.</li>
+<li>If cached lines are not available, the layout estimates items per line and line advance using average item sizes.</li>
+<li><code>Algorithm_OnLineArranged</code> feeds line metrics back into the cache to improve subsequent anchors.</li>
+</ul>
+<h2 id="collection-changes-and-anchors">Collection changes and anchors</h2>
+<p>Collection changes can invalidate anchors and cached metrics:</p>
+<ul>
+<li><code>ElementManager</code> updates realized ranges and uses sentinel entries for replace operations to avoid full re-realization.</li>
+<li><code>FlowLayoutAlgorithm</code> marks a collection change as pending, which forces anchor re-evaluation on the next measure.</li>
+<li>For wrapping layouts, this also triggers column re-evaluation to prevent anchors from landing in the wrong line.</li>
+</ul>
+<h2 id="non-virtualizing-layouts">Non-virtualizing layouts</h2>
+<p><code>NonVirtualizingStackLayout</code> is not part of the virtualization algorithm pipeline. It measures and arranges all items every time and should be used only when virtualization must be disabled.</p>
+<h2 id="practical-guidance">Practical guidance</h2>
+<ul>
+<li>Use <code>StackLayout</code> for linear lists and <code>UniformGridLayout</code> for grids with predictable cell sizes.</li>
+<li>Use <code>WrapLayout</code> when item sizes vary and the layout must flow to new lines.</li>
+<li>Keep virtualization enabled unless you explicitly need all elements realized.</li>
+<li>For debugging layout behavior, compare the realized range to the realization window and check anchor selection logic.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization-algorithms.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Layout Infrastructure | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Layout Infrastructure | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-infrastructure.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="layout-infrastructure">Layout Infrastructure</h1>
+
+<p>This article describes the layout infrastructure that connects <code>ItemsRepeater</code> to its layouts. It focuses on how layout contexts, state, and lifecycle callbacks are wired, and how virtualizing and non-virtualizing layouts are integrated through a common API.</p>
+<p>If you want algorithm details, see <code>virtualization-algorithms.md</code>. If you want usage guidance, see <code>layouts.md</code>.</p>
+<h2 id="key-roles-and-types">Key roles and types</h2>
+<ul>
+<li><code>ItemsRepeater</code>: owns the layout instance, provides layout context, and drives Measure/Arrange.</li>
+<li><code>AttachedLayout</code>: common base for all layouts; routes Measure/Arrange and Initialize/Uninitialize based on layout type.</li>
+<li><code>VirtualizingLayout</code> / <code>NonVirtualizingLayout</code>: specialization for virtualizing vs non-virtualizing behaviors.</li>
+<li><code>LayoutContext</code>: carries <code>LayoutState</code> for per-container layout state.</li>
+<li><code>VirtualizingLayoutContext</code> / <code>NonVirtualizingLayoutContext</code>: context flavors with virtualization APIs vs full-children access.</li>
+<li><code>RepeaterLayoutContext</code>: <code>ItemsRepeater</code>'s concrete <code>VirtualizingLayoutContext</code> implementation.</li>
+<li>Context adapters:
+<ul>
+<li><code>LayoutContextAdapter</code> (non-virtualizing -&gt; virtualizing with infinite realization rect).</li>
+<li><code>VirtualLayoutContextAdapter</code> (virtualizing -&gt; non-virtualizing by exposing <code>Children</code> through <code>GetOrCreateElementAt</code>).</li>
+</ul>
+</li>
+</ul>
+<h2 id="layout-lifecycle-and-state">Layout lifecycle and state</h2>
+<h3 id="layout-assignment-and-initialization">Layout assignment and initialization</h3>
+<p>When <code>ItemsRepeater.Layout</code> changes, the control:</p>
+<ol>
+<li>Calls <code>UninitializeForContext</code> on the old layout.</li>
+<li>Unsubscribes from its layout invalidation weak events.</li>
+<li>Clears realized elements and resets <code>LayoutState</code>.</li>
+<li>Calls <code>InitializeForContext</code> on the new layout.</li>
+<li>Subscribes to new layout invalidation weak events.</li>
+</ol>
+<p><code>LayoutState</code> is stored on the context, not on the layout itself. This allows a single layout instance to be reused across multiple repeaters without sharing state.</p>
+<h3 id="layout-invalidation">Layout invalidation</h3>
+<p><code>AttachedLayout</code> exposes protected <code>InvalidateMeasure()</code> and <code>InvalidateArrange()</code>. Layouts call these in response to property changes or internal state updates.</p>
+<p><code>ItemsRepeater</code> listens to the weak events and forwards them to its own <code>InvalidateMeasure()</code> / <code>InvalidateArrange()</code>, keeping layout invalidation centralized.</p>
+<h2 id="measurearrange-integration">Measure/Arrange integration</h2>
+<h3 id="measure-pass-virtualizing">Measure pass (virtualizing)</h3>
+<p>High-level call flow:</p>
+<ol>
+<li><code>ItemsRepeater.MeasureOverride</code> calls <code>ViewportManager.OnOwnerMeasuring()</code>.</li>
+<li><code>ItemsRepeater</code> calls <code>AttachedLayout.Measure(context, availableSize)</code>.</li>
+<li><code>AttachedLayout</code> detects layout type and calls:
+<ul>
+<li><code>VirtualizingLayout.MeasureOverride(...)</code> or</li>
+<li><code>NonVirtualizingLayout.MeasureOverride(...)</code>.</li>
+</ul>
+</li>
+<li>Virtualizing layouts use <code>context.RealizationRect</code> to choose which items to realize.</li>
+<li><code>ItemsRepeater</code> records the resulting extent using <code>LayoutOrigin</code> and the returned size.</li>
+<li><code>ViewportManager.SetLayoutExtent(...)</code> receives the extent for scroll/viewport coordination.</li>
+</ol>
+<p>Key infrastructure points:</p>
+<ul>
+<li><code>RepeaterLayoutContext.RealizationRect</code> is derived from <code>ViewportManager</code>'s realization window.</li>
+<li><code>LayoutOrigin</code> allows the layout to adjust estimated content origin as measurements improve.</li>
+</ul>
+<h3 id="arrange-pass-virtualizing">Arrange pass (virtualizing)</h3>
+<p>High-level call flow:</p>
+<ol>
+<li><code>ItemsRepeater.ArrangeOverride</code> calls <code>AttachedLayout.Arrange(...)</code>.</li>
+<li>The layout arranges realized elements.</li>
+<li><code>ItemsRepeater</code> arranges recycled elements off-screen and registers realized elements as anchor candidates.</li>
+<li><code>ViewportManager.OnOwnerArranged()</code> updates cache growth and anchoring behavior.</li>
+</ol>
+<h3 id="items-source-changes">Items source changes</h3>
+<p><code>ItemsRepeater</code> forwards collection changes to virtualizing layouts:</p>
+<ol>
+<li>The view manager updates realized element bookkeeping.</li>
+<li>If the layout is virtualizing, <code>VirtualizingLayout.OnItemsChanged(...)</code> is called.</li>
+<li>Otherwise, the repeater invalidates measure for non-virtualizing layouts.</li>
+</ol>
+<p>Virtualizing layouts typically update caches and invalidate measure; non-virtualizing layouts usually invalidate measure directly.</p>
+<h2 id="context-adaptation">Context adaptation</h2>
+<p><code>AttachedLayout</code> accepts a base <code>LayoutContext</code> and adapts it if the layout type does not match the context type.</p>
+<h3 id="virtualizinglayout-with-a-non-virtualizing-context">VirtualizingLayout with a non-virtualizing context</h3>
+<p>If a virtualizing layout is hosted on a <code>NonVirtualizingLayoutContext</code>, <code>AttachedLayout</code> wraps it with <code>LayoutContextAdapter</code>:</p>
+<ul>
+<li><code>RealizationRect</code> becomes infinite.</li>
+<li><code>LayoutOrigin</code> is fixed at <code>(0,0)</code>.</li>
+<li><code>GetOrCreateElementAt</code> maps directly to the non-virtualizing children.</li>
+</ul>
+<p>This allows a virtualizing layout to operate in a non-virtualized host without special-case logic.</p>
+<h3 id="nonvirtualizinglayout-with-a-virtualizing-context">NonVirtualizingLayout with a virtualizing context</h3>
+<p>If a non-virtualizing layout is hosted on a <code>VirtualizingLayoutContext</code>, <code>AttachedLayout</code> wraps it with <code>VirtualLayoutContextAdapter</code>:</p>
+<ul>
+<li><code>Children</code> is exposed as a virtual list backed by <code>GetOrCreateElementAt</code>.</li>
+<li>Iterating <code>Children</code> forces realization of every item.</li>
+<li><code>LayoutState</code> is still stored on the original virtualizing context.</li>
+</ul>
+<p>This is the path used by <code>ItemsRepeater</code> when <code>Layout</code> is non-virtualizing, because its native context is virtualizing.</p>
+<h2 id="repeaterlayoutcontext-specifics">RepeaterLayoutContext specifics</h2>
+<p><code>RepeaterLayoutContext</code> is the concrete <code>VirtualizingLayoutContext</code> implementation used by <code>ItemsRepeater</code>. It supplies:</p>
+<ul>
+<li><code>RealizationRect</code>: from <code>ItemsRepeater.RealizationWindow</code>, which is computed by <code>ViewportManager</code>.</li>
+<li><code>RecommendedAnchorIndex</code>: derived from the current scroll anchor (<code>SuggestedAnchor</code>).</li>
+<li><code>LayoutState</code>: stored on the repeater instance.</li>
+<li><code>LayoutOrigin</code>: forwarded to and from <code>ItemsRepeater.LayoutOrigin</code>.</li>
+<li>Element lifecycle methods that delegate to <code>ItemsRepeater</code> (realize, recycle, index lookup).</li>
+</ul>
+<p>This context is the primary bridge between layout algorithms and the repeater control.</p>
+<h2 id="where-virtualization-plugs-in">Where virtualization plugs in</h2>
+<p>Layout infrastructure does not implement virtualization itself. Instead, it provides a stable contract:</p>
+<ul>
+<li>Virtualizing layouts request elements by index (<code>GetOrCreateElementAt</code>).</li>
+<li>Layouts decide which items to realize based on <code>RealizationRect</code>.</li>
+<li>Layouts recycle elements when they fall outside that window.</li>
+<li>Layouts report size and origin estimates for scrolling.</li>
+</ul>
+<p>The actual realization strategy lives in layout code and shared helpers like <code>FlowLayoutAlgorithm</code> and <code>ElementManager</code>.</p>
+<h2 id="summary-call-sequence">Summary call sequence</h2>
+<p>The following summarizes a typical virtualizing pass:</p>
+<ol>
+<li><code>ItemsRepeater.MeasureOverride</code> -&gt; <code>AttachedLayout.Measure(...)</code>.</li>
+<li><code>AttachedLayout</code> dispatches to <code>VirtualizingLayout.MeasureOverride</code>.</li>
+<li>Layout uses <code>context.RealizationRect</code> to realize items and returns desired size.</li>
+<li><code>ItemsRepeater</code> updates extent and informs <code>ViewportManager</code>.</li>
+<li><code>ItemsRepeater.ArrangeOverride</code> -&gt; <code>AttachedLayout.Arrange(...)</code>.</li>
+<li>Layout arranges realized items; repeater registers anchors and updates viewport state.</li>
+</ol>
+<p>This separation keeps layout algorithms focused on geometry and realization, while <code>ItemsRepeater</code> handles viewport integration and element lifecycle.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-infrastructure.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

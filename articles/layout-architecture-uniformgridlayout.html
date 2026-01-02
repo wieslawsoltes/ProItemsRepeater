@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>UniformGridLayout Architecture | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="UniformGridLayout Architecture | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-uniformgridlayout.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="uniformgridlayout-architecture">UniformGridLayout Architecture</h1>
+
+<p>This article describes the internal layout pipeline for <code>UniformGridLayout</code> in <code>ItemsRepeater</code>. It focuses on fixed cell sizing, row-based anchoring, and stretch/justification behavior.</p>
+<h2 id="components-and-responsibilities">Components and responsibilities</h2>
+<ul>
+<li><code>UniformGridLayout</code> (<code>VirtualizingLayout</code>, <code>IFlowLayoutAlgorithmDelegates</code>)
+<ul>
+<li>Defines fixed cell sizing rules and justification.</li>
+<li>Supplies algorithm callbacks for measurement, anchoring, and extent estimation.</li>
+</ul>
+</li>
+<li><code>UniformGridLayoutState</code>
+<ul>
+<li>Stores the shared <code>FlowLayoutAlgorithm</code>.</li>
+<li>Computes <code>EffectiveItemWidth</code> / <code>EffectiveItemHeight</code>.</li>
+<li>Manages cached ownership of the first element when measuring defaults.</li>
+</ul>
+</li>
+<li><code>FlowLayoutAlgorithm</code>
+<ul>
+<li>Implements realization, anchoring, generation, and arranging.</li>
+</ul>
+</li>
+</ul>
+<h2 id="initialization-sequence">Initialization sequence</h2>
+<ol>
+<li><code>UniformGridLayout.InitializeForContextCore</code> ensures a <code>UniformGridLayoutState</code>.</li>
+<li><code>UniformGridLayoutState.InitializeForContext</code> initializes <code>FlowLayoutAlgorithm</code> with callbacks.</li>
+</ol>
+<h2 id="measure-pipeline-step-by-step">Measure pipeline (step-by-step)</h2>
+<ol>
+<li>Determine effective item size:
+<ul>
+<li>If <code>MinItemWidth</code> / <code>MinItemHeight</code> are NaN, the first item is measured to derive defaults.</li>
+<li><code>UniformGridLayoutState</code> may cache element <code>0</code> if not already realized by the algorithm.</li>
+<li><code>ItemsStretch</code> expands the minor axis, optionally adjusting the major axis proportionally.</li>
+</ul>
+</li>
+<li>Call <code>FlowLayoutAlgorithm.Measure(...)</code> with:
+<ul>
+<li><code>isWrapping = true</code></li>
+<li><code>minItemSpacing = MinItemSpacing</code> (row/column spacing depends on orientation)</li>
+<li><code>lineSpacing = LineSpacing</code></li>
+<li><code>maxItemsPerLine = MaximumRowsOrColumns</code></li>
+<li><code>disableVirtualization = false</code></li>
+</ul>
+</li>
+<li>The delegate callbacks provide fixed size values:
+<ul>
+<li><code>Algorithm_GetMeasureSize</code> returns the effective width/height.</li>
+<li><code>Algorithm_GetProvisionalArrangeSize</code> returns the same fixed size.</li>
+</ul>
+</li>
+<li>The algorithm generates items forward and backward from the anchor, using uniform cell sizes.</li>
+<li>After measure, <code>EnsureFirstElementOwnership</code> releases any cached element if the algorithm took ownership.</li>
+</ol>
+<h2 id="anchor-selection-strategy">Anchor selection strategy</h2>
+<p>Anchoring is row-based:</p>
+<ul>
+<li><code>Algorithm_GetAnchorForRealizationRect</code> computes:
+<ul>
+<li><code>itemsPerLine</code> from available minor size and effective item size.</li>
+<li>The row index intersecting the realization rect.</li>
+<li>The anchor as the first item in that row.</li>
+</ul>
+</li>
+<li><code>Algorithm_GetAnchorForTargetElement</code>:
+<ul>
+<li>Computes the row for the target index.</li>
+<li>Anchors to the first index in that row.</li>
+</ul>
+</li>
+</ul>
+<p>This provides stable anchors during fast scrolls because item sizes are deterministic.</p>
+<h2 id="extent-estimation">Extent estimation</h2>
+<p><code>Algorithm_GetExtent</code> computes:</p>
+<ul>
+<li><code>itemsPerLine</code> and <code>lineSize</code> from effective item size and spacing.</li>
+<li>Major extent = <code>(itemCount / itemsPerLine) * lineSize - lineSpacing</code>.</li>
+<li>Minor extent:
+<ul>
+<li>Uses available minor size when <code>ItemsStretch = Fill</code>.</li>
+<li>Otherwise uses <code>itemsPerLine * itemSize + spacing</code>.</li>
+</ul>
+</li>
+</ul>
+<p>If realized items exist, the extent origin is aligned with the first realized line.</p>
+<h2 id="arrange-pipeline-step-by-step">Arrange pipeline (step-by-step)</h2>
+<ol>
+<li><code>UniformGridLayout.ArrangeOverride</code> calls <code>FlowLayoutAlgorithm.Arrange(...)</code>.</li>
+<li>Line alignment maps directly from <code>ItemsJustification</code>:
+<ul>
+<li><code>Start</code>, <code>Center</code>, <code>End</code>, <code>SpaceBetween</code>, <code>SpaceAround</code>, <code>SpaceEvenly</code>.</li>
+</ul>
+</li>
+<li>Items are arranged into a fixed grid using the computed effective item size.</li>
+</ol>
+<h2 id="items-source-changes">Items source changes</h2>
+<p><code>UniformGridLayout.OnItemsChangedCore</code>:</p>
+<ol>
+<li>Forwards changes to <code>FlowLayoutAlgorithm.OnItemsSourceChanged(...)</code>.</li>
+<li>Invalidates measure to recompute layout.</li>
+<li>Clears cached element <code>0</code> if the change touches index <code>0</code>.</li>
+</ol>
+<h2 id="orientation-and-scroll-axis">Orientation and scroll axis</h2>
+<p><code>UniformGridLayout</code> maps orientation to scroll axis inversely:</p>
+<ul>
+<li><code>Orientation.Horizontal</code> -&gt; vertical scroll orientation.</li>
+<li><code>Orientation.Vertical</code> -&gt; horizontal scroll orientation.</li>
+</ul>
+<p>This matches grid behavior where rows (or columns) advance orthogonally to the scroll axis.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-uniformgridlayout.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

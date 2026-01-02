@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>WrapLayout Architecture | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="WrapLayout Architecture | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-wraplayout.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="wraplayout-architecture">WrapLayout Architecture</h1>
+
+<p>This article describes the internal layout pipeline for <code>WrapLayout</code> in <code>ItemsRepeater</code>. It focuses on wrapping behavior, line caching, and anchor selection.</p>
+<h2 id="components-and-responsibilities">Components and responsibilities</h2>
+<ul>
+<li><code>WrapLayout</code> (<code>VirtualizingLayout</code>, <code>IFlowLayoutAlgorithmDelegates</code>)
+<ul>
+<li>Defines orientation and row/column spacing.</li>
+<li>Provides wrapping callbacks for <code>FlowLayoutAlgorithm</code>.</li>
+</ul>
+</li>
+<li><code>WrapLayoutState</code>
+<ul>
+<li>Stores the shared <code>FlowLayoutAlgorithm</code>.</li>
+<li>Records per-item size metrics.</li>
+<li>Caches line positions and sizes to accelerate anchor selection.</li>
+</ul>
+</li>
+<li><code>FlowLayoutAlgorithm</code>
+<ul>
+<li>Implements realization, anchoring, generation, and arranging.</li>
+</ul>
+</li>
+</ul>
+<h2 id="initialization-sequence">Initialization sequence</h2>
+<ol>
+<li><code>WrapLayout.InitializeForContextCore</code> ensures a <code>WrapLayoutState</code> is assigned to <code>context.LayoutState</code>.</li>
+<li><code>WrapLayoutState.InitializeForContext</code> initializes <code>FlowLayoutAlgorithm</code> with callbacks.</li>
+</ol>
+<h2 id="measure-pipeline-step-by-step">Measure pipeline (step-by-step)</h2>
+<ol>
+<li>Build <code>UvMeasure</code> values based on <code>Orientation</code>:
+<ul>
+<li><code>U</code> is the primary layout axis (width for horizontal orientation, height for vertical).</li>
+<li><code>V</code> is the secondary axis.</li>
+</ul>
+</li>
+<li>If the available <code>U</code> is infinite, use the realization window's <code>U</code> to stabilize measurements.</li>
+<li>If the algorithm has invalid measures, clear line stats (<code>WrapLayoutState.ClearLineStats()</code>).</li>
+<li>Ensure parameters:
+<ul>
+<li><code>EnsureParameters(Orientation, spacing, availableU)</code> resets caches if orientation, spacing, or available size changes.</li>
+<li><code>EnsureItemCount(context.ItemCount)</code> sizes internal arrays.</li>
+</ul>
+</li>
+<li>Begin measure:
+<ul>
+<li><code>BeginMeasure()</code> clears line stats if the line cache was marked dirty.</li>
+</ul>
+</li>
+<li>Call <code>FlowLayoutAlgorithm.Measure(...)</code> with:
+<ul>
+<li><code>isWrapping = true</code></li>
+<li><code>minItemSpacing = spacing.U</code></li>
+<li><code>lineSpacing = spacing.V</code></li>
+<li><code>maxItemsPerLine = int.MaxValue</code></li>
+<li><code>disableVirtualization = false</code></li>
+</ul>
+</li>
+<li>During generation:
+<ul>
+<li><code>Algorithm_GetProvisionalArrangeSize</code> uses the desired size (items can be variable).</li>
+<li><code>Algorithm_ShouldBreakLine</code> breaks when remaining space is negative.</li>
+<li><code>Algorithm_OnElementMeasured</code> records item sizes into <code>WrapLayoutState</code>.</li>
+</ul>
+</li>
+</ol>
+<h2 id="anchor-selection-strategy">Anchor selection strategy</h2>
+<p><code>WrapLayout</code> uses a tiered strategy:</p>
+<ol>
+<li>If the realization window is still connected, and line cache is valid:
+<ul>
+<li><code>TryGetLineNearViewport</code> or <code>TryGetNearestLine</code> picks a cached line near the viewport.</li>
+</ul>
+</li>
+<li>Otherwise, estimate:
+<ul>
+<li><code>TryGetLineMetrics</code> derives <code>itemsPerLine</code> and <code>lineAdvance</code> from cached averages or average item size.</li>
+<li>The anchor line is chosen by projecting the realization offset onto the estimated line grid.</li>
+</ul>
+</li>
+<li>If a target index is requested (bring-into-view):
+<ul>
+<li><code>GetAnchorForTargetElement</code> finds the first item of the line containing the target.</li>
+</ul>
+</li>
+</ol>
+<p>This keeps anchors stable for both smooth scrolling and large jumps.</p>
+<h2 id="line-cache-and-item-metrics">Line cache and item metrics</h2>
+<p><code>WrapLayoutState</code> records:</p>
+<ul>
+<li>Per-item size metrics (<code>RecordItemSize</code>), including whether sizes are variable.</li>
+<li>Per-line cache entries (<code>UpdateLineCache</code>) with start index, item count, position, and size.</li>
+</ul>
+<p>Line caches are updated during arrange, via <code>Algorithm_OnLineArranged</code>. If measured item sizes change, the cache is marked dirty and cleared on the next measure pass.</p>
+<h2 id="extent-estimation">Extent estimation</h2>
+<p><code>WrapLayout.GetExtent(...)</code> computes:</p>
+<ul>
+<li><code>itemsPerLine</code> and <code>lineAdvance</code> from cached line averages or average item sizes.</li>
+<li><code>lineCount = ceil(itemCount / itemsPerLine)</code>.</li>
+<li>Major extent = <code>lineCount * lineAdvance - lineSpacing</code>.</li>
+<li>Minor extent = available minor size (if finite).</li>
+</ul>
+<p>If line metrics cannot be estimated yet, the extent is empty and will be refined as items are measured.</p>
+<h2 id="arrange-pipeline-step-by-step">Arrange pipeline (step-by-step)</h2>
+<ol>
+<li><code>WrapLayout.ArrangeOverride</code> calls <code>FlowLayoutAlgorithm.Arrange(...)</code> with line alignment <code>Start</code>.</li>
+<li>The algorithm arranges realized items line-by-line.</li>
+<li><code>Algorithm_OnLineArranged</code> feeds line metrics back into <code>WrapLayoutState</code> to improve future anchors.</li>
+</ol>
+<h2 id="items-source-changes">Items source changes</h2>
+<p><code>WrapLayout.OnItemsChangedCore</code>:</p>
+<ol>
+<li>Forwards changes to <code>FlowLayoutAlgorithm.OnItemsSourceChanged(...)</code>.</li>
+<li>Clears line and item statistics.</li>
+<li>Invalidates layout to re-run measure.</li>
+</ol>
+<h2 id="orientation-and-scroll-axis">Orientation and scroll axis</h2>
+<p><code>WrapLayout</code> inverts scroll orientation:</p>
+<ul>
+<li><code>Orientation.Horizontal</code> -&gt; vertical scroll orientation.</li>
+<li><code>Orientation.Vertical</code> -&gt; horizontal scroll orientation.</li>
+</ul>
+<p>This matches the fact that the wrap direction is orthogonal to the scroll axis.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-wraplayout.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

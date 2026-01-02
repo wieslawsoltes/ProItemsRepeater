@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>StackLayout Architecture | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="StackLayout Architecture | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-stacklayout.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="stacklayout-architecture">StackLayout Architecture</h1>
+
+<p>This article describes the internal layout pipeline for <code>StackLayout</code> as used by <code>ItemsRepeater</code>. It assumes familiarity with <code>VirtualizingLayout</code> and <code>FlowLayoutAlgorithm</code>.</p>
+<h2 id="components-and-responsibilities">Components and responsibilities</h2>
+<ul>
+<li><code>StackLayout</code> (<code>VirtualizingLayout</code>, <code>IFlowLayoutAlgorithmDelegates</code>)
+<ul>
+<li>Defines orientation and spacing.</li>
+<li>Supplies algorithm callbacks for measurement, anchoring, and extent estimation.</li>
+</ul>
+</li>
+<li><code>StackLayoutState</code>
+<ul>
+<li>Stores the shared <code>FlowLayoutAlgorithm</code>.</li>
+<li>Tracks measured sizes using a rolling estimation buffer and prefix sums.</li>
+<li>Tracks the maximum minor size to compute the cross-axis extent.</li>
+</ul>
+</li>
+<li><code>FlowLayoutAlgorithm</code>
+<ul>
+<li>Implements realization, anchor selection, generation, and arranging.</li>
+</ul>
+</li>
+</ul>
+<h2 id="initialization-sequence">Initialization sequence</h2>
+<ol>
+<li><code>StackLayout.InitializeForContextCore</code> checks <code>context.LayoutState</code>.</li>
+<li>If no state exists, it creates <code>StackLayoutState</code>.</li>
+<li><code>StackLayoutState.InitializeForContext</code> sets up <code>FlowLayoutAlgorithm</code> with the context and delegate callbacks.</li>
+</ol>
+<p><code>LayoutState</code> is stored on the layout context (per repeater instance), not on the layout object.</p>
+<h2 id="measure-pipeline-step-by-step">Measure pipeline (step-by-step)</h2>
+<ol>
+<li><code>StackLayout.MeasureOverride</code> prepares the state:
+<ul>
+<li><code>EnsureLineCacheParameters(Orientation, Spacing)</code></li>
+<li><code>EnsureItemCount(context.ItemCount)</code></li>
+<li>Clears line and size caches</li>
+<li><code>OnMeasureStart()</code> resets the cross-axis maximum</li>
+</ul>
+</li>
+<li>Calls <code>FlowLayoutAlgorithm.Measure(...)</code> with:
+<ul>
+<li><code>isWrapping = false</code></li>
+<li><code>minItemSpacing = 0</code></li>
+<li><code>lineSpacing = Spacing</code></li>
+<li><code>maxItemsPerLine = int.MaxValue</code></li>
+<li><code>disableVirtualization = DisableVirtualization</code></li>
+</ul>
+</li>
+<li><code>FlowLayoutAlgorithm</code> selects an anchor:
+<ul>
+<li>Uses <code>RecommendedAnchorIndex</code> if realized and still in the realization window.</li>
+<li>Otherwise calls <code>Algorithm_GetAnchorForRealizationRect</code> (StackLayout implementation).</li>
+</ul>
+</li>
+<li><code>Algorithm_GetAnchorForRealizationRect</code> estimates an anchor based on:
+<ul>
+<li>The realization rect offset inside the last extent.</li>
+<li>The estimated average item size from <code>StackLayoutState</code>.</li>
+<li>A clamped offset to avoid invalid indices.</li>
+</ul>
+</li>
+<li>The algorithm generates items forward and backward from the anchor:
+<ul>
+<li><code>Algorithm_GetMeasureSize</code> returns the provided available size.</li>
+<li><code>Algorithm_GetProvisionalArrangeSize</code> enforces the minor-axis size to be at least the desired size (and respects finite available size).</li>
+<li><code>Algorithm_OnElementMeasured</code> updates <code>StackLayoutState</code> with measured sizes and updates the estimation buffer and prefix sums.</li>
+</ul>
+</li>
+<li>The algorithm computes the extent via <code>Algorithm_GetExtent</code>:
+<ul>
+<li>The major size uses <code>StackLayoutState.GetEstimatedTotalSize(...)</code>.</li>
+<li>The minor size uses <code>StackLayoutState.MaxArrangeBounds</code>.</li>
+<li>If realized items exist, the extent origin is aligned to the first realized item's offset.</li>
+</ul>
+</li>
+</ol>
+<h2 id="anchor-strategy-details">Anchor strategy details</h2>
+<p><code>StackLayout</code> anchors by index rather than by pixel data:</p>
+<ul>
+<li>The estimated offset for an index is derived from the prefix sums of measured items plus estimated sizes for unknown items.</li>
+<li>When no measured items exist, the layout measures index <code>0</code> to seed the estimator.</li>
+</ul>
+<p>This approach allows fast jumps while still producing a stable anchor.</p>
+<h2 id="arrange-pipeline-step-by-step">Arrange pipeline (step-by-step)</h2>
+<ol>
+<li><code>StackLayout.ArrangeOverride</code> calls <code>FlowLayoutAlgorithm.Arrange(...)</code>.</li>
+<li>Because <code>isWrapping</code> is false:
+<ul>
+<li>Each item occupies its own &quot;line&quot;.</li>
+<li>The algorithm aligns lines to the start.</li>
+<li>The minor axis is stretched to at least the available final size.</li>
+</ul>
+</li>
+<li><code>FlowLayoutAlgorithm</code> arranges only the realized items.</li>
+</ol>
+<h2 id="items-source-changes">Items source changes</h2>
+<p><code>StackLayout.OnItemsChangedCore</code>:</p>
+<ol>
+<li>Forwards changes to <code>FlowLayoutAlgorithm.OnItemsSourceChanged(...)</code>.</li>
+<li>Clears line and size caches to prevent stale estimates.</li>
+<li>Invalidates layout to re-run measure.</li>
+</ol>
+<h2 id="properties-that-affect-the-algorithm">Properties that affect the algorithm</h2>
+<ul>
+<li><code>Orientation</code>: defines the major (stacking) axis and scroll orientation.</li>
+<li><code>Spacing</code>: applied as line spacing between items.</li>
+<li><code>DisableVirtualization</code>: forces <code>FlowLayoutAlgorithm</code> to generate all items regardless of the realization window.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/layout-architecture-stacklayout.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Diagnostics Internals | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Diagnostics Internals | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/diagnostics-internals.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="diagnostics-internals">Diagnostics Internals</h1>
+
+<p>This article describes how <code>ItemsRepeater</code> emits diagnostic events and metrics. It complements <code>diagnostics.md</code> with implementation details.</p>
+<h2 id="activitysource-and-meter">ActivitySource and Meter</h2>
+<p><code>ItemsRepeaterDiagnostics</code> declares:</p>
+<ul>
+<li><code>ActivitySourceName</code>: <code>Avalonia.ItemsRepeater</code></li>
+<li><code>MeterName</code>: <code>Avalonia.ItemsRepeater</code></li>
+</ul>
+<p>Both are created only on .NET 6+ builds (<code>NET6_0_OR_GREATER</code>).</p>
+<h2 id="measure-and-arrange-activities">Measure and arrange activities</h2>
+<h3 id="measure">Measure</h3>
+<p><code>ItemsRepeater.MeasureOverride</code> calls:</p>
+<ul>
+<li><code>ItemsRepeaterDiagnostics.StartMeasure(...)</code></li>
+</ul>
+<p>Activity tags include:</p>
+<ul>
+<li><code>layout.id</code></li>
+<li><code>items.count</code></li>
+<li><code>available.width</code>, <code>available.height</code></li>
+<li><code>realization.x</code>, <code>realization.y</code>, <code>realization.width</code>, <code>realization.height</code></li>
+<li><code>visible.x</code>, <code>visible.y</code>, <code>visible.width</code>, <code>visible.height</code></li>
+</ul>
+<h3 id="arrange">Arrange</h3>
+<p><code>ItemsRepeater.ArrangeOverride</code> calls:</p>
+<ul>
+<li><code>ItemsRepeaterDiagnostics.StartArrange(...)</code></li>
+</ul>
+<p>Activity tags include:</p>
+<ul>
+<li><code>layout.id</code></li>
+<li><code>items.count</code></li>
+<li><code>final.width</code>, <code>final.height</code></li>
+</ul>
+<h2 id="generate-activity">Generate activity</h2>
+<p><code>FlowLayoutAlgorithm.Generate</code> wraps each forward/backward generation pass with:</p>
+<ul>
+<li><code>ItemsRepeaterDiagnostics.StartGenerate(...)</code></li>
+</ul>
+<p>Activity tags include:</p>
+<ul>
+<li><code>layout.id</code></li>
+<li><code>direction</code> (<code>forward</code> / <code>backward</code>)</li>
+<li><code>wrapping</code> (bool)</li>
+<li><code>anchor.index</code></li>
+</ul>
+<h2 id="metrics-and-tags">Metrics and tags</h2>
+<p><code>ItemsRepeaterDiagnostics</code> records metrics via counters and histograms:</p>
+<ul>
+<li><code>itemsrepeater.measure.count</code></li>
+<li><code>itemsrepeater.measure.duration.ms</code></li>
+<li><code>itemsrepeater.arrange.count</code></li>
+<li><code>itemsrepeater.arrange.duration.ms</code></li>
+<li><code>itemsrepeater.generate.pass</code></li>
+<li><code>itemsrepeater.generate.duration.ms</code></li>
+<li><code>itemsrepeater.generate.measured.count</code></li>
+<li><code>itemsrepeater.element.realized</code></li>
+<li><code>itemsrepeater.element.recycled</code></li>
+<li><code>itemsrepeater.anchor.make</code></li>
+</ul>
+<h3 id="measurearrange-tags">Measure/arrange tags</h3>
+<p>Both measure and arrange metrics include:</p>
+<ul>
+<li><code>layout.id</code></li>
+<li><code>items.count</code></li>
+<li><code>realized.count</code></li>
+</ul>
+<h3 id="generate-tags">Generate tags</h3>
+<p>Generate metrics include:</p>
+<ul>
+<li><code>layout.id</code></li>
+<li><code>direction</code></li>
+<li><code>wrapping</code></li>
+<li><code>disable.virtualization</code></li>
+</ul>
+<h2 id="when-metrics-are-recorded">When metrics are recorded</h2>
+<p>The control records metrics at well-defined points:</p>
+<ul>
+<li><strong>Measure/Arrange</strong>: after the pass completes and the realized count is computed.</li>
+<li><strong>Generate</strong>: after a forward/backward pass, with the measured element count.</li>
+<li><strong>Element realized</strong>: when a new element is created by the view manager.</li>
+<li><strong>Element recycled</strong>: when an element is cleared by the repeater.</li>
+<li><strong>Make anchor</strong>: when an explicit anchor is created or when the algorithm makes one.</li>
+</ul>
+<h2 id="timing-helpers">Timing helpers</h2>
+<p><code>ItemsRepeaterDiagnostics</code> uses <code>Stopwatch.GetTimestamp()</code> and converts to milliseconds with:</p>
+<pre><code>(Stopwatch.GetTimestamp() - start) * 1000 / Stopwatch.Frequency
+</code></pre>
+<p>This provides high-resolution timings without allocations.</p>
+<h2 id="listener-behavior">Listener behavior</h2>
+<p>Activities are only created if the <code>ActivitySource</code> has listeners. This avoids the overhead of tag allocation and activity creation when tracing is disabled.</p>
+<h2 id="summary">Summary</h2>
+<p>Diagnostics are split into tracing (activities) and metrics (counters/histograms). Tags are attached consistently so you can correlate layout passes, generation behavior, and element churn with layout and scroll behavior.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/diagnostics-internals.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

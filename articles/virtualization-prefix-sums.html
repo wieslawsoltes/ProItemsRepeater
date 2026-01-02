@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Prefix Sums and Fenwick Trees | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Prefix Sums and Fenwick Trees | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization-prefix-sums.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="prefix-sums-and-fenwick-trees">Prefix Sums and Fenwick Trees</h1>
+
+<p>This article explains how prefix sums are used in the virtualization pipeline, with a focus on <code>StackLayoutState</code>. It also documents the underlying data structure (Fenwick tree, also known as a Binary Indexed Tree) and why it is used.</p>
+<h2 id="why-prefix-sums-are-needed">Why prefix sums are needed</h2>
+<p>Virtualizing layouts cannot measure every element on every pass. However, they still need to:</p>
+<ul>
+<li>Estimate the pixel offset for an item index (for anchoring and scrolling).</li>
+<li>Estimate the total extent of a large list.</li>
+<li>Adjust those estimates as new items are measured.</li>
+</ul>
+<p>Prefix sums provide fast cumulative totals, so you can estimate offsets without iterating over all items.</p>
+<h2 id="where-prefix-sums-are-used">Where prefix sums are used</h2>
+<p>In this codebase, prefix sums are used in <code>StackLayoutState</code> to support <code>StackLayout</code>:</p>
+<ul>
+<li><code>StackLayoutState</code> tracks measured major-axis sizes per item.</li>
+<li>Prefix sums are used to compute estimated offsets for any index.</li>
+<li>Those offsets drive anchor selection and extent estimation.</li>
+</ul>
+<p><code>WrapLayout</code> and <code>UniformGridLayout</code> use different techniques (line caches and direct arithmetic), so prefix sums are primarily a <code>StackLayout</code> optimization.</p>
+<h2 id="data-structure-fenwick-tree-binary-indexed-tree">Data structure: Fenwick tree (Binary Indexed Tree)</h2>
+<p><code>StackLayoutState</code> uses two Fenwick trees:</p>
+<ul>
+<li><code>FenwickDouble</code> for the sum of measured sizes.</li>
+<li><code>FenwickInt</code> for the count of measured items.</li>
+</ul>
+<p>Both support:</p>
+<ul>
+<li><code>Add(index, delta)</code> in <code>O(log n)</code></li>
+<li><code>Sum(index)</code> (prefix sum over <code>[0, index)</code>) in <code>O(log n)</code></li>
+</ul>
+<p>The implementation uses 1-based indexing internally and updates indices by <code>i += i &amp; -i</code>.</p>
+<h2 id="core-formulas">Core formulas</h2>
+<p>Let:</p>
+<ul>
+<li><code>measuredSum(i)</code> = sum of measured sizes for indices <code>[0, i)</code></li>
+<li><code>measuredCount(i)</code> = count of measured items in <code>[0, i)</code></li>
+<li><code>unknownCount(i) = i - measuredCount(i)</code></li>
+<li><code>estimatedSize</code> = current average size for unmeasured items</li>
+<li><code>spacing</code> = uniform spacing between items</li>
+</ul>
+<p>Then the estimated offset for index <code>i</code> is:</p>
+<pre><code>offset(i) = measuredSum(i) + unknownCount(i) * estimatedSize + spacing * i
+</code></pre>
+<p>This formula is implemented in <code>StackLayoutState.GetEstimatedOffsetForIndex(...)</code>.</p>
+<h2 id="how-measurements-update-the-prefix-sums">How measurements update the prefix sums</h2>
+<p>When an item is measured:</p>
+<ol>
+<li><code>StackLayoutState.UpdateMeasuredSize(index, majorSize)</code> checks if the size was previously known.</li>
+<li>If unknown, it:
+<ul>
+<li>Stores the size in <code>_measuredSizes</code>.</li>
+<li>Updates the sum Fenwick tree by <code>+majorSize</code>.</li>
+<li>Updates the count Fenwick tree by <code>+1</code>.</li>
+</ul>
+</li>
+<li>If the size changed, it updates the sum tree by the delta.</li>
+</ol>
+<p>This makes all downstream prefix-sum queries reflect the newest measurements.</p>
+<h2 id="anchor-selection-with-prefix-sums">Anchor selection with prefix sums</h2>
+<p><code>StackLayout</code> uses prefix sums in two places:</p>
+<ol>
+<li><p><strong>Realization window anchoring</strong>:</p>
+<ul>
+<li><code>GetAnchorForRealizationRect</code> estimates the index for a pixel offset.</li>
+<li>It calls <code>EstimateIndexForOffset(offset, estimatedSize, spacing, itemCount)</code>.</li>
+<li>This method uses binary search over indices and calls <code>GetEstimatedOffsetForIndex</code> for each probe.</li>
+</ul>
+</li>
+<li><p><strong>Target anchoring</strong>:</p>
+<ul>
+<li><code>GetAnchorForTargetElement</code> estimates the anchor offset for a target index.</li>
+<li>It uses <code>GetEstimatedOffsetForIndex</code> directly if bounds are not available.</li>
+</ul>
+</li>
+</ol>
+<p>The result is stable anchors even when most items have not been measured yet.</p>
+<h2 id="extent-estimation-with-prefix-sums">Extent estimation with prefix sums</h2>
+<p>The total extent is estimated using:</p>
+<pre><code>total = measuredSum(n) + unknownCount(n) * estimatedSize + spacing * (n - 1)
+</code></pre>
+<p>This is implemented in <code>StackLayoutState.GetEstimatedTotalSize(...)</code> and used by <code>StackLayout</code> in <code>Algorithm_GetExtent</code>.</p>
+<h2 id="average-size-estimation">Average size estimation</h2>
+<p>The <code>estimatedSize</code> used in formulas comes from:</p>
+<ul>
+<li>A rolling estimation buffer that tracks recently measured sizes.</li>
+<li>Prefix-sum derived averages when enough items have been measured.</li>
+</ul>
+<p>This allows the layout to converge as more items are realized while keeping estimates stable.</p>
+<h2 id="complexity-and-behavior">Complexity and behavior</h2>
+<p>Using Fenwick trees provides:</p>
+<ul>
+<li><code>O(log n)</code> updates when an item is measured or re-measured.</li>
+<li><code>O(log n)</code> prefix sums for any index.</li>
+<li><code>O(log^2 n)</code> anchor estimation via binary search + prefix sums.</li>
+</ul>
+<p>This is a significant improvement over naive <code>O(n)</code> accumulation for large lists.</p>
+<h2 id="summary">Summary</h2>
+<p>Prefix sums are the backbone of <code>StackLayout</code>'s estimation logic. They enable fast, incremental updates and stable anchor selection without measuring the entire list, which is critical for large or dynamic item sources.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization-prefix-sums.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

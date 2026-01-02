@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Recycling Pools and Template Reuse Internals | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Recycling Pools and Template Reuse Internals | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/recycling-pools-internals.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="recycling-pools-and-template-reuse-internals">Recycling Pools and Template Reuse Internals</h1>
+
+<p>This article documents the low-level recycling system used by <code>ItemsRepeater</code>. It complements <code>templates-and-recycling.md</code> with internal details and control flow.</p>
+<h2 id="recyclepool-data-model">RecyclePool data model</h2>
+<p><code>RecyclePool</code> is a per-template pool that stores reusable elements:</p>
+<ul>
+<li>Each pool is keyed by <code>IDataTemplate</code> in a <code>ConditionalWeakTable</code>.</li>
+<li>Elements are grouped by a reuse key (string) into lists.</li>
+<li>Each entry tracks the element and its last owning <code>Panel</code>.</li>
+</ul>
+<p>This enables reuse across repeaters and reduces reparenting when possible.</p>
+<h2 id="attached-properties">Attached properties</h2>
+<p><code>RecyclePool</code> uses two attached properties on realized controls:</p>
+<ul>
+<li><code>OriginTemplateProperty</code>: the template that created the element.</li>
+<li><code>ReuseKeyProperty</code>: the key used to choose the pool bucket.</li>
+</ul>
+<p>These are normally managed by <code>RecyclingElementFactory</code>.</p>
+<h2 id="put-and-get-semantics">Put and get semantics</h2>
+<h3 id="putting-an-element">Putting an element</h3>
+<p><code>RecyclePool.PutElement(element, key, owner)</code>:</p>
+<ol>
+<li>Validates that <code>owner</code> is a <code>Panel</code> (or null).</li>
+<li>Appends the element to the list for the given key.</li>
+<li>Stores the element with its owner to allow owner affinity.</li>
+</ol>
+<h3 id="getting-an-element">Getting an element</h3>
+<p><code>RecyclePool.TryGetElement(key, owner)</code>:</p>
+<ol>
+<li>Looks up the list for the key.</li>
+<li>Prefers elements whose stored owner matches the current owner.</li>
+<li>If the element has a different owner, removes it from the old <code>Panel.Children</code>.</li>
+<li>Returns the element for reuse or <code>null</code> if none are available.</li>
+</ol>
+<p>Owner affinity avoids unnecessary visual tree detach/attach costs.</p>
+<h2 id="element-factory-integration">Element factory integration</h2>
+<p><code>ItemsRepeater</code> uses <code>ItemTemplateShim</code> (<code>IElementFactory</code>) to realize elements:</p>
+<ul>
+<li>If no template is provided, <code>FuncDataTemplate.Default</code> is used.</li>
+<li>If the data item is a <code>Control</code>, it may be returned directly.</li>
+<li>Otherwise, the element factory creates or recycles an element.</li>
+</ul>
+<p>When <code>ItemsRepeater</code> sets the DataContext, it marks <code>VirtualizationInfo.MustClearDataContext</code> so the DataContext can be cleared on recycle.</p>
+<h2 id="uniqueidelementpool-stable-reset">UniqueIdElementPool (stable reset)</h2>
+<p><code>UniqueIdElementPool</code> is a separate mechanism used only for stable resets:</p>
+<ul>
+<li>Activated when <code>ItemsSourceView.HasKeyIndexMapping</code> is true.</li>
+<li>Elements are keyed by <code>ItemsSourceView.KeyFromIndex</code>.</li>
+<li>On <code>Reset</code>, elements are moved into the pool instead of being fully recycled.</li>
+<li>On the next realization pass, elements can be rehydrated by key.</li>
+</ul>
+<p>This pool is managed by <code>ViewManager</code>, not by <code>RecyclePool</code>.</p>
+<h2 id="pinned-elements-and-reuse">Pinned elements and reuse</h2>
+<p>Pinned elements are never placed into <code>RecyclePool</code>:</p>
+<ul>
+<li>If an element is pinned and the clear is not due to a collection change, it moves to the pinned pool.</li>
+<li>If the clear is due to remove/replace/reset, pinned elements are forced back through the factory.</li>
+</ul>
+<p>This prevents pinned elements from being reused incorrectly.</p>
+<h2 id="reuse-across-repeaters">Reuse across repeaters</h2>
+<p>Because <code>RecyclePool</code> is associated with a template (not a repeater), pools can be shared across repeaters by using the same template instance or a shared <code>RecyclePool</code>.</p>
+<h2 id="summary">Summary</h2>
+<p><code>RecyclePool</code> handles template-keyed element reuse, while <code>UniqueIdElementPool</code> supports stable resets by key. Together with <code>ItemTemplateShim</code> and <code>VirtualizationInfo</code>, these pools provide efficient container reuse without breaking ownership invariants.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/recycling-pools-internals.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

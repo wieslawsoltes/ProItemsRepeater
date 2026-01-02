@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>SelectingItemsRepeater Internals | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="SelectingItemsRepeater Internals | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/selecting-itemsrepeater-internals.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="selectingitemsrepeater-internals">SelectingItemsRepeater Internals</h1>
+
+<p>This article describes the internal architecture of <code>SelectingItemsRepeater</code>. It complements <code>selection.md</code> with implementation-level behavior.</p>
+<h2 id="responsibilities">Responsibilities</h2>
+<p><code>SelectingItemsRepeater</code> adds selection on top of <code>ItemsRepeater</code>:</p>
+<ul>
+<li>Manages an <code>ISelectionModel</code> (default: <code>RepeaterSelectionModel</code>).</li>
+<li>Synchronizes selection properties (<code>SelectedIndex</code>, <code>SelectedItem</code>, <code>SelectedItems</code>, <code>SelectedValue</code>).</li>
+<li>Applies selection state to realized containers.</li>
+<li>Handles pointer and keyboard input.</li>
+<li>Optionally scrolls selected items into view.</li>
+</ul>
+<h2 id="selection-model-lifecycle">Selection model lifecycle</h2>
+<p><code>SelectingItemsRepeater</code> owns a selection model instance:</p>
+<ol>
+<li><strong>Creation</strong>:
+<ul>
+<li><code>GetOrCreateSelectionModel</code> creates a <code>RepeaterSelectionModel</code> if none is set.</li>
+<li><code>SelectionMode</code> is mapped to <code>SingleSelect</code> or <code>Multiple</code> on the model.</li>
+</ul>
+</li>
+<li><strong>Initialization</strong>:
+<ul>
+<li><code>InitializeSelectionModel</code> wires <code>PropertyChanged</code>, <code>SelectionChanged</code>, and <code>LostSelection</code>.</li>
+<li>The model <code>Source</code> is set to <code>ItemsSourceView.Source</code>.</li>
+</ul>
+</li>
+<li><strong>Deinitialization</strong>:
+<ul>
+<li>When <code>Selection</code> is replaced, event handlers are removed from the old model.</li>
+</ul>
+</li>
+</ol>
+<p>If a custom <code>Selection</code> is provided, it must not already have a <code>Source</code>.</p>
+<h2 id="updatestate-batching">UpdateState batching</h2>
+<p>When <code>ItemsSource</code> changes, selection properties are updated in a batch:</p>
+<ul>
+<li><code>BeginUpdating</code> stores pending changes in <code>UpdateState</code>.</li>
+<li><code>EndUpdating</code> replays the pending selection changes in order:
+<ul>
+<li><code>Selection</code>, <code>SelectedItems</code>, <code>SelectedValue</code>, <code>SelectedIndex</code>, <code>SelectedItem</code>.</li>
+</ul>
+</li>
+<li>This prevents inconsistent intermediate states and avoids recursive updates.</li>
+</ul>
+<p><code>AlwaysSelected</code> enforces a selection when the collection is non-empty.</p>
+<h2 id="container-selection-pipeline">Container selection pipeline</h2>
+<p>Selection is applied to realized containers:</p>
+<ol>
+<li>On <code>ElementPrepared</code>:
+<ul>
+<li>The container is made focusable (if not already).</li>
+<li>The container is registered for <code>PropertyChanged</code>.</li>
+<li>Selection state is applied (<code>ApplyContainerSelection</code>).</li>
+</ul>
+</li>
+<li>On <code>ElementClearing</code>:
+<ul>
+<li>The container is unregistered.</li>
+<li>Selection state is cleared.</li>
+</ul>
+</li>
+<li>On <code>ElementIndexChanged</code>:
+<ul>
+<li>Selection state is re-applied using the new index.</li>
+</ul>
+</li>
+</ol>
+<p><code>IsSelectedManaged</code> is an attached property that prevents re-entrant selection updates when the repeater itself is setting <code>IsSelected</code>.</p>
+<h2 id="pseudo-classes-and-isselected">Pseudo-classes and IsSelected</h2>
+<p>When a container's <code>IsSelected</code> property changes:</p>
+<ul>
+<li><code>:selected</code> pseudo-class is set on the container.</li>
+<li>If the change was user-driven (not managed), the selection model is updated.</li>
+</ul>
+<p>This keeps template styling and model state in sync.</p>
+<h2 id="input-handling">Input handling</h2>
+<p>Selection can be triggered by pointer or keyboard:</p>
+<ul>
+<li><code>OnPointerPressed</code> / <code>OnPointerReleased</code> uses <code>ShouldTriggerSelection</code> to decide when to act.</li>
+<li><code>OnKeyDown</code> handles:
+<ul>
+<li>Arrow navigation and range selection.</li>
+<li><code>Ctrl+A</code> selection when allowed.</li>
+<li>Space/Enter selection toggles.</li>
+</ul>
+</li>
+</ul>
+<p>Modifiers are resolved using platform hotkey configuration:</p>
+<ul>
+<li>Range selection uses <code>SelectionModifiers</code>.</li>
+<li>Toggle selection uses <code>CommandModifiers</code>.</li>
+</ul>
+<h2 id="updateselection-logic">UpdateSelection logic</h2>
+<p>Selection updates follow a strict order:</p>
+<ol>
+<li>Determine selection mode flags (multiple, toggle, always selected).</li>
+<li>If range selection is active, use <code>Selection.SelectRange</code>.</li>
+<li>If toggle is active, select or deselect the target index.</li>
+<li>Otherwise, clear and select the single index.</li>
+</ol>
+<p>Updates use <code>Selection.BatchUpdate()</code> to reduce churn and consolidate events.</p>
+<h2 id="auto-scroll-to-selection">Auto scroll to selection</h2>
+<p>If <code>AutoScrollToSelectedItem</code> is true:</p>
+<ul>
+<li>The control listens for <code>SelectionModel.AnchorIndex</code> changes.</li>
+<li>It schedules <code>ScrollIntoView</code> using the anchor index or selected index.</li>
+<li><code>ScrollIntoView</code> calls <code>BringIntoView</code> on the realized container or creates one if needed.</li>
+</ul>
+<p>This keeps selection visible during keyboard navigation and programmatic updates.</p>
+<h2 id="selectionchanged-event">SelectionChanged event</h2>
+<p><code>SelectionChangedEvent</code> is raised after <code>SelectionModel.SelectionChanged</code>:</p>
+<ul>
+<li>It uses the routed event system for consistent bubbling.</li>
+<li>It provides arrays of added and removed items.</li>
+<li>It is suppressed during internal selection update loops to avoid double raises.</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p><code>SelectingItemsRepeater</code> bridges model-driven selection with container state and input handling. It maintains strict ordering of selection updates, synchronizes styling and model state, and integrates selection with scrolling and virtualization.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/selecting-itemsrepeater-internals.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

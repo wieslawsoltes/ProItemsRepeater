@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Element Factories (IElementFactory) | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Element Factories (IElementFactory) | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/element-factories.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="element-factories-ielementfactory">Element Factories (IElementFactory)</h1>
+
+<p>This article explains how to use <code>IElementFactory</code> to control element creation and recycling in <code>ItemsRepeater</code>.</p>
+<h2 id="what-is-an-element-factory">What is an element factory</h2>
+<p><code>IElementFactory</code> is a template that can both create and recycle elements. It extends <code>IDataTemplate</code> and adds:</p>
+<ul>
+<li><code>GetElement(ElementFactoryGetArgs args)</code></li>
+<li><code>RecycleElement(ElementFactoryRecycleArgs args)</code></li>
+</ul>
+<p><code>ItemsRepeater</code> calls these methods when <code>ItemTemplate</code> implements <code>IElementFactory</code>.</p>
+<h2 id="elementfactory-arguments">ElementFactory arguments</h2>
+<p><code>ElementFactoryGetArgs</code> provides:</p>
+<ul>
+<li><code>Data</code>: the data item for the index.</li>
+<li><code>Parent</code>: the <code>ItemsRepeater</code> that will host the element.</li>
+<li><code>Index</code>: the item index.</li>
+</ul>
+<p><code>ElementFactoryRecycleArgs</code> provides:</p>
+<ul>
+<li><code>Element</code>: the element being recycled.</li>
+<li><code>Parent</code>: the <code>ItemsRepeater</code> that owned it.</li>
+</ul>
+<h2 id="minimal-implementation">Minimal implementation</h2>
+<pre><code class="lang-csharp">public sealed class SimpleElementFactory : IElementFactory
+{
+    public bool Match(object? data) =&gt; true;
+
+    public Control Build(object? data)
+    {
+        return new TextBlock();
+    }
+
+    public Control GetElement(ElementFactoryGetArgs args)
+    {
+        var element = new TextBlock();
+        element.Text = args.Data?.ToString();
+        return element;
+    }
+
+    public void RecycleElement(ElementFactoryRecycleArgs args)
+    {
+        // Reset state here if needed.
+    }
+}
+</code></pre>
+<p><code>IDataTemplate.Match</code> and <code>Build</code> are still required because <code>IElementFactory</code> derives from <code>IDataTemplate</code>, but <code>ItemsRepeater</code> uses <code>GetElement</code> / <code>RecycleElement</code> for element lifetime.</p>
+<h2 id="datacontext-behavior">DataContext behavior</h2>
+<p>After <code>GetElement</code> returns an element:</p>
+<ul>
+<li>If the element is not the data item itself, <code>ItemsRepeater</code> sets <code>DataContext</code> to the data item.</li>
+<li>If it is the data item, DataContext is left unchanged.</li>
+</ul>
+<p>On recycle, <code>ItemsRepeater</code> clears DataContext only if it set it.</p>
+<h2 id="when-to-use-ielementfactory">When to use IElementFactory</h2>
+<p>Use a custom element factory when you need:</p>
+<ul>
+<li>Fine control over reuse.</li>
+<li>Template selection based on index or data type.</li>
+<li>Direct access to parent repeater during creation.</li>
+</ul>
+<p>For key-based reuse, consider using <code>RecyclingElementFactory</code> and <code>RecyclePool</code>.</p>
+<h2 id="related-docs">Related docs</h2>
+<ul>
+<li><code>templates-and-recycling.md</code></li>
+<li><code>item-template-resolution.md</code></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/element-factories.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
