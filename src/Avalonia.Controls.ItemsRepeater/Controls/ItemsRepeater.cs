@@ -12,6 +12,7 @@ using Avalonia.Layout;
 using Avalonia.Logging;
 using Avalonia.LogicalTree;
 using Avalonia.Metadata;
+using Avalonia.Threading;
 using Avalonia.Utilities;
 using Avalonia.VisualTree;
 
@@ -21,7 +22,7 @@ namespace Avalonia.Controls
     /// Represents a data-driven collection control that incorporates a flexible layout system,
     /// custom views, and virtualization.
     /// </summary>
-    public class ItemsRepeater : Panel, IChildIndexProvider
+    public partial class ItemsRepeater : Panel, IChildIndexProvider
     {
         /// <summary>
         /// Defines the <see cref="HorizontalCacheLength"/> property.
@@ -83,9 +84,15 @@ namespace Avalonia.Controls
                 this, static (target, _, ev, _) =>
                 {
                     if (ev == AttachedLayout.ArrangeInvalidatedWeakEvent)
+                    {
+                        target._scrollSizeCacheValid = false;
                         target.InvalidateArrange();
+                    }
                     else if (ev == AttachedLayout.MeasureInvalidatedWeakEvent)
+                    {
+                        target._scrollSizeCacheValid = false;
                         target.InvalidateMeasure();
+                    }
                 });
 
             _viewManager = new ViewManager(this);
@@ -164,7 +171,6 @@ namespace Avalonia.Controls
         internal Control? MadeAnchor => _viewportManager.MadeAnchor;
         internal Rect RealizationWindow => _viewportManager.GetLayoutRealizationWindow();
         internal Control? SuggestedAnchor => _viewportManager.SuggestedAnchor;
-
         private bool IsProcessingCollectionChange => _processingItemsSourceChange != null;
 
         private RepeaterLayoutContext LayoutContext => _layoutContext ??= new RepeaterLayoutContext(this);
@@ -298,12 +304,16 @@ namespace Avalonia.Controls
             }
 
             _viewportManager.OnOwnerMeasuring();
+            SetViewport(availableSize, raiseInvalidated: true, invalidateMeasure: false);
 
             var layout = Layout;
             var layoutId = GetLayoutId();
             var itemCount = ItemsSourceView?.Count ?? 0;
             var realizationWindow = _viewportManager.GetLayoutRealizationWindow();
             var visibleWindow = _viewportManager.GetLayoutVisibleWindow();
+            var measureSize = new Size(
+                _canHorizontallyScroll ? double.PositiveInfinity : availableSize.Width,
+                _canVerticallyScroll ? double.PositiveInfinity : availableSize.Height);
             using var activity = ItemsRepeaterDiagnostics.StartMeasure(
                 layoutId,
                 itemCount,
@@ -325,7 +335,7 @@ namespace Avalonia.Controls
                 {
                     var layoutContext = LayoutContext;
 
-                    desiredSize = layout.Measure(layoutContext, availableSize);
+                    desiredSize = layout.Measure(layoutContext, measureSize);
                     extent = new Rect(LayoutOrigin.X, LayoutOrigin.Y, desiredSize.Width, desiredSize.Height);
 
                     // Clear auto recycle candidate elements that have not been kept alive by layout - i.e layout did not
@@ -344,6 +354,7 @@ namespace Avalonia.Controls
                     }
                 }
 
+                SetExtent(desiredSize);
                 _viewportManager.SetLayoutExtent(extent);
                 measureCompleted = true;
                 return desiredSize;
@@ -388,6 +399,7 @@ namespace Avalonia.Controls
             try
             {
                 var arrangeSize = layout?.Arrange(LayoutContext, finalSize) ?? default;
+                SetViewport(finalSize, raiseInvalidated: true, invalidateMeasure: false, forceInvalidate: true);
 
                 // The view manager might clear elements during this call.
                 // That's why we call it before arranging cleared elements
@@ -412,6 +424,12 @@ namespace Avalonia.Controls
                     else
                     {
                         var newBounds = element.Bounds;
+                        if (UsesLogicalScrolling && (_offset.X != 0 || _offset.Y != 0))
+                        {
+                            newBounds = newBounds.Translate(-_offset);
+                            element.Arrange(newBounds);
+                        }
+
                         virtInfo.ArrangeBounds = newBounds;
 
                         _viewportManager.RegisterScrollAnchorCandidate(element, virtInfo);
@@ -444,6 +462,7 @@ namespace Avalonia.Controls
             base.OnAttachedToVisualTree(e);
             InvalidateMeasure();
             _viewportManager.ResetScrollers();
+            Dispatcher.UIThread.Post(() => _scrollInvalidated?.Invoke(this, EventArgs.Empty), DispatcherPriority.Render);
         }
 
         /// <inheritdoc />
@@ -488,7 +507,6 @@ namespace Avalonia.Controls
             {
                 _viewportManager.VerticalCacheLength = change.GetNewValue<double>();
             }
-
             base.OnPropertyChanged(change);
         }
 
@@ -775,6 +793,9 @@ namespace Avalonia.Controls
                 LayoutState = null;
             }
 
+            _scrollSizeCache = default;
+            _scrollSizeCacheValid = false;
+
             if (newValue != null)
             {
                 newValue.InitializeForContext(LayoutContext);
@@ -857,5 +878,6 @@ namespace Avalonia.Controls
 
             return count;
         }
+
     }
 }
