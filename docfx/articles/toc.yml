@@ -33,6 +33,8 @@
   items:
   - name: Logical Scrolling (ILogicalScrollable)
     href: logical-scrolling.md
+  - name: Physical Scrolling (Non-Logical Mode)
+    href: physical-scrolling.md
 - name: Templates and Recycling
   href: templates-and-recycling.md
   items:

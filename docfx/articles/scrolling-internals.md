@@ -21,6 +21,8 @@ If the repeater is not hosted in a scroll viewer, no logical scrolling occurs an
 
 For a detailed breakdown of the `ILogicalScrollable` contract and how `ItemsRepeater` maps it, see [Logical Scrolling (ILogicalScrollable)](logical-scrolling.md).
 
+If content does not implement `ILogicalScrollable` (or disables it), the scroll viewer uses physical scrolling. See [Physical Scrolling (Non-Logical Mode)](physical-scrolling.md).
+
 ## Viewport-driven virtualization
 
 When scrolling is available, `ItemsRepeater` tracks the *effective viewport* and uses it to compute:
