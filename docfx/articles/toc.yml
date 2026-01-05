@@ -30,6 +30,9 @@
     href: virtualization-prefix-sums.md
 - name: Scrolling Internals
   href: scrolling-internals.md
+  items:
+  - name: Logical Scrolling (ILogicalScrollable)
+    href: logical-scrolling.md
 - name: Templates and Recycling
   href: templates-and-recycling.md
   items:

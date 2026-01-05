@@ -1,6 +1,6 @@
 # Virtualization and Scrolling
 
-ItemsRepeater is a panel, not a scroll viewer. For virtualized scrolling, place it inside a `ScrollViewer` and select a virtualizing layout.
+ItemsRepeater is a panel, not a scroll viewer. For virtualized scrolling, place it inside a `ScrollViewer` and select a virtualizing layout. When hosted in a scroll viewer, the repeater participates via `ILogicalScrollable` so scroll input is quantized using estimated item sizes.
 
 ```xml
 <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -12,6 +12,10 @@ ItemsRepeater is a panel, not a scroll viewer. For virtualized scrolling, place 
   </ItemsRepeater>
 </ScrollViewer>
 ```
+
+## Logical scrolling
+
+`ItemsRepeater` implements `ILogicalScrollable`, which allows the scroll viewer to treat it as a logical scroll source. This keeps scroll steps aligned with item sizing and lets the repeater drive its viewport internally. For details, see [Logical Scrolling (ILogicalScrollable)](logical-scrolling.md).
 
 ## Realization Window
 

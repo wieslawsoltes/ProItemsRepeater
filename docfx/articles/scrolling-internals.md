@@ -1,13 +1,25 @@
 # Scrolling Internals
 
-This article explains how `ItemsRepeater` participates in scrolling without being a scrollable control itself. It focuses on the internal coordination between `ItemsRepeater`, the layout system, and the parent scroller.
+This article explains how `ItemsRepeater` participates in scrolling without being a scroll viewer. It focuses on the internal coordination between `ItemsRepeater`, the layout system, and the parent scroller.
 
-## ItemsRepeater is not a scroller
+## ItemsRepeater is not a scroll viewer
 
-`ItemsRepeater` derives from `Panel` and does not implement `ILogicalScrollable` or `IScrollable`. It relies on an ancestor scroller (usually `ScrollViewer`) to provide scroll offsets and viewport notifications. Because of that:
+`ItemsRepeater` derives from `Panel` and does not render scrollbars or manage input directly. It does implement `ILogicalScrollable`, so an ancestor scroll viewer (usually `ScrollViewer`) can delegate scroll offsets and viewport updates to it. Because of that:
 
 - You must wrap `ItemsRepeater` in a scroll viewer to get scrolling.
-- `ItemsRepeater` supplies virtualization and anchoring, not scrollbars or offset management.
+- `ItemsRepeater` supplies virtualization and anchoring; the scroll viewer supplies scrollbars and input handling.
+
+## Logical scrolling integration
+
+When hosted in a `ScrollViewer`, the repeater is detected as `ILogicalScrollable` and the scroll viewer switches to logical scrolling:
+
+- The scroll viewer binds to `Extent`, `Viewport`, and `Offset` on the repeater.
+- Scroll input uses the repeater-provided logical step sizes (`ScrollSize` and `PageScrollSize`).
+- The child is not physically offset; the repeater updates its viewport through `ViewportManager.UpdateViewportFromLogicalScroll(...)`.
+
+If the repeater is not hosted in a scroll viewer, no logical scrolling occurs and viewport-driven virtualization is limited to layout-driven updates.
+
+For a detailed breakdown of the `ILogicalScrollable` contract and how `ItemsRepeater` maps it, see [Logical Scrolling (ILogicalScrollable)](logical-scrolling.md).
 
 ## Viewport-driven virtualization
 
