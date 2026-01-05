@@ -145,9 +145,18 @@ namespace Avalonia.Controls
             }
             else if (HasScroller)
             {
+                var shiftX = _layoutExtent.X + _unshiftableShift.X;
+                var shiftY = _layoutExtent.Y + _unshiftableShift.Y;
+
+                if (!_owner.UsesLogicalScrolling)
+                {
+                    shiftX += _expectedViewportShift.X;
+                    shiftY += _expectedViewportShift.Y;
+                }
+
                 visibleWindow = new Rect(
-                    visibleWindow.X + _layoutExtent.X + _expectedViewportShift.X + _unshiftableShift.X,
-                    visibleWindow.Y + _layoutExtent.Y + _expectedViewportShift.Y + _unshiftableShift.Y,
+                    visibleWindow.X + shiftX,
+                    visibleWindow.Y + shiftY,
                     visibleWindow.Width,
                     visibleWindow.Height);
             }
@@ -179,7 +188,10 @@ namespace Avalonia.Controls
                 _pendingViewportShift = default;
                 _unshiftableShift = default;
                 _pendingShiftCount = 0;
-                ((Control?)_scroller)?.InvalidateArrange();
+                if (!_owner.UsesLogicalScrolling)
+                {
+                    ((Control?)_scroller)?.InvalidateArrange();
+                }
                 return;
             }
 
@@ -192,6 +204,31 @@ namespace Avalonia.Controls
             if (Math.Abs(deltaY) <= 1)
             {
                 deltaY = 0;
+            }
+
+            if (_owner.UsesLogicalScrolling)
+            {
+                var shift = new Vector(deltaX, deltaY);
+                _layoutExtent = extent;
+                _expectedViewportShift = default;
+                _pendingViewportShift = default;
+                _pendingShiftCount = 0;
+
+                if (shift != default)
+                {
+                    var appliedShift = _owner.ApplyScrollOffsetShift(shift, raiseInvalidated: true);
+                    var remainingShift = new Vector(shift.X - appliedShift.X, shift.Y - appliedShift.Y);
+                    if (Math.Abs(remainingShift.X) > 1 || Math.Abs(remainingShift.Y) > 1)
+                    {
+                        _unshiftableShift = new Point(
+                            _unshiftableShift.X + remainingShift.X,
+                            _unshiftableShift.Y + remainingShift.Y);
+                    }
+
+                    TryInvalidateMeasure();
+                }
+
+                return;
             }
 
             _expectedViewportShift = new Point(
@@ -245,12 +282,13 @@ namespace Avalonia.Controls
             _pendingViewportShift = default;
             _unshiftableShift = default;
 
-            if (_managingViewportDisabled && _effectiveViewportChangedSubscribed)
+            if (_effectiveViewportChangedSubscribed)
             {
                 _owner.EffectiveViewportChanged -= OnEffectiveViewportChanged;
                 _effectiveViewportChangedSubscribed = false;
             }
-            else if (!_managingViewportDisabled && !_effectiveViewportChangedSubscribed)
+
+            if (!_owner.UsesLogicalScrolling && !_managingViewportDisabled)
             {
                 _owner.EffectiveViewportChanged += OnEffectiveViewportChanged;
                 _effectiveViewportChangedSubscribed = true;
@@ -509,7 +547,7 @@ namespace Avalonia.Controls
         private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
         {
             Logger.TryGet(LogEventLevel.Verbose, "Repeater")?.Log(this, "{LayoutId}: EffectiveViewportChanged event callback", _owner.Layout?.LayoutId);
-            UpdateViewport(e.EffectiveViewport);
+            UpdateViewport(e.EffectiveViewport, invalidateMeasure: true);
 
             _pendingViewportShift = default;
             _unshiftableShift = default;
@@ -547,7 +585,7 @@ namespace Avalonia.Controls
                     parent = parent.GetVisualParent();
                 }
 
-                if (!_managingViewportDisabled)
+                if (!_owner.UsesLogicalScrolling && !_managingViewportDisabled)
                 {
                     _owner.EffectiveViewportChanged += OnEffectiveViewportChanged;
                     _effectiveViewportChangedSubscribed = true;
@@ -557,7 +595,17 @@ namespace Avalonia.Controls
             }
         }
 
-        private void UpdateViewport(Rect viewport)
+        public void UpdateViewportFromLogicalScroll(Size viewport, Vector offset, bool invalidateMeasure)
+        {
+            if (_managingViewportDisabled)
+            {
+                return;
+            }
+
+            UpdateViewport(new Rect(offset.X, offset.Y, viewport.Width, viewport.Height), invalidateMeasure);
+        }
+
+        private void UpdateViewport(Rect viewport, bool invalidateMeasure = true)
         {
             var currentVisibleWindow = viewport;
             var previousVisibleWindow = _visibleWindow;
@@ -586,20 +634,23 @@ namespace Avalonia.Controls
                     previousVisibleWindow,
                     currentVisibleWindow);
                 UpdateScrollAnchoring(previousVisibleWindow, _visibleWindow);
-                if (_owner.Layout is Avalonia.Layout.WrapLayout)
+                if (invalidateMeasure)
                 {
-                    if (IsSmallViewportDelta(previousVisibleWindow, _visibleWindow))
+                    if (_owner.Layout is Avalonia.Layout.WrapLayout)
                     {
-                        TryInvalidateMeasure();
+                        if (IsSmallViewportDelta(previousVisibleWindow, _visibleWindow))
+                        {
+                            TryInvalidateMeasure();
+                        }
+                        else
+                        {
+                            ScheduleInvalidateMeasure();
+                        }
                     }
                     else
                     {
-                        ScheduleInvalidateMeasure();
+                        TryInvalidateMeasure();
                     }
-                }
-                else
-                {
-                    TryInvalidateMeasure();
                 }
             }
         }

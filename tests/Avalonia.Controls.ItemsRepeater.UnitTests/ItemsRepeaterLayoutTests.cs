@@ -55,6 +55,212 @@ public class ItemsRepeaterLayoutTests
         return (window, repeater);
     }
 
+    private static (Window window, ScrollViewer scroller, ItemsRepeater repeater) CreateScrollableRepeater(
+        Size windowSize,
+        Size itemSize,
+        int itemCount,
+        Orientation orientation = Orientation.Vertical)
+    {
+        var items = Enumerable.Range(0, itemCount).ToList();
+        var repeater = new ItemsRepeater
+        {
+            Layout = new StackLayout { Orientation = orientation },
+            ItemsSource = items,
+            ItemTemplate = new FuncDataTemplate<int>((_, __) => new Border
+            {
+                Width = itemSize.Width,
+                Height = itemSize.Height
+            })
+        };
+
+        var scroller = new ScrollViewer
+        {
+            HorizontalScrollBarVisibility = orientation == Orientation.Horizontal
+                ? ScrollBarVisibility.Auto
+                : ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = orientation == Orientation.Horizontal
+                ? ScrollBarVisibility.Disabled
+                : ScrollBarVisibility.Auto,
+            Content = repeater
+        };
+
+        var window = new Window
+        {
+            Width = windowSize.Width,
+            Height = windowSize.Height,
+            Content = scroller
+        };
+
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        return (window, scroller, repeater);
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_Updates_Offset_And_Arranges_Items()
+    {
+        var (window, _, repeater) = CreateScrollableRepeater(
+            new Size(200, 120),
+            new Size(80, 20),
+            200);
+
+        var logical = (ILogicalScrollable)repeater;
+        Assert.True(logical.IsLogicalScrollEnabled);
+        Assert.True(logical.Extent.Height > logical.Viewport.Height);
+        logical.CanVerticallyScroll = true;
+
+        ((IScrollable)repeater).Offset = new Vector(0, 200);
+        var offsetAfterSet = ((IScrollable)repeater).Offset;
+        Dispatcher.UIThread.RunJobs();
+
+        var element = repeater.TryGetElement(10);
+        Assert.True(offsetAfterSet.Y > 0);
+        Assert.NotNull(element);
+        Assert.Equal(10 * 20 - offsetAfterSet.Y, element!.Bounds.Y, 3);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_Updates_Offset_And_Arranges_Items_Horizontal()
+    {
+        var (window, _, repeater) = CreateScrollableRepeater(
+            new Size(120, 200),
+            new Size(20, 60),
+            200,
+            Orientation.Horizontal);
+
+        var logical = (ILogicalScrollable)repeater;
+        Assert.True(logical.IsLogicalScrollEnabled);
+        Assert.True(logical.Extent.Width > logical.Viewport.Width);
+        logical.CanHorizontallyScroll = true;
+
+        ((IScrollable)repeater).Offset = new Vector(200, 0);
+        var offsetAfterSet = ((IScrollable)repeater).Offset;
+        Dispatcher.UIThread.RunJobs();
+
+        var element = repeater.TryGetElement(10);
+        Assert.True(offsetAfterSet.X > 0);
+        Assert.NotNull(element);
+        Assert.Equal(10 * 20 - offsetAfterSet.X, element!.Bounds.X, 3);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_BringIntoView_Moves_Viewport()
+    {
+        var (window, scroller, repeater) = CreateScrollableRepeater(
+            new Size(200, 120),
+            new Size(80, 20),
+            200);
+
+        var element = (Border)repeater.GetOrCreateElement(20);
+        Dispatcher.UIThread.RunJobs();
+
+        var logical = (ILogicalScrollable)repeater;
+        logical.BringIntoView(element, new Rect(element.Bounds.Size));
+        Dispatcher.UIThread.RunJobs();
+
+        var viewportStart = ((IScrollable)repeater).Offset.Y;
+        Assert.True(element.Bounds.Y >= 0);
+        Assert.True(element.Bounds.Bottom <= logical.Viewport.Height);
+        Assert.True(viewportStart > 0);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_Realizes_Items_After_Scroll()
+    {
+        var (window, scroller, repeater) = CreateScrollableRepeater(
+            new Size(200, 120),
+            new Size(80, 20),
+            200);
+        
+        var logical = (ILogicalScrollable)repeater;
+
+        Dispatcher.UIThread.RunJobs();
+
+        logical.CanVerticallyScroll = true;
+        ((IScrollable)repeater).Offset = new Vector(0, 200);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.NotNull(repeater.TryGetElement(12));
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_WrapLayout_Realizes_Items_After_Scroll()
+    {
+        var layout = new WrapLayout
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalSpacing = 0,
+            VerticalSpacing = 0
+        };
+
+        var (window, repeater) = CreateRepeater(
+            layout,
+            ScrollBarVisibility.Disabled,
+            ScrollBarVisibility.Auto,
+            new Size(100, 60),
+            new Size(20, 10),
+            200);
+
+        var logical = (ILogicalScrollable)repeater;
+        logical.CanVerticallyScroll = true;
+
+        ((IScrollable)repeater).Offset = new Vector(0, 40);
+        Dispatcher.UIThread.RunJobs();
+
+        var element = repeater.TryGetElement(20);
+        Assert.NotNull(element);
+        Assert.True(element!.Bounds.Y >= 0);
+        Assert.True(element.Bounds.Bottom <= logical.Viewport.Height);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void LogicalScroll_UniformGridLayout_Realizes_Items_After_Scroll()
+    {
+        var layout = new UniformGridLayout
+        {
+            Orientation = Orientation.Horizontal,
+            MinItemWidth = 20,
+            MinItemHeight = 10,
+            MinRowSpacing = 0,
+            MinColumnSpacing = 0,
+            ItemsJustification = UniformGridLayoutItemsJustification.Start,
+            ItemsStretch = UniformGridLayoutItemsStretch.None,
+            MaximumRowsOrColumns = 2
+        };
+
+        var (window, repeater) = CreateRepeater(
+            layout,
+            ScrollBarVisibility.Disabled,
+            ScrollBarVisibility.Auto,
+            new Size(100, 60),
+            new Size(20, 10),
+            200);
+
+        var logical = (ILogicalScrollable)repeater;
+        logical.CanVerticallyScroll = true;
+
+        ((IScrollable)repeater).Offset = new Vector(0, 30);
+        Dispatcher.UIThread.RunJobs();
+
+        var element = repeater.TryGetElement(6);
+        Assert.NotNull(element);
+        Assert.True(element!.Bounds.Y >= 0);
+        Assert.True(element.Bounds.Bottom <= logical.Viewport.Height);
+
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void StackLayout_Vertical_Virtualizes()
     {
