@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Virtualization and Scrolling | ProItemsRepeater for Avalonia </title>
+      <title>Physical Scrolling (Non-Logical Mode) | ProItemsRepeater for Avalonia </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Virtualization and Scrolling | ProItemsRepeater for Avalonia ">
+      <meta name="title" content="Physical Scrolling (Non-Logical Mode) | ProItemsRepeater for Avalonia ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/physical-scrolling.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -81,39 +81,71 @@
         </div>
 
         <article data-uid="">
-<h1 id="virtualization-and-scrolling">Virtualization and Scrolling</h1>
+<h1 id="physical-scrolling-non-logical-mode">Physical Scrolling (Non-Logical Mode)</h1>
 
-<p>ItemsRepeater is a panel, not a scroll viewer. For virtualized scrolling, place it inside a <code>ScrollViewer</code> and select a virtualizing layout. When hosted in a scroll viewer, the repeater participates via <code>ILogicalScrollable</code> so scroll input is quantized using estimated item sizes.</p>
-<pre><code class="lang-xml">&lt;ScrollViewer HorizontalScrollBarVisibility=&quot;Auto&quot;
-              VerticalScrollBarVisibility=&quot;Auto&quot;&gt;
-  &lt;ItemsRepeater ItemsSource=&quot;{Binding Items}&quot;&gt;
-    &lt;ItemsRepeater.Layout&gt;
-      &lt;StackLayout Orientation=&quot;Vertical&quot; /&gt;
-    &lt;/ItemsRepeater.Layout&gt;
-  &lt;/ItemsRepeater&gt;
-&lt;/ScrollViewer&gt;
-</code></pre>
-<h2 id="logical-scrolling">Logical scrolling</h2>
-<p><code>ItemsRepeater</code> implements <code>ILogicalScrollable</code>, which allows the scroll viewer to treat it as a logical scroll source. This keeps scroll steps aligned with item sizing and lets the repeater drive its viewport internally. For details, see <a href="logical-scrolling.html">Logical Scrolling (ILogicalScrollable)</a>.</p>
-<h2 id="realization-window">Realization Window</h2>
-<p>Virtualizing layouts only realize elements within the <em>realization window</em>, which is the viewport plus a cache buffer. This keeps UI creation and measure/arrange costs proportional to what is visible.</p>
-<h2 id="cache-length">Cache Length</h2>
-<p><code>ItemsRepeater.HorizontalCacheLength</code> and <code>ItemsRepeater.VerticalCacheLength</code> control how far the realization window extends beyond the viewport. These values are multipliers of the visible size. The default is <code>2.0</code>, which allocates roughly one viewport of cache on each side and grows gradually as you scroll.</p>
-<pre><code class="lang-xml">&lt;ItemsRepeater ItemsSource=&quot;{Binding Items}&quot;
-               HorizontalCacheLength=&quot;1&quot;
-               VerticalCacheLength=&quot;3&quot; /&gt;
-</code></pre>
-<h2 id="bringing-items-into-view">Bringing Items into View</h2>
-<p>To programmatically scroll to an item, you can create an anchor element and then request it be brought into view:</p>
-<pre><code class="lang-csharp">var element = repeater.GetOrCreateElement(index);
-element.BringIntoView();
-</code></pre>
-<p><code>GetOrCreateElement</code> will realize the element if it is not already on screen, then update the realization window on the next layout pass.</p>
+<p>This article describes the non-logical scrolling path used by <code>ScrollViewer</code> when its content does <strong>not</strong> participate in <code>ILogicalScrollable</code> or has logical scrolling disabled. It also documents the legacy behavior <code>ItemsRepeater</code> used before logical scrolling was implemented.</p>
+<h2 id="when-physical-scrolling-is-used">When physical scrolling is used</h2>
+<p><code>ScrollViewer</code> uses physical scrolling when:</p>
+<ul>
+<li>The content does not implement <code>ILogicalScrollable</code>, <strong>or</strong></li>
+<li>The content implements <code>ILogicalScrollable</code> but <code>IsLogicalScrollEnabled</code> is <code>false</code>.</li>
+</ul>
+<p>In this mode, the scroll viewer treats the content as a large canvas and offsets the child bounds directly.</p>
+<h2 id="how-physical-scrolling-works">How physical scrolling works</h2>
+<p>The scroll viewer drives scrolling through <code>ScrollContentPresenter</code>:</p>
+<ul>
+<li><strong>Extent/Viewport</strong> are computed from content size and viewport size.</li>
+<li><strong>Offset</strong> is applied by arranging the child at negative coordinates (<code>-Offset.X</code>, <code>-Offset.Y</code>).</li>
+<li><strong>EffectiveViewportChanged</strong> updates are used for viewport notifications and virtualization.</li>
+</ul>
+<p>The content does not receive logical scroll events; it only sees layout changes as its bounds are shifted by the presenter.</p>
+<h2 id="implications-for-virtualization">Implications for virtualization</h2>
+<p>When the content does not implement <code>ILogicalScrollable</code>, viewport updates come from <code>EffectiveViewportChanged</code> rather than a logical offset. Virtualizing panels and controls must interpret the effective viewport themselves to decide what to realize.</p>
+<p>This is how <code>ItemsRepeater</code> historically participated in scrolling:</p>
+<ul>
+<li>The repeater did not implement <code>ILogicalScrollable</code>.</li>
+<li>The parent <code>ScrollViewer</code> used physical scrolling.</li>
+<li>The repeater derived its viewport from <code>EffectiveViewportChanged</code>.</li>
+</ul>
+<p>With the current logical scrolling implementation, this legacy path is still relevant for older versions or for custom content that opts out of logical scrolling.</p>
+<h2 id="comparison-with-logical-scrolling">Comparison with logical scrolling</h2>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>Physical scrolling</th>
+<th>Logical scrolling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offset applied to child bounds</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Viewport source</td>
+<td>EffectiveViewportChanged</td>
+<td>Logical offset + viewport</td>
+</tr>
+<tr>
+<td>Scroll step size</td>
+<td>Fixed pixel delta</td>
+<td><code>ScrollSize</code> / <code>PageScrollSize</code></td>
+</tr>
+<tr>
+<td>Used when</td>
+<td>No logical scroll support</td>
+<td><code>ILogicalScrollable</code> enabled</td>
+</tr>
+</tbody>
+</table>
+<p>For how <code>ItemsRepeater</code> maps the logical scroll contract, see <a href="logical-scrolling.html">Logical Scrolling (ILogicalScrollable)</a>.</p>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/virtualization.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/physical-scrolling.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

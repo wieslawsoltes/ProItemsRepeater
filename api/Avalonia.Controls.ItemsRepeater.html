@@ -85,7 +85,7 @@
 
 
   <h1 id="Avalonia_Controls_ItemsRepeater" data-uid="Avalonia.Controls.ItemsRepeater" class="text-break">
-Class ItemsRepeater  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L24"><i class="bi bi-code-slash"></i></a>
+Class ItemsRepeater  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.LogicalScrollable.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -99,7 +99,7 @@ custom views, and virtualization.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ItemsRepeater : Panel, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, IInputElement, IDataTemplateHost, INamed, ISetterValue, IChildIndexProvider</code></pre>
+    <pre><code class="lang-csharp hljs">public class ItemsRepeater : Panel, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, IInputElement, IDataTemplateHost, INamed, ISetterValue, IChildIndexProvider, ILogicalScrollable, IScrollable</code></pre>
   </div>
 
 
@@ -141,6 +141,8 @@ custom views, and virtualization.</p>
       <div><span class="xref">INamed</span></div>
       <div><span class="xref">ISetterValue</span></div>
       <div><span class="xref">IChildIndexProvider</span></div>
+      <div><span class="xref">ILogicalScrollable</span></div>
+      <div><span class="xref">IScrollable</span></div>
     </dd>
   </dl>
 
@@ -955,7 +957,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater__ctor" data-uid="Avalonia.Controls.ItemsRepeater.#ctor">
   ItemsRepeater()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html">ItemsRepeater</a> class.</p>
@@ -985,7 +987,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_HorizontalCacheLengthProperty" data-uid="Avalonia.Controls.ItemsRepeater.HorizontalCacheLengthProperty">
   HorizontalCacheLengthProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_HorizontalCacheLength">HorizontalCacheLength</a> property.</p>
@@ -1016,7 +1018,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ItemTemplateProperty" data-uid="Avalonia.Controls.ItemsRepeater.ItemTemplateProperty">
   ItemTemplateProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_ItemTemplate">ItemTemplate</a> property.</p>
@@ -1047,7 +1049,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSourceProperty" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSourceProperty">
   ItemsSourceProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_ItemsSource">ItemsSource</a> property.</p>
@@ -1078,7 +1080,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_LayoutProperty" data-uid="Avalonia.Controls.ItemsRepeater.LayoutProperty">
   LayoutProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_Layout">Layout</a> property.</p>
@@ -1109,7 +1111,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_VerticalCacheLengthProperty" data-uid="Avalonia.Controls.ItemsRepeater.VerticalCacheLengthProperty">
   VerticalCacheLengthProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_VerticalCacheLength">VerticalCacheLength</a> property.</p>
@@ -1145,7 +1147,7 @@ custom views, and virtualization.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_HorizontalCacheLength" data-uid="Avalonia.Controls.ItemsRepeater.HorizontalCacheLength">
   HorizontalCacheLength
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets a value that indicates the size of the buffer used to realize items when
@@ -1178,7 +1180,7 @@ panning or scrolling horizontally.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ItemTemplate" data-uid="Avalonia.Controls.ItemsRepeater.ItemTemplate">
   ItemTemplate
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the template used to display each item.</p>
@@ -1211,7 +1213,7 @@ public IDataTemplate? ItemTemplate { get; set; }</code></pre>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSource" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSource">
   ItemsSource
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets an object source used to generate the content of the ItemsRepeater.</p>
@@ -1243,7 +1245,7 @@ public IDataTemplate? ItemTemplate { get; set; }</code></pre>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSourceView" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSourceView">
   ItemsSourceView
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a standardized view of the supported interactions between a given Items object and
@@ -1276,7 +1278,7 @@ the ItemsRepeater control and its associated components.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_Layout" data-uid="Avalonia.Controls.ItemsRepeater.Layout">
   Layout
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the layout used to size and position elements in the ItemsRepeater.</p>
@@ -1310,7 +1312,7 @@ vertical orientation.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_VerticalCacheLength" data-uid="Avalonia.Controls.ItemsRepeater.VerticalCacheLength">
   VerticalCacheLength
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets a value that indicates the size of the buffer used to realize items when
@@ -1347,7 +1349,7 @@ panning or scrolling vertically.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ArrangeOverride_Avalonia_Size_" data-uid="Avalonia.Controls.ItemsRepeater.ArrangeOverride(Avalonia.Size)">
   ArrangeOverride(Size)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L367"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L378"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Positions child elements as part of a layout pass.</p>
@@ -1386,7 +1388,7 @@ panning or scrolling vertically.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_GetElementIndex_Avalonia_Controls_Control_" data-uid="Avalonia.Controls.ItemsRepeater.GetElementIndex(Avalonia.Controls.Control)">
   GetElementIndex(Control)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L242"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieves the index of the item from the data source that corresponds to the specified
@@ -1427,7 +1429,7 @@ or -1 if the element is not supported.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_GetOrCreateElement_System_Int32_" data-uid="Avalonia.Controls.ItemsRepeater.GetOrCreateElement(System.Int32)">
   GetOrCreateElement(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L264"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieves the UIElement that corresponds to the item at the specified index in the
@@ -1468,7 +1470,7 @@ item is not realized, a new UIElement is created.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_MeasureOverride_Avalonia_Size_" data-uid="Avalonia.Controls.ItemsRepeater.MeasureOverride(Avalonia.Size)">
   MeasureOverride(Size)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L294"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Measures the control and its child elements as part of a layout pass.</p>
@@ -1507,7 +1509,7 @@ item is not realized, a new UIElement is created.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_OnAttachedToVisualTree_Avalonia_VisualTreeAttachmentEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)">
   OnAttachedToVisualTree(VisualTreeAttachmentEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L442"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L460"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when the control is added to a rooted visual tree.</p>
@@ -1540,7 +1542,7 @@ item is not realized, a new UIElement is created.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_OnDetachedFromVisualTree_Avalonia_VisualTreeAttachmentEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs)">
   OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L450"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L469"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when the control is removed from a rooted visual tree.</p>
@@ -1573,7 +1575,7 @@ item is not realized, a new UIElement is created.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_OnPropertyChanged_Avalonia_AvaloniaPropertyChangedEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)">
   OnPropertyChanged(AvaloniaPropertyChangedEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L456"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L475"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when a avalonia property changes on the object.</p>
@@ -1606,7 +1608,7 @@ item is not realized, a new UIElement is created.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_TryGetElement_System_Int32_" data-uid="Avalonia.Controls.ItemsRepeater.TryGetElement(System.Int32)">
   TryGetElement(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L247"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L253"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieves the realized UIElement that corresponds to the item at the specified index in
@@ -1650,7 +1652,7 @@ realized, or null if the item is not realized.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ElementClearing" data-uid="Avalonia.Controls.ItemsRepeater.ElementClearing">
   ElementClearing
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L205"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Occurs each time an element is cleared and made available to be re-used.</p>
@@ -1686,7 +1688,7 @@ for re-use.</p>
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ElementIndexChanged" data-uid="Avalonia.Controls.ItemsRepeater.ElementIndexChanged">
   ElementIndexChanged
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L214"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L220"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Occurs for each realized <span class="xref">Avalonia.Controls.Control</span> when the index for the item it
@@ -1726,7 +1728,7 @@ source, the index for items that come after in the ordering will be impacted.</p
 
   <h3 id="Avalonia_Controls_ItemsRepeater_ElementPrepared" data-uid="Avalonia.Controls.ItemsRepeater.ElementPrepared">
   ElementPrepared
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L223"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L229"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Occurs each time an element is prepared for use.</p>
@@ -1762,7 +1764,7 @@ used.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L24" class="edit-link">Edit this page</a>
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.LogicalScrollable.cs/#L13" class="edit-link">Edit this page</a>
         </div>
 
 

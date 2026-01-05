@@ -83,13 +83,23 @@
         <article data-uid="">
 <h1 id="scrolling-internals">Scrolling Internals</h1>
 
-<p>This article explains how <code>ItemsRepeater</code> participates in scrolling without being a scrollable control itself. It focuses on the internal coordination between <code>ItemsRepeater</code>, the layout system, and the parent scroller.</p>
-<h2 id="itemsrepeater-is-not-a-scroller">ItemsRepeater is not a scroller</h2>
-<p><code>ItemsRepeater</code> derives from <code>Panel</code> and does not implement <code>ILogicalScrollable</code> or <code>IScrollable</code>. It relies on an ancestor scroller (usually <code>ScrollViewer</code>) to provide scroll offsets and viewport notifications. Because of that:</p>
+<p>This article explains how <code>ItemsRepeater</code> participates in scrolling without being a scroll viewer. It focuses on the internal coordination between <code>ItemsRepeater</code>, the layout system, and the parent scroller.</p>
+<h2 id="itemsrepeater-is-not-a-scroll-viewer">ItemsRepeater is not a scroll viewer</h2>
+<p><code>ItemsRepeater</code> derives from <code>Panel</code> and does not render scrollbars or manage input directly. It does implement <code>ILogicalScrollable</code>, so an ancestor scroll viewer (usually <code>ScrollViewer</code>) can delegate scroll offsets and viewport updates to it. Because of that:</p>
 <ul>
 <li>You must wrap <code>ItemsRepeater</code> in a scroll viewer to get scrolling.</li>
-<li><code>ItemsRepeater</code> supplies virtualization and anchoring, not scrollbars or offset management.</li>
+<li><code>ItemsRepeater</code> supplies virtualization and anchoring; the scroll viewer supplies scrollbars and input handling.</li>
 </ul>
+<h2 id="logical-scrolling-integration">Logical scrolling integration</h2>
+<p>When hosted in a <code>ScrollViewer</code>, the repeater is detected as <code>ILogicalScrollable</code> and the scroll viewer switches to logical scrolling:</p>
+<ul>
+<li>The scroll viewer binds to <code>Extent</code>, <code>Viewport</code>, and <code>Offset</code> on the repeater.</li>
+<li>Scroll input uses the repeater-provided logical step sizes (<code>ScrollSize</code> and <code>PageScrollSize</code>).</li>
+<li>The child is not physically offset; the repeater updates its viewport through <code>ViewportManager.UpdateViewportFromLogicalScroll(...)</code>.</li>
+</ul>
+<p>If the repeater is not hosted in a scroll viewer, no logical scrolling occurs and viewport-driven virtualization is limited to layout-driven updates.</p>
+<p>For a detailed breakdown of the <code>ILogicalScrollable</code> contract and how <code>ItemsRepeater</code> maps it, see <a href="logical-scrolling.html">Logical Scrolling (ILogicalScrollable)</a>.</p>
+<p>If content does not implement <code>ILogicalScrollable</code> (or disables it), the scroll viewer uses physical scrolling. See <a href="physical-scrolling.html">Physical Scrolling (Non-Logical Mode)</a>.</p>
 <h2 id="viewport-driven-virtualization">Viewport-driven virtualization</h2>
 <p>When scrolling is available, <code>ItemsRepeater</code> tracks the <em>effective viewport</em> and uses it to compute:</p>
 <ul>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Logical Scrolling (ILogicalScrollable) | ProItemsRepeater for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Logical Scrolling (ILogicalScrollable) | ProItemsRepeater for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/logical-scrolling.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="logical-scrolling-ilogicalscrollable">Logical Scrolling (ILogicalScrollable)</h1>
+
+<p>This article describes how <code>ItemsRepeater</code> implements <code>ILogicalScrollable</code> and how that changes the scrolling pipeline when the repeater is hosted inside a <code>ScrollViewer</code>.</p>
+<h2 id="overview">Overview</h2>
+<p><code>ItemsRepeater</code> is still a <code>Panel</code> and does not render scrollbars, but it <em>does</em> implement <code>ILogicalScrollable</code>. When placed inside a <code>ScrollViewer</code>, the scroll viewer detects the interface and switches to logical scrolling:</p>
+<ul>
+<li>Scroll offsets, extent, and viewport are read from the repeater.</li>
+<li>Scroll input is quantized using the repeater-provided logical sizes.</li>
+<li>The child is not physically offset; the repeater updates its viewport internally.</li>
+</ul>
+<p>This is different from physical scrolling, where the scroll viewer treats content as a large canvas and offsets the child bounds directly.</p>
+<h2 id="contract-mapping-in-itemsrepeater">Contract mapping in ItemsRepeater</h2>
+<p><code>ILogicalScrollable</code> extends <code>IScrollable</code>. <code>ItemsRepeater</code> implements the following behaviors:</p>
+<ul>
+<li><code>Extent</code> and <code>Viewport</code>: taken from layout size and available size, expressed in layout coordinates (DIPs).</li>
+<li><code>Offset</code>: stored in the repeater and clamped to <code>Extent - Viewport</code>. The offset is interpreted in the same coordinate space as the layout.</li>
+<li><code>ScrollSize</code>: an estimated logical step size based on realized items and layout spacing.</li>
+<li><code>PageScrollSize</code>: equal to the current <code>Viewport</code>.</li>
+<li><code>CanHorizontallyScroll</code> / <code>CanVerticallyScroll</code>: assigned by the scroll viewer based on scrollbar visibility. Disabled axes force offsets to zero.</li>
+<li><code>ScrollInvalidated</code>: raised whenever any scroll-related value changes.</li>
+<li><code>BringIntoView</code>: computes a target rect and updates offset if the rect is outside the viewport.</li>
+</ul>
+<h2 id="scroll-size-calculation">Scroll size calculation</h2>
+<p><code>ItemsRepeater</code> computes <code>ScrollSize</code> from realized elements:</p>
+<ol>
+<li>Average the realized child bounds (or desired sizes) to estimate item width/height.</li>
+<li>Cache the value for reuse until invalidated.</li>
+<li>If no realized elements are available:
+<ul>
+<li>Use <code>UniformGridLayout.MinItemWidth/MinItemHeight</code>, or</li>
+<li>Fall back to a default of <code>50 x 50</code>.</li>
+</ul>
+</li>
+<li>Adjust the value for layout-specific spacing:
+<ul>
+<li><code>StackLayout</code> / <code>NonVirtualizingStackLayout</code>: add <code>Spacing</code> along the scroll axis.</li>
+<li><code>WrapLayout</code>: add <code>VerticalSpacing</code> or <code>HorizontalSpacing</code> depending on orientation.</li>
+<li><code>UniformGridLayout</code>: add <code>MinRowSpacing</code> or <code>MinColumnSpacing</code> depending on orientation.</li>
+</ul>
+</li>
+</ol>
+<p>This gives the scroll viewer a stable step size for wheel and gesture input without requiring fully realized content.</p>
+<h2 id="viewport-integration">Viewport integration</h2>
+<p>When the scroll viewer updates the logical offset, the repeater calls:</p>
+<ul>
+<li><code>ViewportManager.UpdateViewportFromLogicalScroll(viewport, offset, invalidateMeasure)</code></li>
+</ul>
+<p>This converts the logical offset into the visible window used by virtualization. Because the viewport is driven by the logical scrollable, <code>ItemsRepeater</code> does not subscribe to <code>EffectiveViewportChanged</code> for this path.</p>
+<h2 id="logical-vs-physical-scrolling">Logical vs physical scrolling</h2>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>Logical scrolling</th>
+<th>Physical scrolling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offset applied to child bounds</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Viewport source</td>
+<td>Logical offset + viewport</td>
+<td>EffectiveViewportChanged</td>
+</tr>
+<tr>
+<td>Scroll step size</td>
+<td><code>ScrollSize</code> / <code>PageScrollSize</code></td>
+<td>Fixed pixel delta</td>
+</tr>
+<tr>
+<td>Used when</td>
+<td>Content implements <code>ILogicalScrollable</code></td>
+<td>Otherwise</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>ItemsRepeater</code>, logical scrolling provides scroll steps tied to item sizing and keeps virtualization in the repeater's layout coordinate space.</p>
+<h2 id="practical-notes">Practical notes</h2>
+<ul>
+<li>Logical scrolling is automatic when <code>ItemsRepeater</code> is hosted in a <code>ScrollViewer</code>.</li>
+<li>You still need a <code>ScrollViewer</code> to display scrollbars and manage user input.</li>
+<li>Large changes in extent or layout invalidate the cached scroll size to keep steps accurate.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/docfx/articles/logical-scrolling.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

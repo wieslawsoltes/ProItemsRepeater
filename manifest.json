@@ -627,6 +627,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/logical-scrolling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/logical-scrolling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/migration.md",
       "output": {
         ".html": {
@@ -641,6 +651,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/performance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/physical-scrolling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/physical-scrolling.html"
         }
       },
       "version": ""
