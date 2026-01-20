@@ -1,12 +1,12 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Styles.Resources>
-    <SolidColorBrush x:Key="CatalogBaseLowColor" Color="#F7F7F7" />
-    <SolidColorBrush x:Key="CatalogBaseMediumColor" Color="#CFCFCF" />
-    <SolidColorBrush x:Key="CatalogBaseHighColor" Color="#1F1F1F" />
-    <SolidColorBrush x:Key="CatalogAccentLowColor" Color="#DDEBFF" />
-    <SolidColorBrush x:Key="CatalogAccentMediumColor" Color="#3B82F6" />
-    <SolidColorBrush x:Key="CatalogAccentHighColor" Color="#1D4ED8" />
+    <SolidColorBrush x:Key="CatalogBaseLowColor" Color="{DynamicResource SystemChromeLowColor}" />
+    <SolidColorBrush x:Key="CatalogBaseMediumColor" Color="{DynamicResource SystemChromeHighColor}" />
+    <SolidColorBrush x:Key="CatalogBaseHighColor" Color="{DynamicResource SystemBaseHighColor}" />
+    <SolidColorBrush x:Key="CatalogAccentLowColor" Color="{DynamicResource SystemAccentColorLight1}" />
+    <SolidColorBrush x:Key="CatalogAccentMediumColor" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="CatalogAccentHighColor" Color="{DynamicResource SystemAccentColorDark1}" />
 
     <RepeaterDataGridCellTextConverter x:Key="CellTextConverter" />
     <RepeaterDataGridRowHeightConverter x:Key="RowHeightConverter" />
