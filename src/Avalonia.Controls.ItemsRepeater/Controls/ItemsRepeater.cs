@@ -57,6 +57,12 @@ namespace Avalonia.Controls
         public static readonly StyledProperty<double> VerticalCacheLengthProperty =
             AvaloniaProperty.Register<ItemsRepeater, double>(nameof(VerticalCacheLength), 2.0);
 
+        /// <summary>
+        /// Defines the <see cref="IsLogicalScrollEnabled"/> property.
+        /// </summary>
+        public static readonly StyledProperty<bool> IsLogicalScrollEnabledProperty =
+            AvaloniaProperty.Register<ItemsRepeater, bool>(nameof(IsLogicalScrollEnabled), true);
+
         private static readonly StyledProperty<VirtualizationInfo?> VirtualizationInfoProperty =
             AvaloniaProperty.RegisterAttached<ItemsRepeater, Control, VirtualizationInfo?>("VirtualizationInfo");
 
@@ -157,6 +163,16 @@ namespace Avalonia.Controls
         {
             get => GetValue(VerticalCacheLengthProperty);
             set => SetValue(VerticalCacheLengthProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether logical scrolling is enabled when the
+        /// repeater is hosted directly inside a scroll viewer.
+        /// </summary>
+        public bool IsLogicalScrollEnabled
+        {
+            get => GetValue(IsLogicalScrollEnabledProperty);
+            set => SetValue(IsLogicalScrollEnabledProperty, value);
         }
 
         /// <summary>
@@ -506,6 +522,10 @@ namespace Avalonia.Controls
             else if (change.Property == VerticalCacheLengthProperty)
             {
                 _viewportManager.VerticalCacheLength = change.GetNewValue<double>();
+            }
+            else if (change.Property == IsLogicalScrollEnabledProperty)
+            {
+                UpdateLogicalScrollingState();
             }
             base.OnPropertyChanged(change);
         }

@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Avalonia.Controls.Samples"
+             x:Class="Avalonia.Controls.Samples.NestedItemsRepeaterPage"
+             x:DataType="local:NestedItemsRepeaterPageViewModel">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0 0 0 16">
+      <TextBlock Classes="h2">Nested ItemsRepeater virtualization with outer scrolling.</TextBlock>
+      <TextBlock Text="Inner repeaters virtualize using the parent scroller's effective viewport."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+    <Border BorderThickness="1" BorderBrush="{DynamicResource CatalogBaseMediumColor}">
+      <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+        <ItemsRepeater ItemsSource="{Binding Groups}">
+          <ItemsRepeater.Layout>
+            <StackLayout Orientation="Vertical" Spacing="12" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="local:NestedGroup">
+              <Border BorderBrush="{DynamicResource CatalogBaseLowColor}"
+                      BorderThickness="1"
+                      Padding="8">
+                <StackPanel Spacing="6">
+                  <TextBlock Text="{Binding Title}" Classes="h3" />
+                  <ItemsRepeater ItemsSource="{Binding Items}">
+                    <ItemsRepeater.Layout>
+                      <StackLayout Orientation="Vertical" Spacing="4" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                      <DataTemplate x:DataType="local:NestedItem">
+                        <Border Background="{DynamicResource CatalogAccentLowColor}"
+                                CornerRadius="4"
+                                Padding="6 2">
+                          <TextBlock Text="{Binding Label}" />
+                        </Border>
+                      </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                  </ItemsRepeater>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </ScrollViewer>
+    </Border>
+  </DockPanel>
+</UserControl>

@@ -14,3 +14,4 @@ dotnet run --project samples/Avalonia.Controls.ItemsRepeater.Samples/Avalonia.Co
 - Template selection with `RecyclingElementFactory` and `RecyclePool`.
 - Selection styles and keyboard interaction in `SelectingItemsRepeater`.
 - Scroll-to-item behavior and random item updates.
+- Nested `ItemsRepeater` virtualization inside a scrolling container.

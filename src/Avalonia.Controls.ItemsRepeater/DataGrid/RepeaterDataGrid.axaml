@@ -1,0 +1,172 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <SolidColorBrush x:Key="CatalogBaseLowColor" Color="{DynamicResource SystemChromeLowColor}" />
+    <SolidColorBrush x:Key="CatalogBaseMediumColor" Color="{DynamicResource SystemChromeHighColor}" />
+    <SolidColorBrush x:Key="CatalogBaseHighColor" Color="{DynamicResource SystemBaseHighColor}" />
+    <SolidColorBrush x:Key="CatalogAccentLowColor" Color="{DynamicResource SystemAccentColorLight1}" />
+    <SolidColorBrush x:Key="CatalogAccentMediumColor" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="CatalogAccentHighColor" Color="{DynamicResource SystemAccentColorDark1}" />
+
+    <RepeaterDataGridCellTextConverter x:Key="CellTextConverter" />
+    <RepeaterDataGridRowHeightConverter x:Key="RowHeightConverter" />
+    <IsNullConverter x:Key="IsNullConverter" />
+    <IsNotNullConverter x:Key="IsNotNullConverter" />
+    <RepeaterDataGridCellContentConverter x:Key="CellContentConverter" />
+
+    <ControlTheme x:Key="RepeaterDataGridHeaderCellTheme" TargetType="Border">
+      <Setter Property="Background" Value="{DynamicResource CatalogBaseLowColor}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CatalogBaseMediumColor}" />
+      <Setter Property="BorderThickness" Value="0,1,1,1" />
+      <Setter Property="Padding" Value="8,6" />
+      <Style Selector="^:nth-child(1)">
+        <Setter Property="BorderThickness" Value="1,1,1,1" />
+      </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="RepeaterDataGridRowTheme" TargetType="Border">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CatalogBaseMediumColor}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Style Selector="^:pointerover">
+        <Setter Property="Background" Value="{DynamicResource CatalogBaseLowColor}" />
+      </Style>
+      <Style Selector="^.rowSelected">
+        <Setter Property="Background" Value="{DynamicResource CatalogAccentLowColor}" />
+      </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="RepeaterDataGridCellTheme" TargetType="Border">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CatalogBaseMediumColor}" />
+      <Setter Property="BorderThickness" Value="0,0,1,1" />
+      <Setter Property="Padding" Value="8,4" />
+      <Style Selector="^:pointerover">
+        <Setter Property="Background" Value="{DynamicResource CatalogBaseLowColor}" />
+      </Style>
+      <Style Selector="^:nth-child(1)">
+        <Setter Property="BorderThickness" Value="1,0,1,1" />
+      </Style>
+      <Style Selector="^.cellSelected">
+        <Setter Property="Background" Value="{DynamicResource CatalogAccentMediumColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CatalogAccentHighColor}" />
+      </Style>
+    </ControlTheme>
+
+    <DataTemplate x:Key="RepeaterDataGridHeaderTemplate"
+                  x:DataType="RepeaterDataGridColumn">
+      <Border Classes="dataGridHeaderCell"
+              Theme="{StaticResource RepeaterDataGridHeaderCellTheme}"
+              Width="{Binding ActualWidth}"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top">
+        <Grid>
+          <ContentPresenter ContentTemplate="{Binding HeaderTemplate}"
+                            IsVisible="{Binding HeaderTemplate, Converter={StaticResource IsNotNullConverter}}"
+                            VerticalAlignment="Center">
+            <ContentPresenter.Content>
+              <Binding Path="Header" />
+            </ContentPresenter.Content>
+          </ContentPresenter>
+          <TextBlock Text="{Binding Header}"
+                     TextTrimming="CharacterEllipsis"
+                     FontWeight="SemiBold"
+                     Foreground="{DynamicResource CatalogBaseHighColor}"
+                     VerticalAlignment="Center"
+                     IsVisible="{Binding HeaderTemplate, Converter={StaticResource IsNullConverter}}" />
+        </Grid>
+      </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RepeaterDataGridRowTemplate"
+                  x:DataType="x:Object">
+      <Border Classes="dataGridRow"
+              Theme="{StaticResource RepeaterDataGridRowTheme}"
+              HorizontalAlignment="Left">
+        <Border.Height>
+          <MultiBinding Converter="{StaticResource RowHeightConverter}">
+            <Binding />
+            <Binding Path="RowHeightBindingPath"
+                     RelativeSource="{RelativeSource AncestorType=RepeaterDataGrid}" />
+          </MultiBinding>
+        </Border.Height>
+        <ItemsRepeater x:Name="PART_RowCells"
+                       DataContext="{Binding}"
+                       ItemsSource="{Binding Columns, RelativeSource={RelativeSource AncestorType=RepeaterDataGrid}}"
+                       HorizontalAlignment="Left">
+          <ItemsRepeater.Layout>
+            <StackLayout Orientation="Horizontal" DisableVirtualization="True" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="RepeaterDataGridColumn">
+              <Border Classes="dataGridCell"
+                      Theme="{StaticResource RepeaterDataGridCellTheme}"
+                      Width="{Binding ActualWidth}"
+                      Tag="{Binding Index}">
+                <Grid>
+                  <ContentPresenter ContentTemplate="{Binding CellTemplate}"
+                                    IsVisible="{Binding CellTemplate, Converter={StaticResource IsNotNullConverter}}"
+                                    VerticalAlignment="Center">
+                    <ContentPresenter.Content>
+                      <MultiBinding Converter="{StaticResource CellContentConverter}">
+                        <Binding Path="CellTemplate" />
+                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ItemsRepeater}" />
+                      </MultiBinding>
+                    </ContentPresenter.Content>
+                  </ContentPresenter>
+                  <TextBlock TextTrimming="CharacterEllipsis"
+                             VerticalAlignment="Center"
+                             Foreground="{DynamicResource CatalogBaseHighColor}"
+                             IsVisible="{Binding CellTemplate, Converter={StaticResource IsNullConverter}}">
+                    <TextBlock.Text>
+                      <MultiBinding Converter="{StaticResource CellTextConverter}">
+                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ItemsRepeater}" />
+                        <Binding Path="BindingPath" />
+                      </MultiBinding>
+                    </TextBlock.Text>
+                  </TextBlock>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </Border>
+    </DataTemplate>
+
+    <ControlTheme x:Key="{x:Type RepeaterDataGrid}" TargetType="RepeaterDataGrid">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+      <Setter Property="Template">
+        <ControlTemplate TargetType="RepeaterDataGrid"
+                         x:DataType="RepeaterDataGrid">
+          <DockPanel>
+            <Border DockPanel.Dock="Top" ClipToBounds="True">
+              <ItemsRepeater x:Name="PART_HeaderRepeater"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             Height="{Binding HeaderHeight, RelativeSource={RelativeSource AncestorType=RepeaterDataGrid}}"
+                             ItemTemplate="{StaticResource RepeaterDataGridHeaderTemplate}">
+                <ItemsRepeater.Layout>
+                  <StackLayout Orientation="Horizontal" DisableVirtualization="True" />
+                </ItemsRepeater.Layout>
+              </ItemsRepeater>
+            </Border>
+            <ScrollViewer x:Name="PART_Scroller"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+              <SelectingItemsRepeater x:Name="PART_RowsRepeater"
+                                      Background="Transparent"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Top"
+                                      ItemTemplate="{StaticResource RepeaterDataGridRowTemplate}">
+                <SelectingItemsRepeater.Layout>
+                  <StackLayout Orientation="Vertical" />
+                </SelectingItemsRepeater.Layout>
+              </SelectingItemsRepeater>
+            </ScrollViewer>
+          </DockPanel>
+        </ControlTemplate>
+      </Setter>
+    </ControlTheme>
+  </Styles.Resources>
+</Styles>

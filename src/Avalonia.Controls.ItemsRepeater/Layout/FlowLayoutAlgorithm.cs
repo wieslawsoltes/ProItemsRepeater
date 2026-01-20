@@ -631,10 +631,20 @@ namespace Avalonia.Layout
                 if (realizedElementCount > 0)
                 {
                     int countInLine = 0;
-                    var previousElementBounds = _elementManager.GetLayoutBoundsForDataIndex(_firstRealizedDataIndexInsideRealizationWindow);
+                    int firstRealizedIndex = _elementManager.GetDataIndexFromRealizedRangeIndex(0);
+                    int lastRealizedIndex = _elementManager.GetDataIndexFromRealizedRangeIndex(realizedElementCount - 1);
+                    int startIndex = Math.Max(_firstRealizedDataIndexInsideRealizationWindow, firstRealizedIndex);
+                    int endIndex = Math.Min(_lastRealizedDataIndexInsideRealizationWindow, lastRealizedIndex);
+
+                    if (startIndex > endIndex)
+                    {
+                        return;
+                    }
+
+                    var previousElementBounds = _elementManager.GetLayoutBoundsForDataIndex(startIndex);
                     var currentLineOffset = _orientation.MajorStart(previousElementBounds);
                     var currentLineSize = _orientation.MajorSize(previousElementBounds);
-                    for (int currentDataIndex = _firstRealizedDataIndexInsideRealizationWindow; currentDataIndex <= _lastRealizedDataIndexInsideRealizationWindow; currentDataIndex++)
+                    for (int currentDataIndex = startIndex; currentDataIndex <= endIndex; currentDataIndex++)
                     {
                         var currentBounds = _elementManager.GetLayoutBoundsForDataIndex(currentDataIndex);
                         if (_orientation.MajorStart(currentBounds) != currentLineOffset)
@@ -652,7 +662,7 @@ namespace Avalonia.Layout
                     }
 
                     // Raise for the last line.
-                    _algorithmCallbacks!.Algorithm_OnLineArranged(_lastRealizedDataIndexInsideRealizationWindow - countInLine + 1, countInLine, currentLineSize, _context!);
+                    _algorithmCallbacks!.Algorithm_OnLineArranged(endIndex - countInLine + 1, countInLine, currentLineSize, _context!);
                 }
             }
         }

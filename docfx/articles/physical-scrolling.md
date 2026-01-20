@@ -11,6 +11,8 @@ This article describes the non-logical scrolling path used by `ScrollViewer` whe
 
 In this mode, the scroll viewer treats the content as a large canvas and offsets the child bounds directly.
 
+`ItemsRepeater` also takes this path when it is nested inside another scrolling/virtualizing control, because it is not the scroll viewer's direct logical scrolling content.
+
 ## How physical scrolling works
 
 The scroll viewer drives scrolling through `ScrollContentPresenter`:

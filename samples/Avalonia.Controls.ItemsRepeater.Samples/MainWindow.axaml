@@ -10,6 +10,12 @@
     <TabItem Header="ItemsRepeater">
       <local:ItemsRepeaterPage />
     </TabItem>
+    <TabItem Header="RepeaterDataGrid">
+      <local:RepeaterDataGridPage />
+    </TabItem>
+    <TabItem Header="Nested ItemsRepeater">
+      <local:NestedItemsRepeaterPage />
+    </TabItem>
     <TabItem Header="SelectingItemsRepeater">
       <local:SelectingItemsRepeaterPage />
     </TabItem>
