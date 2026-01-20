@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class ItemsRepeater | ProItemsRepeater for Avalonia </title>
+      <title>Class RepeaterDataGrid | ProItemsRepeater for Avalonia </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class ItemsRepeater | ProItemsRepeater for Avalonia ">
+      <meta name="title" content="Class RepeaterDataGrid | ProItemsRepeater for Avalonia ">
       
-      <meta name="description" content="Represents a data-driven collection control that incorporates a flexible layout system, custom views, and virtualization.">
+      
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/new/main/apiSpec/new?filename=Avalonia_Controls_ItemsRepeater.md&amp;value=---%0Auid%3A%20Avalonia.Controls.ItemsRepeater%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/wieslawsoltes/ProItemsRepeater/new/main/apiSpec/new?filename=Avalonia_Controls_DataGrid_RepeaterDataGrid.md&amp;value=---%0Auid%3A%20Avalonia.Controls.DataGrid.RepeaterDataGrid%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -80,26 +80,24 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Avalonia.Controls.ItemsRepeater">
+        <article data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid">
 
 
 
-  <h1 id="Avalonia_Controls_ItemsRepeater" data-uid="Avalonia.Controls.ItemsRepeater" class="text-break">
-Class ItemsRepeater  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.LogicalScrollable.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Avalonia_Controls_DataGrid_RepeaterDataGrid" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid" class="text-break">
+Class RepeaterDataGrid  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Avalonia.html">Avalonia</a>.<a class="xref" href="Avalonia.Controls.html">Controls</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Avalonia.html">Avalonia</a>.<a class="xref" href="Avalonia.Controls.html">Controls</a>.<a class="xref" href="Avalonia.Controls.DataGrid.html">DataGrid</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Avalonia.Controls.ItemsRepeater.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a data-driven collection control that incorporates a flexible layout system,
-custom views, and virtualization.</p>
-</div>
+  <div class="markdown summary"></div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ItemsRepeater : Panel, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, IInputElement, IDataTemplateHost, INamed, ISetterValue, IChildIndexProvider, ILogicalScrollable, IScrollable</code></pre>
+    <pre><code class="lang-csharp hljs">public class RepeaterDataGrid : TemplatedControl, INotifyPropertyChanged, IDataContextProvider, ILogical, IThemeVariantHost, IResourceHost, IResourceNode, IStyleHost, ISetLogicalParent, ISetInheritanceParent, ISupportInitialize, IStyleable, IInputElement, IDataTemplateHost, INamed, ISetterValue</code></pre>
   </div>
 
 
@@ -117,8 +115,8 @@ custom views, and virtualization.</p>
       <div><span class="xref">Interactive</span></div>
       <div><span class="xref">InputElement</span></div>
       <div><span class="xref">Control</span></div>
-      <div><span class="xref">Panel</span></div>
-      <div><span class="xref">ItemsRepeater</span></div>
+      <div><span class="xref">TemplatedControl</span></div>
+      <div><span class="xref">RepeaterDataGrid</span></div>
     </dd>
   </dl>
 
@@ -140,45 +138,114 @@ custom views, and virtualization.</p>
       <div><span class="xref">IDataTemplateHost</span></div>
       <div><span class="xref">INamed</span></div>
       <div><span class="xref">ISetterValue</span></div>
-      <div><span class="xref">IChildIndexProvider</span></div>
-      <div><span class="xref">ILogicalScrollable</span></div>
-      <div><span class="xref">IScrollable</span></div>
     </dd>
   </dl>
 
-  <dl class="typelist derived">
-    <dt>Derived</dt>
-    <dd>
-      <div><a class="xref" href="Avalonia.Controls.SelectingItemsRepeater.html">SelectingItemsRepeater</a></div>
-    </dd>
-  </dl>
 
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>
-      <span class="xref">Panel.BackgroundProperty</span>
+      <span class="xref">TemplatedControl.BackgroundProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.Render(DrawingContext)</span>
+      <span class="xref">TemplatedControl.BorderBrushProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.AffectsParentArrange&lt;TPanel&gt;(params AvaloniaProperty[])</span>
+      <span class="xref">TemplatedControl.BorderThicknessProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.AffectsParentMeasure&lt;TPanel&gt;(params AvaloniaProperty[])</span>
+      <span class="xref">TemplatedControl.CornerRadiusProperty</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Panel.ChildrenChanged(object, NotifyCollectionChangedEventArgs)</a>
+      <span class="xref">TemplatedControl.FontFamilyProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.Children</span>
+      <span class="xref">TemplatedControl.FontSizeProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.Background</span>
+      <span class="xref">TemplatedControl.FontStyleProperty</span>
     </div>
     <div>
-      <span class="xref">Panel.IsItemsHost</span>
+      <span class="xref">TemplatedControl.FontWeightProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontStretchProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.ForegroundProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.PaddingProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.TemplateProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.IsTemplateFocusTargetProperty</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.TemplateAppliedEvent</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.GetIsTemplateFocusTarget(Control)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">TemplatedControl.SetIsTemplateFocusTarget(Control, bool)</a>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.ApplyTemplate()</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.GetTemplateFocusTarget()</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs)</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs)</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.OnTemplateChanged(AvaloniaPropertyChangedEventArgs)</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.Background</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.BorderBrush</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.BorderThickness</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.CornerRadius</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontFamily</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontSize</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontStyle</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontWeight</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.FontStretch</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.Foreground</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.Padding</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.Template</span>
+    </div>
+    <div>
+      <span class="xref">TemplatedControl.TemplateApplied</span>
     </div>
     <div>
       <span class="xref">Control.FocusAdornerProperty</span>
@@ -206,9 +273,6 @@ custom views, and virtualization.</p>
     </div>
     <div>
       <span class="xref">Control.SizeChangedEvent</span>
-    </div>
-    <div>
-      <span class="xref">Control.GetTemplateFocusTarget()</span>
     </div>
     <div>
       <span class="xref">Control.OnLoaded(RoutedEventArgs)</span>
@@ -520,9 +584,6 @@ custom views, and virtualization.</p>
       <span class="xref">Layoutable.UpdateLayout()</span>
     </div>
     <div>
-      <span class="xref">Layoutable.ApplyTemplate()</span>
-    </div>
-    <div>
       <span class="xref">Layoutable.Measure(Size)</span>
     </div>
     <div>
@@ -545,6 +606,9 @@ custom views, and virtualization.</p>
     </div>
     <div>
       <span class="xref">Layoutable.ArrangeCore(Rect)</span>
+    </div>
+    <div>
+      <span class="xref">Layoutable.ArrangeOverride(Size)</span>
     </div>
     <div>
       <span class="xref">Layoutable.OnMeasureInvalidated()</span>
@@ -646,10 +710,16 @@ custom views, and virtualization.</p>
       <span class="xref">Visual.InvalidateVisual()</span>
     </div>
     <div>
+      <span class="xref">Visual.Render(DrawingContext)</span>
+    </div>
+    <div>
       <span class="xref">Visual.AffectsRender&lt;T&gt;(params AvaloniaProperty[])</span>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Visual.LogicalChildrenCollectionChanged(object, NotifyCollectionChangedEventArgs)</a>
+    </div>
+    <div>
+      <span class="xref">Visual.OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs)</span>
     </div>
     <div>
       <span class="xref">Visual.InvalidateMirrorTransform()</span>
@@ -737,12 +807,6 @@ custom views, and virtualization.</p>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">StyledElement.TryGetResource(object, ThemeVariant, out object)</a>
-    </div>
-    <div>
-      <span class="xref">StyledElement.OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs)</span>
-    </div>
-    <div>
-      <span class="xref">StyledElement.OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs)</span>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventargs">StyledElement.OnDataContextChanged(EventArgs)</a>
@@ -953,19 +1017,18 @@ custom views, and virtualization.</p>
 </h2>
 
 
-  <a id="Avalonia_Controls_ItemsRepeater__ctor_" data-uid="Avalonia.Controls.ItemsRepeater.#ctor*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid__ctor_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater__ctor" data-uid="Avalonia.Controls.ItemsRepeater.#ctor">
-  ItemsRepeater()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid__ctor" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor">
+  RepeaterDataGrid()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html">ItemsRepeater</a> class.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ItemsRepeater()</code></pre>
+    <pre><code class="lang-csharp hljs">public RepeaterDataGrid()</code></pre>
   </div>
 
 
@@ -985,17 +1048,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_HorizontalCacheLengthProperty" data-uid="Avalonia.Controls.ItemsRepeater.HorizontalCacheLengthProperty">
-  HorizontalCacheLengthProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimitProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimitProperty">
+  AutoMeasureRowLimitProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L58"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_HorizontalCacheLength">HorizontalCacheLength</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;double&gt; HorizontalCacheLengthProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;int&gt; AutoMeasureRowLimitProperty</code></pre>
   </div>
 
 
@@ -1003,7 +1065,7 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
+    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1016,17 +1078,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabledProperty" data-uid="Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabledProperty">
-  IsLogicalScrollEnabledProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_ColumnsProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.ColumnsProperty">
+  ColumnsProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabled">IsLogicalScrollEnabled</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;bool&gt; IsLogicalScrollEnabledProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;RepeaterDataGrid, AvaloniaList&lt;RepeaterDataGridColumn&gt;&gt; ColumnsProperty</code></pre>
   </div>
 
 
@@ -1034,7 +1095,7 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGrid.html">RepeaterDataGrid</a>, <span class="xref">AvaloniaList</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html">RepeaterDataGridColumn</a>&gt;&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1047,17 +1108,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_ItemTemplateProperty" data-uid="Avalonia.Controls.ItemsRepeater.ItemTemplateProperty">
-  ItemTemplateProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeightProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeightProperty">
+  HeaderHeightProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_ItemTemplate">ItemTemplate</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;IDataTemplate?&gt; ItemTemplateProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;RepeaterDataGrid, double&gt; HeaderHeightProperty</code></pre>
   </div>
 
 
@@ -1065,7 +1125,7 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">StyledProperty</span>&lt;<span class="xref">IDataTemplate</span>&gt;</dt>
+    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGrid.html">RepeaterDataGrid</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1078,17 +1138,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSourceProperty" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSourceProperty">
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSourceProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSourceProperty">
   ItemsSourceProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_ItemsSource">ItemsSource</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;ItemsRepeater, IEnumerable?&gt; ItemsSourceProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;RepeaterDataGrid, IEnumerable?&gt; ItemsSourceProperty</code></pre>
   </div>
 
 
@@ -1096,7 +1155,7 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.ItemsRepeater.html">ItemsRepeater</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>&gt;</dt>
+    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGrid.html">RepeaterDataGrid</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1109,17 +1168,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_LayoutProperty" data-uid="Avalonia.Controls.ItemsRepeater.LayoutProperty">
-  LayoutProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPathProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPathProperty">
+  RowHeightBindingPathProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_Layout">Layout</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;AttachedLayout?&gt; LayoutProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;string?&gt; RowHeightBindingPathProperty</code></pre>
   </div>
 
 
@@ -1127,7 +1185,7 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="Avalonia.Layout.AttachedLayout.html">AttachedLayout</a>&gt;</dt>
+    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1140,17 +1198,16 @@ custom views, and virtualization.</p>
 
 
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_VerticalCacheLengthProperty" data-uid="Avalonia.Controls.ItemsRepeater.VerticalCacheLengthProperty">
-  VerticalCacheLengthProperty
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCellProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCellProperty">
+  SelectedCellProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Defines the <a class="xref" href="Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_VerticalCacheLength">VerticalCacheLength</a> property.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;double&gt; VerticalCacheLengthProperty</code></pre>
+    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;RepeaterDataGrid, RepeaterDataGridCellInfo?&gt; SelectedCellProperty</code></pre>
   </div>
 
 
@@ -1158,7 +1215,67 @@ custom views, and virtualization.</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">StyledProperty</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
+    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGrid.html">RepeaterDataGrid</a>, <a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html">RepeaterDataGridCellInfo</a>?&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionModeProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionModeProperty">
+  SelectionModeProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly StyledProperty&lt;SelectionMode&gt; SelectionModeProperty</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">StyledProperty</span>&lt;<span class="xref">SelectionMode</span>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidthProperty" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidthProperty">
+  TotalColumnWidthProperty
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly DirectProperty&lt;RepeaterDataGrid, double&gt; TotalColumnWidthProperty</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">DirectProperty</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGrid.html">RepeaterDataGrid</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -1174,20 +1291,80 @@ custom views, and virtualization.</p>
 </h2>
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_HorizontalCacheLength_" data-uid="Avalonia.Controls.ItemsRepeater.HorizontalCacheLength*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimit_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_HorizontalCacheLength" data-uid="Avalonia.Controls.ItemsRepeater.HorizontalCacheLength">
-  HorizontalCacheLength
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimit" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit">
+  AutoMeasureRowLimit
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L125"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets a value that indicates the size of the buffer used to realize items when
-panning or scrolling horizontally.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double HorizontalCacheLength { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int AutoMeasureRowLimit { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_Columns_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns*"></a>
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_Columns" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns">
+  Columns
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AvaloniaList&lt;RepeaterDataGridColumn&gt; Columns { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">AvaloniaList</span>&lt;<a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html">RepeaterDataGridColumn</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeight_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight*"></a>
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeight" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight">
+  HeaderHeight
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double HeaderHeight { get; }</code></pre>
   </div>
 
 
@@ -1207,81 +1384,14 @@ panning or scrolling horizontally.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabled_" data-uid="Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSource_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabled" data-uid="Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled">
-  IsLogicalScrollEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L172"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets a value that indicates whether logical scrolling is enabled when the
-repeater is hosted directly inside a scroll viewer.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsLogicalScrollEnabled { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_ItemTemplate_" data-uid="Avalonia.Controls.ItemsRepeater.ItemTemplate*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_ItemTemplate" data-uid="Avalonia.Controls.ItemsRepeater.ItemTemplate">
-  ItemTemplate
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L141"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets the template used to display each item.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[InheritDataTypeFromItems(&quot;ItemsSource&quot;)]
-public IDataTemplate? ItemTemplate { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><span class="xref">IDataTemplate</span></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_ItemsSource_" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSource*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSource" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSource">
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSource" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource">
   ItemsSource
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets an object source used to generate the content of the ItemsRepeater.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -1305,20 +1415,18 @@ public IDataTemplate? ItemTemplate { get; set; }</code></pre>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_ItemsSourceView_" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSourceView*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPath_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_ItemsSourceView" data-uid="Avalonia.Controls.ItemsRepeater.ItemsSourceView">
-  ItemsSourceView
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L182"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPath" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath">
+  RowHeightBindingPath
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a standardized view of the supported interactions between a given Items object and
-the ItemsRepeater control and its associated components.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ItemsSourceView? ItemsSourceView { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string? RowHeightBindingPath { get; set; }</code></pre>
   </div>
 
 
@@ -1327,7 +1435,7 @@ the ItemsRepeater control and its associated components.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">ItemsSourceView</span></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -1338,19 +1446,18 @@ the ItemsRepeater control and its associated components.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_Layout_" data-uid="Avalonia.Controls.ItemsRepeater.Layout*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCell_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_Layout" data-uid="Avalonia.Controls.ItemsRepeater.Layout">
-  Layout
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCell" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell">
+  SelectedCell
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets the layout used to size and position elements in the ItemsRepeater.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AttachedLayout? Layout { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public RepeaterDataGridCellInfo? SelectedCell { get; set; }</code></pre>
   </div>
 
 
@@ -1359,10 +1466,8 @@ the ItemsRepeater control and its associated components.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="Avalonia.Layout.AttachedLayout.html">AttachedLayout</a></dt>
-    <dd><p>The layout used to size and position elements. The default is a StackLayout with
-vertical orientation.</p>
-</dd>
+    <dt><a class="xref" href="Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html">RepeaterDataGridCellInfo</a>?</dt>
+    <dd></dd>
   </dl>
 
 
@@ -1372,20 +1477,49 @@ vertical orientation.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_VerticalCacheLength_" data-uid="Avalonia.Controls.ItemsRepeater.VerticalCacheLength*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionMode_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_VerticalCacheLength" data-uid="Avalonia.Controls.ItemsRepeater.VerticalCacheLength">
-  VerticalCacheLength
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionMode" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode">
+  SelectionMode
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets a value that indicates the size of the buffer used to realize items when
-panning or scrolling vertically.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double VerticalCacheLength { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public SelectionMode SelectionMode { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">SelectionMode</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidth_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth*"></a>
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidth" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth">
+  TotalColumnWidth
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double TotalColumnWidth { get; }</code></pre>
   </div>
 
 
@@ -1409,132 +1543,11 @@ panning or scrolling vertically.</p>
 </h2>
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_ArrangeOverride_" data-uid="Avalonia.Controls.ItemsRepeater.ArrangeOverride*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_MeasureOverride_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_ArrangeOverride_Avalonia_Size_" data-uid="Avalonia.Controls.ItemsRepeater.ArrangeOverride(Avalonia.Size)">
-  ArrangeOverride(Size)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L394"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Positions child elements as part of a layout pass.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override Size ArrangeOverride(Size finalSize)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>finalSize</code> <span class="xref">Size</span></dt>
-    <dd><p>The size available to the control.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><span class="xref">Size</span></dt>
-    <dd><p>The actual size used.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_GetElementIndex_" data-uid="Avalonia.Controls.ItemsRepeater.GetElementIndex*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_GetElementIndex_Avalonia_Controls_Control_" data-uid="Avalonia.Controls.ItemsRepeater.GetElementIndex(Avalonia.Controls.Control)">
-  GetElementIndex(Control)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L258"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Retrieves the index of the item from the data source that corresponds to the specified
-<span class="xref">Avalonia.Controls.Control</span>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int GetElementIndex(Control element)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>element</code> <span class="xref">Control</span></dt>
-    <dd><p>The element that corresponds to the item to get the index of.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The index of the item from the data source that corresponds to the specified UIElement,
-or -1 if the element is not supported.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_GetOrCreateElement_" data-uid="Avalonia.Controls.ItemsRepeater.GetOrCreateElement*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_GetOrCreateElement_System_Int32_" data-uid="Avalonia.Controls.ItemsRepeater.GetOrCreateElement(System.Int32)">
-  GetOrCreateElement(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L280"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Retrieves the UIElement that corresponds to the item at the specified index in the
-data source.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Control GetOrCreateElement(int index)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The index of the item.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><span class="xref">Control</span></dt>
-    <dd><p>An <span class="xref">Avalonia.Controls.Control</span> that corresponds to the item at the specified index. If the
-item is not realized, a new UIElement is created.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_MeasureOverride_" data-uid="Avalonia.Controls.ItemsRepeater.MeasureOverride*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_MeasureOverride_Avalonia_Size_" data-uid="Avalonia.Controls.ItemsRepeater.MeasureOverride(Avalonia.Size)">
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_MeasureOverride_Avalonia_Size_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride(Avalonia.Size)">
   MeasureOverride(Size)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L310"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L367"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Measures the control and its child elements as part of a layout pass.</p>
@@ -1569,11 +1582,45 @@ item is not realized, a new UIElement is created.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_OnAttachedToVisualTree_" data-uid="Avalonia.Controls.ItemsRepeater.OnAttachedToVisualTree*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnApplyTemplate_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_OnAttachedToVisualTree_Avalonia_VisualTreeAttachmentEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)">
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnApplyTemplate_Avalonia_Controls_Primitives_TemplateAppliedEventArgs_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs)">
+  OnApplyTemplate(TemplateAppliedEventArgs)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Called when the control's template is applied.
+In simple terms, this means the method is called just before the control is displayed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnApplyTemplate(TemplateAppliedEventArgs e)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>e</code> <span class="xref">TemplateAppliedEventArgs</span></dt>
+    <dd><p>The event args.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnAttachedToVisualTree_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree*"></a>
+
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnAttachedToVisualTree_Avalonia_VisualTreeAttachmentEventArgs_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)">
   OnAttachedToVisualTree(VisualTreeAttachmentEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L476"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when the control is added to a rooted visual tree.</p>
@@ -1602,44 +1649,11 @@ item is not realized, a new UIElement is created.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_OnDetachedFromVisualTree_" data-uid="Avalonia.Controls.ItemsRepeater.OnDetachedFromVisualTree*"></a>
+  <a id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnPropertyChanged_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged*"></a>
 
-  <h3 id="Avalonia_Controls_ItemsRepeater_OnDetachedFromVisualTree_Avalonia_VisualTreeAttachmentEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs)">
-  OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L485"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Called when the control is removed from a rooted visual tree.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>e</code> <span class="xref">VisualTreeAttachmentEventArgs</span></dt>
-    <dd><p>The event args.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Avalonia_Controls_ItemsRepeater_OnPropertyChanged_" data-uid="Avalonia.Controls.ItemsRepeater.OnPropertyChanged*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_OnPropertyChanged_Avalonia_AvaloniaPropertyChangedEventArgs_" data-uid="Avalonia.Controls.ItemsRepeater.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)">
+  <h3 id="Avalonia_Controls_DataGrid_RepeaterDataGrid_OnPropertyChanged_Avalonia_AvaloniaPropertyChangedEventArgs_" data-uid="Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)">
   OnPropertyChanged(AvaloniaPropertyChangedEventArgs)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L491"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L174"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when a avalonia property changes on the object.</p>
@@ -1668,167 +1682,11 @@ item is not realized, a new UIElement is created.</p>
 
 
 
-  <a id="Avalonia_Controls_ItemsRepeater_TryGetElement_" data-uid="Avalonia.Controls.ItemsRepeater.TryGetElement*"></a>
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_TryGetElement_System_Int32_" data-uid="Avalonia.Controls.ItemsRepeater.TryGetElement(System.Int32)">
-  TryGetElement(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L269"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Retrieves the realized UIElement that corresponds to the item at the specified index in
-the data source.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Control? TryGetElement(int index)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The index of the item.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><span class="xref">Control</span></dt>
-    <dd><p>he UIElement that corresponds to the item at the specified index if the item is
-realized, or null if the item is not realized.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <h2 class="section" id="events">Events
-</h2>
-
-
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_ElementClearing" data-uid="Avalonia.Controls.ItemsRepeater.ElementClearing">
-  ElementClearing
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L221"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Occurs each time an element is cleared and made available to be re-used.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event EventHandler&lt;ItemsRepeaterElementClearingEventArgs&gt;? ElementClearing</code></pre>
-  </div>
-
-
-
-
-
-
-  <h4 class="section">Event Type</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Avalonia.Controls.ItemsRepeaterElementClearingEventArgs.html">ItemsRepeaterElementClearingEventArgs</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-
-
-  <h4 class="section" id="Avalonia_Controls_ItemsRepeater_ElementClearing_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This event is raised immediately each time an element is cleared, such as when it falls
-outside the range of realized items. Elements are cleared when they become available
-for re-use.</p>
-</div>
-
-
-
-
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_ElementIndexChanged" data-uid="Avalonia.Controls.ItemsRepeater.ElementIndexChanged">
-  ElementIndexChanged
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L236"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Occurs for each realized <span class="xref">Avalonia.Controls.Control</span> when the index for the item it
-represents has changed.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event EventHandler&lt;ItemsRepeaterElementIndexChangedEventArgs&gt;? ElementIndexChanged</code></pre>
-  </div>
-
-
-
-
-
-
-  <h4 class="section">Event Type</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Avalonia.Controls.ItemsRepeaterElementIndexChangedEventArgs.html">ItemsRepeaterElementIndexChangedEventArgs</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-
-
-  <h4 class="section" id="Avalonia_Controls_ItemsRepeater_ElementIndexChanged_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>When you use ItemsRepeater to build a more complex control that supports specific
-interactions on the child elements (such as selection or click), it is useful to be
-able to keep an up-to-date identifier for the backing data item.</p>
-<p>This event is raised for each realized Control where the index for the item it
-represents has changed. For example, when another item is added or removed in the data
-source, the index for items that come after in the ordering will be impacted.</p>
-</div>
-
-
-
-
-
-  <h3 id="Avalonia_Controls_ItemsRepeater_ElementPrepared" data-uid="Avalonia.Controls.ItemsRepeater.ElementPrepared">
-  ElementPrepared
-  <a class="header-action link-secondary" title="View source" href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.cs/#L245"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Occurs each time an element is prepared for use.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event EventHandler&lt;ItemsRepeaterElementPreparedEventArgs&gt;? ElementPrepared</code></pre>
-  </div>
-
-
-
-
-
-
-  <h4 class="section">Event Type</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Avalonia.Controls.ItemsRepeaterElementPreparedEventArgs.html">ItemsRepeaterElementPreparedEventArgs</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-
-
-  <h4 class="section" id="Avalonia_Controls_ItemsRepeater_ElementPrepared_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The prepared element might be newly created or an existing element that is being re-
-used.</p>
-</div>
-
-
-
-
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/Controls/ItemsRepeater.LogicalScrollable.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/wieslawsoltes/ProItemsRepeater/blob/main/src/Avalonia.Controls.ItemsRepeater/DataGrid/RepeaterDataGrid.axaml.cs/#L18" class="edit-link">Edit this page</a>
         </div>
 
 

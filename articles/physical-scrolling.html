@@ -91,6 +91,7 @@
 <li>The content implements <code>ILogicalScrollable</code> but <code>IsLogicalScrollEnabled</code> is <code>false</code>.</li>
 </ul>
 <p>In this mode, the scroll viewer treats the content as a large canvas and offsets the child bounds directly.</p>
+<p><code>ItemsRepeater</code> also takes this path when it is nested inside another scrolling/virtualizing control, because it is not the scroll viewer's direct logical scrolling content.</p>
 <h2 id="how-physical-scrolling-works">How physical scrolling works</h2>
 <p>The scroll viewer drives scrolling through <code>ScrollContentPresenter</code>:</p>
 <ul>

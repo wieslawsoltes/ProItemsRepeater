@@ -7,6 +7,713 @@ references:
   commentId: N:Avalonia.Controls
   fullName: Avalonia.Controls
   nameWithType: Avalonia.Controls
+- uid: Avalonia.Controls.DataGrid
+  name: Avalonia.Controls.DataGrid
+  href: api/Avalonia.Controls.DataGrid.html
+  commentId: N:Avalonia.Controls.DataGrid
+  fullName: Avalonia.Controls.DataGrid
+  nameWithType: Avalonia.Controls.DataGrid
+- uid: Avalonia.Controls.DataGrid.IsNotNullConverter
+  name: IsNotNullConverter
+  href: api/Avalonia.Controls.DataGrid.IsNotNullConverter.html
+  commentId: T:Avalonia.Controls.DataGrid.IsNotNullConverter
+  fullName: Avalonia.Controls.DataGrid.IsNotNullConverter
+  nameWithType: IsNotNullConverter
+- uid: Avalonia.Controls.DataGrid.IsNotNullConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object?, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.IsNotNullConverter.html#Avalonia_Controls_DataGrid_IsNotNullConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.IsNotNullConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.IsNotNullConverter.Convert(object?, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.IsNotNullConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: IsNotNullConverter.Convert(object?, Type, object?, CultureInfo)
+  nameWithType.vb: IsNotNullConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.IsNotNullConverter.Convert*
+  name: Convert
+  href: api/Avalonia.Controls.DataGrid.IsNotNullConverter.html#Avalonia_Controls_DataGrid_IsNotNullConverter_Convert_
+  commentId: Overload:Avalonia.Controls.DataGrid.IsNotNullConverter.Convert
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.IsNotNullConverter.Convert
+  nameWithType: IsNotNullConverter.Convert
+- uid: Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object?, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.IsNotNullConverter.html#Avalonia_Controls_DataGrid_IsNotNullConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack(object?, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: IsNotNullConverter.ConvertBack(object?, Type, object?, CultureInfo)
+  nameWithType.vb: IsNotNullConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack*
+  name: ConvertBack
+  href: api/Avalonia.Controls.DataGrid.IsNotNullConverter.html#Avalonia_Controls_DataGrid_IsNotNullConverter_ConvertBack_
+  commentId: Overload:Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.IsNotNullConverter.ConvertBack
+  nameWithType: IsNotNullConverter.ConvertBack
+- uid: Avalonia.Controls.DataGrid.IsNullConverter
+  name: IsNullConverter
+  href: api/Avalonia.Controls.DataGrid.IsNullConverter.html
+  commentId: T:Avalonia.Controls.DataGrid.IsNullConverter
+  fullName: Avalonia.Controls.DataGrid.IsNullConverter
+  nameWithType: IsNullConverter
+- uid: Avalonia.Controls.DataGrid.IsNullConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object?, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.IsNullConverter.html#Avalonia_Controls_DataGrid_IsNullConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.IsNullConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.IsNullConverter.Convert(object?, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.IsNullConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: IsNullConverter.Convert(object?, Type, object?, CultureInfo)
+  nameWithType.vb: IsNullConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.IsNullConverter.Convert*
+  name: Convert
+  href: api/Avalonia.Controls.DataGrid.IsNullConverter.html#Avalonia_Controls_DataGrid_IsNullConverter_Convert_
+  commentId: Overload:Avalonia.Controls.DataGrid.IsNullConverter.Convert
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.IsNullConverter.Convert
+  nameWithType: IsNullConverter.Convert
+- uid: Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object?, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.IsNullConverter.html#Avalonia_Controls_DataGrid_IsNullConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack(object?, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: IsNullConverter.ConvertBack(object?, Type, object?, CultureInfo)
+  nameWithType.vb: IsNullConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack*
+  name: ConvertBack
+  href: api/Avalonia.Controls.DataGrid.IsNullConverter.html#Avalonia_Controls_DataGrid_IsNullConverter_ConvertBack_
+  commentId: Overload:Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.IsNullConverter.ConvertBack
+  nameWithType: IsNullConverter.ConvertBack
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid
+  name: RepeaterDataGrid
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGrid
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid
+  nameWithType: RepeaterDataGrid
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor
+  name: RepeaterDataGrid()
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid__ctor
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor
+  name.vb: New()
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.RepeaterDataGrid()
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGrid.New()
+  nameWithType: RepeaterDataGrid.RepeaterDataGrid()
+  nameWithType.vb: RepeaterDataGrid.New()
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor*
+  name: RepeaterDataGrid
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid__ctor_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.RepeaterDataGrid
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGrid.New
+  nameWithType: RepeaterDataGrid.RepeaterDataGrid
+  nameWithType.vb: RepeaterDataGrid.New
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit
+  name: AutoMeasureRowLimit
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimit
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit
+  nameWithType: RepeaterDataGrid.AutoMeasureRowLimit
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit*
+  name: AutoMeasureRowLimit
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimit_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimit
+  nameWithType: RepeaterDataGrid.AutoMeasureRowLimit
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimitProperty
+  name: AutoMeasureRowLimitProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_AutoMeasureRowLimitProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimitProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.AutoMeasureRowLimitProperty
+  nameWithType: RepeaterDataGrid.AutoMeasureRowLimitProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns
+  name: Columns
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_Columns
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns
+  nameWithType: RepeaterDataGrid.Columns
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns*
+  name: Columns
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_Columns_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.Columns
+  nameWithType: RepeaterDataGrid.Columns
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.ColumnsProperty
+  name: ColumnsProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_ColumnsProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.ColumnsProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.ColumnsProperty
+  nameWithType: RepeaterDataGrid.ColumnsProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight
+  name: HeaderHeight
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeight
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight
+  nameWithType: RepeaterDataGrid.HeaderHeight
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight*
+  name: HeaderHeight
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeight_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeight
+  nameWithType: RepeaterDataGrid.HeaderHeight
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeightProperty
+  name: HeaderHeightProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_HeaderHeightProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeightProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.HeaderHeightProperty
+  nameWithType: RepeaterDataGrid.HeaderHeightProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource
+  name: ItemsSource
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSource
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource
+  nameWithType: RepeaterDataGrid.ItemsSource
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource*
+  name: ItemsSource
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSource_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSource
+  nameWithType: RepeaterDataGrid.ItemsSource
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSourceProperty
+  name: ItemsSourceProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_ItemsSourceProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSourceProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.ItemsSourceProperty
+  nameWithType: RepeaterDataGrid.ItemsSourceProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride(Avalonia.Size)
+  name: MeasureOverride(Size)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_MeasureOverride_Avalonia_Size_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride(Avalonia.Size)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride(Avalonia.Size)
+  nameWithType: RepeaterDataGrid.MeasureOverride(Size)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride*
+  name: MeasureOverride
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_MeasureOverride_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.MeasureOverride
+  nameWithType: RepeaterDataGrid.MeasureOverride
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs)
+  name: OnApplyTemplate(TemplateAppliedEventArgs)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnApplyTemplate_Avalonia_Controls_Primitives_TemplateAppliedEventArgs_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs)
+  nameWithType: RepeaterDataGrid.OnApplyTemplate(TemplateAppliedEventArgs)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate*
+  name: OnApplyTemplate
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnApplyTemplate_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnApplyTemplate
+  nameWithType: RepeaterDataGrid.OnApplyTemplate
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)
+  name: OnAttachedToVisualTree(VisualTreeAttachmentEventArgs)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnAttachedToVisualTree_Avalonia_VisualTreeAttachmentEventArgs_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs)
+  nameWithType: RepeaterDataGrid.OnAttachedToVisualTree(VisualTreeAttachmentEventArgs)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree*
+  name: OnAttachedToVisualTree
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnAttachedToVisualTree_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnAttachedToVisualTree
+  nameWithType: RepeaterDataGrid.OnAttachedToVisualTree
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)
+  name: OnPropertyChanged(AvaloniaPropertyChangedEventArgs)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnPropertyChanged_Avalonia_AvaloniaPropertyChangedEventArgs_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs)
+  nameWithType: RepeaterDataGrid.OnPropertyChanged(AvaloniaPropertyChangedEventArgs)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged*
+  name: OnPropertyChanged
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_OnPropertyChanged_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.OnPropertyChanged
+  nameWithType: RepeaterDataGrid.OnPropertyChanged
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath
+  name: RowHeightBindingPath
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPath
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath
+  nameWithType: RepeaterDataGrid.RowHeightBindingPath
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath*
+  name: RowHeightBindingPath
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPath_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPath
+  nameWithType: RepeaterDataGrid.RowHeightBindingPath
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPathProperty
+  name: RowHeightBindingPathProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_RowHeightBindingPathProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPathProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.RowHeightBindingPathProperty
+  nameWithType: RepeaterDataGrid.RowHeightBindingPathProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell
+  name: SelectedCell
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCell
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell
+  nameWithType: RepeaterDataGrid.SelectedCell
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell*
+  name: SelectedCell
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCell_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCell
+  nameWithType: RepeaterDataGrid.SelectedCell
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCellProperty
+  name: SelectedCellProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectedCellProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCellProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectedCellProperty
+  nameWithType: RepeaterDataGrid.SelectedCellProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode
+  name: SelectionMode
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionMode
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode
+  nameWithType: RepeaterDataGrid.SelectionMode
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode*
+  name: SelectionMode
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionMode_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionMode
+  nameWithType: RepeaterDataGrid.SelectionMode
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionModeProperty
+  name: SelectionModeProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_SelectionModeProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionModeProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.SelectionModeProperty
+  nameWithType: RepeaterDataGrid.SelectionModeProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth
+  name: TotalColumnWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidth
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth
+  nameWithType: RepeaterDataGrid.TotalColumnWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth*
+  name: TotalColumnWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidth_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidth
+  nameWithType: RepeaterDataGrid.TotalColumnWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidthProperty
+  name: TotalColumnWidthProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html#Avalonia_Controls_DataGrid_RepeaterDataGrid_TotalColumnWidthProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidthProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGrid.TotalColumnWidthProperty
+  nameWithType: RepeaterDataGrid.TotalColumnWidthProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter
+  name: RepeaterDataGridCellContentConverter
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter
+  nameWithType: RepeaterDataGridCellContentConverter
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellContentConverter_Convert_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridCellContentConverter.Convert(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridCellContentConverter.Convert(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert*
+  name: Convert
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellContentConverter_Convert_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.Convert
+  nameWithType: RepeaterDataGridCellContentConverter.Convert
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellContentConverter_ConvertBack_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridCellContentConverter.ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridCellContentConverter.ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack*
+  name: ConvertBack
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellContentConverter_ConvertBack_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.ConvertBack
+  nameWithType: RepeaterDataGridCellContentConverter.ConvertBack
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo
+  name: RepeaterDataGridCellInfo
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo
+  nameWithType: RepeaterDataGridCellInfo
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.#ctor(System.Int32,System.Int32)
+  name: RepeaterDataGridCellInfo(int, int)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo__ctor_System_Int32_System_Int32_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.#ctor(System.Int32,System.Int32)
+  name.vb: New(Integer, Integer)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RepeaterDataGridCellInfo(int, int)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.New(Integer, Integer)
+  nameWithType: RepeaterDataGridCellInfo.RepeaterDataGridCellInfo(int, int)
+  nameWithType.vb: RepeaterDataGridCellInfo.New(Integer, Integer)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.#ctor*
+  name: RepeaterDataGridCellInfo
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo__ctor_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RepeaterDataGridCellInfo
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.New
+  nameWithType: RepeaterDataGridCellInfo.RepeaterDataGridCellInfo
+  nameWithType.vb: RepeaterDataGridCellInfo.New
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex
+  name: ColumnIndex
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_ColumnIndex
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex
+  nameWithType: RepeaterDataGridCellInfo.ColumnIndex
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex*
+  name: ColumnIndex
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_ColumnIndex_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.ColumnIndex
+  nameWithType: RepeaterDataGridCellInfo.ColumnIndex
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  name: Equals(RepeaterDataGridCellInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_Equals_Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  nameWithType: RepeaterDataGridCellInfo.Equals(RepeaterDataGridCellInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(System.Object)
+  name: Equals(object?)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_Equals_System_Object_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(System.Object)
+  name.vb: Equals(Object)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(object?)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals(Object)
+  nameWithType: RepeaterDataGridCellInfo.Equals(object?)
+  nameWithType.vb: RepeaterDataGridCellInfo.Equals(Object)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals*
+  name: Equals
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_Equals_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.Equals
+  nameWithType: RepeaterDataGridCellInfo.Equals
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode
+  name: GetHashCode()
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_GetHashCode
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode()
+  nameWithType: RepeaterDataGridCellInfo.GetHashCode()
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode*
+  name: GetHashCode
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_GetHashCode_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.GetHashCode
+  nameWithType: RepeaterDataGridCellInfo.GetHashCode
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex
+  name: RowIndex
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_RowIndex
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex
+  nameWithType: RepeaterDataGridCellInfo.RowIndex
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex*
+  name: RowIndex
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_RowIndex_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.RowIndex
+  nameWithType: RepeaterDataGridCellInfo.RowIndex
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Equality(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo,Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  name: operator ==(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_op_Equality_Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Equality(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo,Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  name.vb: =(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.operator ==(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo, Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.=(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo, Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  nameWithType: RepeaterDataGridCellInfo.operator ==(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  nameWithType.vb: RepeaterDataGridCellInfo.=(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Equality*
+  name: operator ==
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_op_Equality_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Equality
+  isSpec: "True"
+  name.vb: =
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.operator ==
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.=
+  nameWithType: RepeaterDataGridCellInfo.operator ==
+  nameWithType.vb: RepeaterDataGridCellInfo.=
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Inequality(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo,Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  name: operator !=(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_op_Inequality_Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Inequality(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo,Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  name.vb: <>(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.operator !=(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo, Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.<>(Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo, Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo)
+  nameWithType: RepeaterDataGridCellInfo.operator !=(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+  nameWithType.vb: RepeaterDataGridCellInfo.<>(RepeaterDataGridCellInfo, RepeaterDataGridCellInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Inequality*
+  name: operator !=
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellInfo_op_Inequality_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.op_Inequality
+  isSpec: "True"
+  name.vb: <>
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.operator !=
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.<>
+  nameWithType: RepeaterDataGridCellInfo.operator !=
+  nameWithType.vb: RepeaterDataGridCellInfo.<>
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter
+  name: RepeaterDataGridCellTextConverter
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter
+  nameWithType: RepeaterDataGridCellTextConverter
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellTextConverter_Convert_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridCellTextConverter.Convert(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridCellTextConverter.Convert(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert*
+  name: Convert
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellTextConverter_Convert_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.Convert
+  nameWithType: RepeaterDataGridCellTextConverter.Convert
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellTextConverter_ConvertBack_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridCellTextConverter.ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridCellTextConverter.ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack*
+  name: ConvertBack
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridCellTextConverter_ConvertBack_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.ConvertBack
+  nameWithType: RepeaterDataGridCellTextConverter.ConvertBack
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn
+  name: RepeaterDataGridColumn
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGridColumn
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn
+  nameWithType: RepeaterDataGridColumn
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth
+  name: ActualWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_ActualWidth
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth
+  nameWithType: RepeaterDataGridColumn.ActualWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth*
+  name: ActualWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_ActualWidth_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidth
+  nameWithType: RepeaterDataGridColumn.ActualWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidthProperty
+  name: ActualWidthProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_ActualWidthProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidthProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.ActualWidthProperty
+  nameWithType: RepeaterDataGridColumn.ActualWidthProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath
+  name: BindingPath
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_BindingPath
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath
+  nameWithType: RepeaterDataGridColumn.BindingPath
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath*
+  name: BindingPath
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_BindingPath_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPath
+  nameWithType: RepeaterDataGridColumn.BindingPath
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPathProperty
+  name: BindingPathProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_BindingPathProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPathProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.BindingPathProperty
+  nameWithType: RepeaterDataGridColumn.BindingPathProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate
+  name: CellTemplate
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_CellTemplate
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate
+  nameWithType: RepeaterDataGridColumn.CellTemplate
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate*
+  name: CellTemplate
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_CellTemplate_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplate
+  nameWithType: RepeaterDataGridColumn.CellTemplate
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplateProperty
+  name: CellTemplateProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_CellTemplateProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplateProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.CellTemplateProperty
+  nameWithType: RepeaterDataGridColumn.CellTemplateProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header
+  name: Header
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Header
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header
+  nameWithType: RepeaterDataGridColumn.Header
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header*
+  name: Header
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Header_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Header
+  nameWithType: RepeaterDataGridColumn.Header
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderProperty
+  name: HeaderProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_HeaderProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderProperty
+  nameWithType: RepeaterDataGridColumn.HeaderProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate
+  name: HeaderTemplate
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_HeaderTemplate
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate
+  nameWithType: RepeaterDataGridColumn.HeaderTemplate
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate*
+  name: HeaderTemplate
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_HeaderTemplate_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplate
+  nameWithType: RepeaterDataGridColumn.HeaderTemplate
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplateProperty
+  name: HeaderTemplateProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_HeaderTemplateProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplateProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.HeaderTemplateProperty
+  nameWithType: RepeaterDataGridColumn.HeaderTemplateProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index
+  name: Index
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Index
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index
+  nameWithType: RepeaterDataGridColumn.Index
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index*
+  name: Index
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Index_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Index
+  nameWithType: RepeaterDataGridColumn.Index
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.IndexProperty
+  name: IndexProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_IndexProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.IndexProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.IndexProperty
+  nameWithType: RepeaterDataGridColumn.IndexProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth
+  name: MinWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_MinWidth
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth
+  nameWithType: RepeaterDataGridColumn.MinWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth*
+  name: MinWidth
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_MinWidth_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidth
+  nameWithType: RepeaterDataGridColumn.MinWidth
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidthProperty
+  name: MinWidthProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_MinWidthProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidthProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.MinWidthProperty
+  nameWithType: RepeaterDataGridColumn.MinWidthProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width
+  name: Width
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Width
+  commentId: P:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width
+  nameWithType: RepeaterDataGridColumn.Width
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width*
+  name: Width
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_Width_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.Width
+  nameWithType: RepeaterDataGridColumn.Width
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.WidthProperty
+  name: WidthProperty
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html#Avalonia_Controls_DataGrid_RepeaterDataGridColumn_WidthProperty
+  commentId: F:Avalonia.Controls.DataGrid.RepeaterDataGridColumn.WidthProperty
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridColumn.WidthProperty
+  nameWithType: RepeaterDataGridColumn.WidthProperty
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter
+  name: RepeaterDataGridRowHeightConverter
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html
+  commentId: T:Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter
+  nameWithType: RepeaterDataGridRowHeightConverter
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridRowHeightConverter_Convert_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridRowHeightConverter.Convert(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridRowHeightConverter.Convert(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert*
+  name: Convert
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridRowHeightConverter_Convert_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.Convert
+  nameWithType: RepeaterDataGridRowHeightConverter.Convert
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridRowHeightConverter_ConvertBack_System_Collections_Generic_IList_System_Object__System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack(System.Collections.Generic.IList{System.Object},System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack(System.Collections.Generic.IList<object?>, System.Type, object?, System.Globalization.CultureInfo)
+  fullName.vb: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack(System.Collections.Generic.IList(Of Object), System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: RepeaterDataGridRowHeightConverter.ConvertBack(IList<object?>, Type, object?, CultureInfo)
+  nameWithType.vb: RepeaterDataGridRowHeightConverter.ConvertBack(IList(Of Object), Type, Object, CultureInfo)
+- uid: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack*
+  name: ConvertBack
+  href: api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html#Avalonia_Controls_DataGrid_RepeaterDataGridRowHeightConverter_ConvertBack_
+  commentId: Overload:Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack
+  isSpec: "True"
+  fullName: Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.ConvertBack
+  nameWithType: RepeaterDataGridRowHeightConverter.ConvertBack
 - uid: Avalonia.Controls.ElementFactory
   name: ElementFactory
   href: api/Avalonia.Controls.ElementFactory.html
@@ -310,6 +1017,25 @@ references:
   commentId: F:Avalonia.Controls.ItemsRepeater.HorizontalCacheLengthProperty
   fullName: Avalonia.Controls.ItemsRepeater.HorizontalCacheLengthProperty
   nameWithType: ItemsRepeater.HorizontalCacheLengthProperty
+- uid: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled
+  name: IsLogicalScrollEnabled
+  href: api/Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabled
+  commentId: P:Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled
+  fullName: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled
+  nameWithType: ItemsRepeater.IsLogicalScrollEnabled
+- uid: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled*
+  name: IsLogicalScrollEnabled
+  href: api/Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabled_
+  commentId: Overload:Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled
+  isSpec: "True"
+  fullName: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabled
+  nameWithType: ItemsRepeater.IsLogicalScrollEnabled
+- uid: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabledProperty
+  name: IsLogicalScrollEnabledProperty
+  href: api/Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_IsLogicalScrollEnabledProperty
+  commentId: F:Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabledProperty
+  fullName: Avalonia.Controls.ItemsRepeater.IsLogicalScrollEnabledProperty
+  nameWithType: ItemsRepeater.IsLogicalScrollEnabledProperty
 - uid: Avalonia.Controls.ItemsRepeater.ItemTemplate
   name: ItemTemplate
   href: api/Avalonia.Controls.ItemsRepeater.html#Avalonia_Controls_ItemsRepeater_ItemTemplate

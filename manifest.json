@@ -4,6 +4,132 @@
   "files": [
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.IsNotNullConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.IsNotNullConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.IsNotNullConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.IsNullConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.IsNullConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.IsNullConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGrid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGrid",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridColumn",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGrid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGrid.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGrid",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.ElementFactory.yml",
       "output": {
         ".html": {

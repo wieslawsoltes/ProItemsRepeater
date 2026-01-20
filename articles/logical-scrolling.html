@@ -129,6 +129,9 @@
 <li><code>ViewportManager.UpdateViewportFromLogicalScroll(viewport, offset, invalidateMeasure)</code></li>
 </ul>
 <p>This converts the logical offset into the visible window used by virtualization. Because the viewport is driven by the logical scrollable, <code>ItemsRepeater</code> does not subscribe to <code>EffectiveViewportChanged</code> for this path.</p>
+<h2 id="nested-repeaters">Nested repeaters</h2>
+<p>Logical scrolling only applies when the repeater is the direct scrollable content of a <code>ScrollViewer</code>. When an <code>ItemsRepeater</code> is nested inside another scrolling or virtualizing control, it falls back to effective viewport updates so the inner repeater virtualizes against the parent scroller's visible window.</p>
+<p>You can also force physical scrolling by setting <code>IsLogicalScrollEnabled=&quot;False&quot;</code> on a root repeater.</p>
 <h2 id="logical-vs-physical-scrolling">Logical vs physical scrolling</h2>
 <table>
 <thead>
