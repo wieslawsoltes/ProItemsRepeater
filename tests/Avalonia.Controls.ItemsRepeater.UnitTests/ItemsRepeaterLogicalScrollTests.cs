@@ -10,6 +10,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Xunit;
 
 namespace Avalonia.Controls.UnitTests;
@@ -296,6 +297,54 @@ public class ItemsRepeaterLogicalScrollTests
     }
 
     [AvaloniaFact]
+    public void LogicalScroll_Uses_Inner_Repeater_ScrollSize_For_Groups()
+    {
+        var groups = Enumerable.Range(0, 5)
+            .Select(i => new Group(i, Enumerable.Range(0, 200).ToList()))
+            .ToList();
+
+        var (window, repeater) = CreateRepeater(
+            new StackLayout { Orientation = Orientation.Vertical, Spacing = 0 },
+            groups,
+            group => new StackPanel
+            {
+                Spacing = 4,
+                Children =
+                {
+                    new Border { Width = 100, Height = 24 },
+                    new ItemsRepeater
+                    {
+                        Layout = new StackLayout { Orientation = Orientation.Vertical, Spacing = 0 },
+                        ItemsSource = group.Items,
+                        ItemTemplate = new FuncDataTemplate<int>((_, __) => new Border { Width = 100, Height = 20 })
+                    }
+                }
+            },
+            new Size(200, 200));
+
+        var outerElement = (Control)repeater.GetOrCreateElement(0);
+        Dispatcher.UIThread.RunJobs();
+
+        var innerRepeater = outerElement.GetVisualDescendants()
+            .OfType<ItemsRepeater>()
+            .FirstOrDefault();
+
+        Assert.NotNull(innerRepeater);
+
+        innerRepeater!.GetOrCreateElement(0);
+        Dispatcher.UIThread.RunJobs();
+
+        repeater.InvalidateMeasure();
+        Dispatcher.UIThread.RunJobs();
+
+        var scrollSize = ((ILogicalScrollable)repeater).ScrollSize;
+
+        Assert.Equal(20, scrollSize.Height, 3);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void ScrollViewer_Uses_LogicalScroll_Sizes()
     {
         var items = Enumerable.Range(0, 200).ToList();
@@ -315,5 +364,17 @@ public class ItemsRepeaterLogicalScrollTests
         Assert.Equal(pageSize, scroller.LargeChange);
 
         window.Close();
+    }
+
+    private sealed class Group
+    {
+        public Group(int index, IReadOnlyList<int> items)
+        {
+            Index = index;
+            Items = items;
+        }
+
+        public int Index { get; }
+        public IReadOnlyList<int> Items { get; }
     }
 }

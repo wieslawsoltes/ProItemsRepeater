@@ -48,6 +48,12 @@ When the scroll viewer updates the logical offset, the repeater calls:
 
 This converts the logical offset into the visible window used by virtualization. Because the viewport is driven by the logical scrollable, `ItemsRepeater` does not subscribe to `EffectiveViewportChanged` for this path.
 
+## Nested repeaters
+
+Logical scrolling only applies when the repeater is the direct scrollable content of a `ScrollViewer`. When an `ItemsRepeater` is nested inside another scrolling or virtualizing control, it falls back to effective viewport updates so the inner repeater virtualizes against the parent scroller's visible window.
+
+You can also force physical scrolling by setting `IsLogicalScrollEnabled="False"` on a root repeater.
+
 ## Logical vs physical scrolling
 
 | Behavior | Logical scrolling | Physical scrolling |

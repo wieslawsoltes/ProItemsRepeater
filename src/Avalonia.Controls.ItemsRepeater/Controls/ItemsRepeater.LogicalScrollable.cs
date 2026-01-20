@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -21,7 +22,10 @@ namespace Avalonia.Controls
         private bool _canVerticallyScroll;
         private bool _scrollAxesConfigured;
         private EventHandler? _scrollInvalidated;
-        internal bool UsesLogicalScrolling => true;
+        private bool _isLogicalScrollActive;
+        private bool _usesLogicalScrolling;
+        private bool _scrollSizeCacheUsesNested;
+        internal bool UsesLogicalScrolling => _usesLogicalScrolling;
 
         bool ILogicalScrollable.CanHorizontallyScroll
         {
@@ -57,7 +61,7 @@ namespace Avalonia.Controls
             }
         }
 
-        bool ILogicalScrollable.IsLogicalScrollEnabled => true;
+        bool ILogicalScrollable.IsLogicalScrollEnabled => IsLogicalScrollEnabled;
 
         Size ILogicalScrollable.ScrollSize => GetScrollSize();
 
@@ -75,8 +79,26 @@ namespace Avalonia.Controls
 
         event EventHandler? ILogicalScrollable.ScrollInvalidated
         {
-            add => _scrollInvalidated += value;
-            remove => _scrollInvalidated -= value;
+            add
+            {
+                var wasActive = _isLogicalScrollActive;
+                _scrollInvalidated += value;
+                _isLogicalScrollActive = _scrollInvalidated != null;
+                if (_isLogicalScrollActive != wasActive)
+                {
+                    UpdateLogicalScrollingState();
+                }
+            }
+            remove
+            {
+                var wasActive = _isLogicalScrollActive;
+                _scrollInvalidated -= value;
+                _isLogicalScrollActive = _scrollInvalidated != null;
+                if (_isLogicalScrollActive != wasActive)
+                {
+                    UpdateLogicalScrollingState();
+                }
+            }
         }
 
         bool ILogicalScrollable.BringIntoView(Control target, Rect targetRect)
@@ -202,7 +224,10 @@ namespace Avalonia.Controls
             _scrollSizeCacheValid = false;
             var coerced = CoerceOffset(_offset);
             _offset = coerced;
-            _viewportManager.UpdateViewportFromLogicalScroll(_viewport, _offset, invalidateMeasure && !_isLayoutInProgress);
+            if (UsesLogicalScrolling || !_viewportManager.HasScroller)
+            {
+                _viewportManager.UpdateViewportFromLogicalScroll(_viewport, _offset, invalidateMeasure && !_isLayoutInProgress);
+            }
             if (raiseInvalidated)
             {
                 _scrollInvalidated?.Invoke(this, EventArgs.Empty);
@@ -219,7 +244,10 @@ namespace Avalonia.Controls
 
             var previous = _offset;
             _offset = coerced;
-            _viewportManager.UpdateViewportFromLogicalScroll(_viewport, _offset, invalidateMeasure && !_isLayoutInProgress);
+            if (UsesLogicalScrolling)
+            {
+                _viewportManager.UpdateViewportFromLogicalScroll(_viewport, _offset, invalidateMeasure && !_isLayoutInProgress);
+            }
 
             if (raiseInvalidated)
             {
@@ -268,6 +296,20 @@ namespace Avalonia.Controls
             InvalidateMeasure();
         }
 
+        private void UpdateLogicalScrollingState()
+        {
+            var usesLogicalScrolling = IsLogicalScrollEnabled && _isLogicalScrollActive;
+            if (_usesLogicalScrolling == usesLogicalScrolling)
+            {
+                return;
+            }
+
+            _usesLogicalScrolling = usesLogicalScrolling;
+            _viewportManager.OnLayoutChanged(Layout is VirtualizingLayout);
+            _scrollInvalidated?.Invoke(this, EventArgs.Empty);
+            InvalidateMeasure();
+        }
+
         private Size GetScrollSize()
         {
             if (!_scrollSizeCacheValid)
@@ -276,6 +318,8 @@ namespace Avalonia.Controls
                 var totalWidth = 0.0;
                 var totalHeight = 0.0;
                 var realizedCount = 0;
+                var usedNestedScrollSize = false;
+                var axis = GetPreferredScrollAxis();
 
                 for (var i = 0; i < Children.Count; i++)
                 {
@@ -295,6 +339,12 @@ namespace Avalonia.Controls
                     if (size.Width <= 0 || size.Height <= 0)
                     {
                         continue;
+                    }
+
+                    if (TryGetNestedRepeaterScrollSize(child, out var nestedSize))
+                    {
+                        size = ApplyNestedScrollSize(size, nestedSize, axis);
+                        usedNestedScrollSize = true;
                     }
 
                     totalWidth += size.Width;
@@ -323,13 +373,14 @@ namespace Avalonia.Controls
                     }
                 }
 
+                _scrollSizeCacheUsesNested = usedNestedScrollSize;
                 _scrollSizeCacheValid = true;
             }
 
             var width = Math.Max(1, _scrollSizeCache.Width);
             var height = Math.Max(1, _scrollSizeCache.Height);
 
-            if (Layout is StackLayout stack)
+            if (!_scrollSizeCacheUsesNested && Layout is StackLayout stack)
             {
                 if (stack.Orientation == Orientation.Horizontal)
                 {
@@ -340,7 +391,7 @@ namespace Avalonia.Controls
                     height = Math.Max(1, height + stack.Spacing);
                 }
             }
-            else if (Layout is NonVirtualizingStackLayout nonVirtualizingStack)
+            else if (!_scrollSizeCacheUsesNested && Layout is NonVirtualizingStackLayout nonVirtualizingStack)
             {
                 if (nonVirtualizingStack.Orientation == Orientation.Horizontal)
                 {
@@ -351,7 +402,7 @@ namespace Avalonia.Controls
                     height = Math.Max(1, height + nonVirtualizingStack.Spacing);
                 }
             }
-            else if (Layout is WrapLayout wrap)
+            else if (!_scrollSizeCacheUsesNested && Layout is WrapLayout wrap)
             {
                 if (wrap.Orientation == Orientation.Horizontal)
                 {
@@ -362,7 +413,7 @@ namespace Avalonia.Controls
                     width = Math.Max(1, width + wrap.HorizontalSpacing);
                 }
             }
-            else if (Layout is UniformGridLayout uniformGrid)
+            else if (!_scrollSizeCacheUsesNested && Layout is UniformGridLayout uniformGrid)
             {
                 if (uniformGrid.Orientation == Orientation.Horizontal)
                 {
@@ -375,6 +426,72 @@ namespace Avalonia.Controls
             }
 
             return new Size(width, height);
+        }
+
+        private static bool TryGetNestedRepeaterScrollSize(Control child, out Size scrollSize)
+        {
+            if (child is ItemsRepeater itemsRepeater)
+            {
+                scrollSize = ((ILogicalScrollable)itemsRepeater).ScrollSize;
+                return scrollSize.Width > 0 || scrollSize.Height > 0;
+            }
+
+            var nestedRepeater = child.GetVisualDescendants().OfType<ItemsRepeater>().FirstOrDefault();
+            if (nestedRepeater != null)
+            {
+                scrollSize = ((ILogicalScrollable)nestedRepeater).ScrollSize;
+                return scrollSize.Width > 0 || scrollSize.Height > 0;
+            }
+
+            scrollSize = default;
+            return false;
+        }
+
+        private enum ScrollAxis
+        {
+            Both,
+            Vertical,
+            Horizontal
+        }
+
+        private ScrollAxis GetPreferredScrollAxis()
+        {
+            if (_scrollAxesConfigured)
+            {
+                if (_canVerticallyScroll && !_canHorizontallyScroll)
+                {
+                    return ScrollAxis.Vertical;
+                }
+
+                if (_canHorizontallyScroll && !_canVerticallyScroll)
+                {
+                    return ScrollAxis.Horizontal;
+                }
+            }
+
+            return Layout switch
+            {
+                StackLayout stack => stack.Orientation == Orientation.Horizontal ? ScrollAxis.Horizontal : ScrollAxis.Vertical,
+                NonVirtualizingStackLayout nonVirtualizingStack => nonVirtualizingStack.Orientation == Orientation.Horizontal ? ScrollAxis.Horizontal : ScrollAxis.Vertical,
+                WrapLayout wrap => wrap.Orientation == Orientation.Horizontal ? ScrollAxis.Vertical : ScrollAxis.Horizontal,
+                UniformGridLayout uniformGrid => uniformGrid.Orientation == Orientation.Horizontal ? ScrollAxis.Vertical : ScrollAxis.Horizontal,
+                _ => ScrollAxis.Both
+            };
+        }
+
+        private static Size ApplyNestedScrollSize(Size childSize, Size nestedSize, ScrollAxis axis)
+        {
+            var nestedWidth = nestedSize.Width > 0 ? nestedSize.Width : childSize.Width;
+            var nestedHeight = nestedSize.Height > 0 ? nestedSize.Height : childSize.Height;
+
+            return axis switch
+            {
+                ScrollAxis.Vertical => new Size(childSize.Width, Math.Min(childSize.Height, nestedHeight)),
+                ScrollAxis.Horizontal => new Size(Math.Min(childSize.Width, nestedWidth), childSize.Height),
+                _ => new Size(
+                    Math.Min(childSize.Width, nestedWidth),
+                    Math.Min(childSize.Height, nestedHeight))
+            };
         }
 
     }

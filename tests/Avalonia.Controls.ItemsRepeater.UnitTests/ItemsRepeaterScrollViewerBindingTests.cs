@@ -105,6 +105,29 @@ public class ItemsRepeaterScrollViewerBindingTests
     }
 
     [AvaloniaFact]
+    public void ScrollViewer_Uses_Physical_Scrolling_When_Logical_Disabled()
+    {
+        var items = Enumerable.Range(0, 50).ToList();
+        var repeater = new ItemsRepeater
+        {
+            IsLogicalScrollEnabled = false,
+            Layout = new StackLayout { Orientation = Orientation.Vertical },
+            ItemsSource = items,
+            ItemTemplate = new FuncDataTemplate<int>((_, __) => new Border { Width = 80, Height = 20 })
+        };
+
+        var (window, scroller) = CreateScrollViewer(repeater, new Size(100, 100));
+
+        scroller.Offset = new Vector(0, 30);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(0, repeater.Bounds.X, 3);
+        Assert.Equal(-30, repeater.Bounds.Y, 3);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void PhysicalScroll_Offsets_Content_Bounds()
     {
         var content = new Border
