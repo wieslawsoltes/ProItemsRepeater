@@ -19,7 +19,13 @@ public readonly struct RepeaterDataGridCellInfo : IEquatable<RepeaterDataGridCel
     public override bool Equals(object? obj) =>
         obj is RepeaterDataGridCellInfo other && Equals(other);
 
-    public override int GetHashCode() => HashCode.Combine(RowIndex, ColumnIndex);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (RowIndex * 397) ^ ColumnIndex;
+        }
+    }
 
     public static bool operator ==(RepeaterDataGridCellInfo left, RepeaterDataGridCellInfo right) => left.Equals(right);
 

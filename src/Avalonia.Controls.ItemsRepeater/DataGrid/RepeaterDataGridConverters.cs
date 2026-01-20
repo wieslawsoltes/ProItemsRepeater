@@ -165,7 +165,35 @@ public sealed class RepeaterDataGridCellContentConverter : IMultiValueConverter
 
 internal static class RepeaterDataGridBindingHelper
 {
-    private readonly record struct AccessorKey(Type Type, string Path);
+    private readonly struct AccessorKey : IEquatable<AccessorKey>
+    {
+        public AccessorKey(Type type, string path)
+        {
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+        }
+
+        public Type Type { get; }
+        public string Path { get; }
+
+        public bool Equals(AccessorKey other)
+        {
+            return Type == other.Type && StringComparer.Ordinal.Equals(Path, other.Path);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is AccessorKey other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Type.GetHashCode() * 397) ^ StringComparer.Ordinal.GetHashCode(Path);
+            }
+        }
+    }
 
     private static readonly ConcurrentDictionary<AccessorKey, Func<object, object?>> AccessorCache = new();
 
@@ -188,10 +216,11 @@ internal static class RepeaterDataGridBindingHelper
 
 #if NET6_0_OR_GREATER
     [UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection used for dynamic column binding.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Reflection used for dynamic column binding.")]
 #endif
     private static Func<object, object?> BuildAccessor(Type type, string path)
     {
-        var segments = path.Split('.', StringSplitOptions.RemoveEmptyEntries);
+        var segments = path.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
         var accessors = new List<Func<object, object?>>();
 
         foreach (var segment in segments)
@@ -239,11 +268,12 @@ internal static class RepeaterDataGridBindingHelper
 
 #if NET6_0_OR_GREATER
     [UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection used for dynamic column binding.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Reflection used for dynamic column binding.")]
 #endif
     private static object? GetPropertyValueSlow(object item, string path)
     {
         var current = item;
-        foreach (var segment in path.Split('.', StringSplitOptions.RemoveEmptyEntries))
+        foreach (var segment in path.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
         {
             if (current is null)
             {
