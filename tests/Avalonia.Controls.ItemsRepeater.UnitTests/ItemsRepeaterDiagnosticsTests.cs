@@ -9,7 +9,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Avalonia.Controls.UnitTests;
 

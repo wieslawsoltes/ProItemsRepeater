@@ -2,8 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>ProItemsRepeater.UnitTests</AssemblyName>
+    <RootNamespace>ProItemsRepeater.UnitTests</RootNamespace>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -13,10 +18,7 @@
     <PackageReference Include="Avalonia" Version="$(AvaloniaSampleVersion)" />
     <PackageReference Include="Avalonia.Headless.XUnit" Version="$(AvaloniaSampleVersion)" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaSampleVersion)" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="xunit" Version="2.5.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
   </ItemGroup>
 
   <ItemGroup>
