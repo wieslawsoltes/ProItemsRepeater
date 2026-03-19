@@ -30,23 +30,23 @@ public class XamlStyleTests
             Brushes.Red, Brushes.Green, Brushes.Blue
         };
 
-        var list = window.FindControl<ItemsRepeater>("list");
+        var list = Assert.IsType<ItemsRepeater>(window.FindControl<ItemsRepeater>("list"));
         list.ItemsSource = collection;
 
         window.Show();
 
-        IEnumerable<IBrush> GetColors() => Enumerable.Range(0, list.ItemsSourceView.Count)
+        IEnumerable<IBrush?> GetColors() => Enumerable.Range(0, list.ItemsSourceView!.Count)
             .Select(t => (list.GetOrCreateElement(t) as TextBlock)!.Foreground);
 
-        Assert.Equal(new[] { Brushes.Transparent, Brushes.Green, Brushes.Transparent }, GetColors());
+        Assert.Equal(new IBrush?[] { Brushes.Transparent, Brushes.Green, Brushes.Transparent }, GetColors());
 
         collection.Remove(Brushes.Green);
 
-        Assert.Equal(new[] { Brushes.Transparent, Brushes.Blue }, GetColors().ToList());
+        Assert.Equal(new IBrush?[] { Brushes.Transparent, Brushes.Blue }, GetColors().ToList());
 
         collection.Add(Brushes.Violet);
         collection.Add(Brushes.Black);
 
-        Assert.Equal(new[] { Brushes.Transparent, Brushes.Blue, Brushes.Transparent, Brushes.Black }, GetColors());
+        Assert.Equal(new IBrush?[] { Brushes.Transparent, Brushes.Blue, Brushes.Transparent, Brushes.Black }, GetColors());
     }
 }

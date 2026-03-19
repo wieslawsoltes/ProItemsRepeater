@@ -5,19 +5,19 @@ using Avalonia.Data;
 namespace Avalonia.Controls.Utils
 {
     /// <summary>
-    /// Helper class for evaluating a binding from an Item and IBinding instance.
+    /// Helper class for evaluating a binding from an item and binding instance.
     /// </summary>
-    internal sealed class BindingEvaluator<T> : StyledElement, IDisposable
+    internal sealed class RepeaterBindingEvaluator<T> : StyledElement, IDisposable
     {
         private IDisposable? _expression;
-        private IBinding? _lastBinding;
+        private BindingBase? _lastBinding;
 
         [SuppressMessage(
             "AvaloniaProperty",
             "AVP1002:AvaloniaProperty objects should not be owned by a generic type",
             Justification = "This property is not supposed to be used from XAML.")]
         public static readonly StyledProperty<T> ValueProperty =
-            AvaloniaProperty.Register<BindingEvaluator<T>, T>("Value");
+            AvaloniaProperty.Register<RepeaterBindingEvaluator<T>, T>("Value");
 
         /// <summary>
         /// Gets or sets the data item value.
@@ -36,19 +36,14 @@ namespace Avalonia.Controls.Utils
             return GetValue(ValueProperty);
         }
 
-        public void UpdateBinding(IBinding binding)
+        public void UpdateBinding(BindingBase binding)
         {
             if (binding == _lastBinding)
                 return;
 
             _expression?.Dispose();
             _expression = null;
-
-            var instanced = binding.Initiate(this, ValueProperty);
-            if (instanced is not null)
-            {
-                _expression = BindingOperations.Apply(this, ValueProperty, instanced, null);
-            }
+            _expression = this.Bind(ValueProperty, binding);
             _lastBinding = binding;
         }
 
@@ -63,12 +58,12 @@ namespace Avalonia.Controls.Utils
             DataContext = null;
         }
 
-        public static BindingEvaluator<T>? TryCreate(IBinding? binding)
+        public static RepeaterBindingEvaluator<T>? TryCreate(BindingBase? binding)
         {
             if (binding is null)
                 return null;
 
-            var evaluator = new BindingEvaluator<T>();
+            var evaluator = new RepeaterBindingEvaluator<T>();
             evaluator.UpdateBinding(binding);
             return evaluator;
         }
