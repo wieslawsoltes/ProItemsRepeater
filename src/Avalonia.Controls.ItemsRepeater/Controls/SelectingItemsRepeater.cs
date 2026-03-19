@@ -71,8 +71,8 @@ namespace Avalonia.Controls
         /// <summary>
         /// Defines the <see cref="SelectedValueBinding"/> property.
         /// </summary>
-        public static readonly StyledProperty<IBinding?> SelectedValueBindingProperty =
-            AvaloniaProperty.Register<SelectingItemsRepeater, IBinding?>(nameof(SelectedValueBinding));
+        public static readonly StyledProperty<BindingBase?> SelectedValueBindingProperty =
+            AvaloniaProperty.Register<SelectingItemsRepeater, BindingBase?>(nameof(SelectedValueBinding));
 
         /// <summary>
         /// Defines the <see cref="SelectedItems"/> property.
@@ -131,7 +131,7 @@ namespace Avalonia.Controls
         private bool _ignoreContainerSelectionChanged;
         private UpdateState? _updateState;
         private bool _hasScrolledToSelectedItem;
-        private BindingEvaluator<object?>? _selectedValueBindingEvaluator;
+        private RepeaterBindingEvaluator<object?>? _selectedValueBindingEvaluator;
         private bool _isSelectionChangeActive;
 
         public SelectingItemsRepeater()
@@ -218,11 +218,11 @@ namespace Avalonia.Controls
         }
 
         /// <summary>
-        /// Gets the <see cref="IBinding"/> instance used to obtain the <see cref="SelectedValue"/> property.
+        /// Gets the <see cref="BindingBase"/> instance used to obtain the <see cref="SelectedValue"/> property.
         /// </summary>
         [AssignBinding]
         [InheritDataTypeFromItems(nameof(ItemsSource))]
-        public IBinding? SelectedValueBinding
+        public BindingBase? SelectedValueBinding
         {
             get => GetValue(SelectedValueBindingProperty);
             set => SetValue(SelectedValueBindingProperty, value);
@@ -486,7 +486,7 @@ namespace Avalonia.Controls
                     return;
                 }
 
-                var value = change.GetNewValue<IBinding?>();
+                var value = change.GetNewValue<BindingBase?>();
                 if (value is null)
                 {
                     SetCurrentValue(SelectedValueProperty, SelectedItem);
@@ -1395,9 +1395,11 @@ namespace Avalonia.Controls
             }
         }
 
-        private BindingEvaluator<object?> GetSelectedValueBindingEvaluator(IBinding binding)
+        private RepeaterBindingEvaluator<object?> GetSelectedValueBindingEvaluator(BindingBase binding)
         {
-            _selectedValueBindingEvaluator ??= new();
+            _selectedValueBindingEvaluator ??= RepeaterBindingEvaluator<object?>.TryCreate(binding)
+                ?? throw new InvalidOperationException("SelectedValueBinding could not be created.");
+
             _selectedValueBindingEvaluator.UpdateBinding(binding);
             return _selectedValueBindingEvaluator;
         }
@@ -1505,7 +1507,7 @@ namespace Avalonia.Controls
             switch (eventArgs.Pointer.Type)
             {
                 case PointerType.Mouse:
-                    return Gestures.GetIsHoldWithMouseEnabled(selectable)
+                    return selectable is StyledElement styledElement && InputElement.GetIsHoldWithMouseEnabled(styledElement)
                         ? eventArgs.RoutedEvent == InputElement.PointerReleasedEvent
                         : eventArgs.RoutedEvent == InputElement.PointerPressedEvent;
                 case PointerType.Pen:
@@ -1533,7 +1535,7 @@ namespace Avalonia.Controls
             HasModifiers(eventArgs, GetHotkeys(selectable)?.CommandModifiers);
 
         private static PlatformHotkeyConfiguration? GetHotkeys(Visual element) =>
-            (TopLevel.GetTopLevel(element)?.PlatformSettings ?? Application.Current?.PlatformSettings)?.HotkeyConfiguration;
+            (element.GetPlatformSettings() ?? Application.Current?.PlatformSettings)?.HotkeyConfiguration;
 
         private static bool HasModifiers(RoutedEventArgs eventArgs, KeyModifiers? modifiers)
         {

@@ -71,6 +71,10 @@ namespace Avalonia.Controls
 
         Size IScrollable.Viewport => _viewport;
 
+        bool IScrollable.CanHorizontallyScroll => _canHorizontallyScroll;
+
+        bool IScrollable.CanVerticallyScroll => _canVerticallyScroll;
+
         Vector IScrollable.Offset
         {
             get => _offset;
