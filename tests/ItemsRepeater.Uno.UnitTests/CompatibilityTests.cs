@@ -117,4 +117,5 @@ public class CompatibilityTests
         Assert.Equal(0, model.SelectedIndex);
         Assert.Equal("alpha", model.SelectedItem);
     }
+
 }

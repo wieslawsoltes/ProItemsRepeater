@@ -197,9 +197,13 @@ public class SelectingItemsRepeater : ItemsRepeater
         if (index < 0)
             return false;
 
+        var properties = e.GetCurrentPoint(element).Properties;
+        if (!properties.IsLeftButtonPressed && !properties.IsRightButtonPressed)
+            return false;
+
         var ctrl = IsModifierKeyDown(VirtualKey.Control) || IsModifierKeyDown(VirtualKey.LeftWindows) || IsModifierKeyDown(VirtualKey.RightWindows);
         var shift = IsModifierKeyDown(VirtualKey.Shift);
-        ApplySelectionGesture(index, ctrl, shift);
+        ApplySelectionGesture(index, ctrl, shift, properties.IsRightButtonPressed);
         Focus(FocusState.Programmatic);
         return true;
     }
@@ -258,7 +262,8 @@ public class SelectingItemsRepeater : ItemsRepeater
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         _ = sender;
-        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        var properties = e.GetCurrentPoint(this).Properties;
+        if (!properties.IsLeftButtonPressed && !properties.IsRightButtonPressed)
             return;
 
         var element = FindRealizedElement(e.OriginalSource as DependencyObject);
@@ -277,6 +282,14 @@ public class SelectingItemsRepeater : ItemsRepeater
 
         var ctrl = IsModifierKeyDown(VirtualKey.Control) || IsModifierKeyDown(VirtualKey.LeftWindows) || IsModifierKeyDown(VirtualKey.RightWindows);
         var shift = IsModifierKeyDown(VirtualKey.Shift);
+
+        if (ctrl && HasAllFlags(SelectionMode, SelectionMode.Multiple) && e.Key == VirtualKey.A)
+        {
+            _selection.SelectAll();
+            e.Handled = true;
+            return;
+        }
+
         var current = SelectedIndex < 0 ? 0 : SelectedIndex;
         var target = current;
         var handled = true;
@@ -324,13 +337,24 @@ public class SelectingItemsRepeater : ItemsRepeater
         e.Handled = true;
     }
 
-    private void ApplySelectionGesture(int index, bool ctrl, bool shift)
+    private void ApplySelectionGesture(int index, bool ctrl, bool shift, bool rightButton = false)
     {
         if (index < 0 || index >= (ItemsSourceView?.Count ?? 0))
             return;
 
         var multiple = HasAllFlags(SelectionMode, SelectionMode.Multiple);
         var toggle = HasAllFlags(SelectionMode, SelectionMode.Toggle);
+
+        if (rightButton)
+        {
+            if (!_selection.IsSelected(index))
+            {
+                _selection.SelectedIndex = index;
+                _anchorIndex = index;
+            }
+
+            return;
+        }
 
         if (!multiple)
         {

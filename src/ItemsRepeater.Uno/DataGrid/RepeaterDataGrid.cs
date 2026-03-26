@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Microsoft.UI.Xaml;
@@ -21,6 +22,7 @@ namespace Avalonia.Controls.DataGrid;
 [TemplatePart(Name = BodyScrollViewerPartName, Type = typeof(ScrollViewer))]
 public class RepeaterDataGrid : Control
 {
+    private const double WidthEpsilon = 0.25;
     private const string HeaderHostPartName = "PART_HeaderHost";
     private const string HeaderPanelPartName = "PART_HeaderPanel";
     private const string RowsRepeaterPartName = "PART_RowsRepeater";
@@ -59,23 +61,52 @@ public class RepeaterDataGrid : Control
             nameof(AutoMeasureRowLimit),
             typeof(int),
             typeof(RepeaterDataGrid),
-            new PropertyMetadata(int.MaxValue));
+            new PropertyMetadata(int.MaxValue, OnAutoMeasureRowLimitChanged));
+
+    public static readonly DependencyProperty TotalColumnWidthProperty =
+        DependencyProperty.Register(
+            nameof(TotalColumnWidth),
+            typeof(double),
+            typeof(RepeaterDataGrid),
+            new PropertyMetadata(0d));
+
+    public static readonly DependencyProperty HeaderHeightProperty =
+        DependencyProperty.Register(
+            nameof(HeaderHeight),
+            typeof(double),
+            typeof(RepeaterDataGrid),
+            new PropertyMetadata(0d));
 
     private readonly AvaloniaList<RepeaterDataGridColumn> _columns = new();
     private readonly Dictionary<int, RepeaterDataGridRowControl> _realizedRows = new();
+    private readonly HashSet<RepeaterDataGridRowControl> _autoMeasureQueue = new();
     private readonly RowElementFactory _rowFactory = new();
     private readonly RectangleGeometry _headerClip = new();
     private readonly TranslateTransform _headerTransform = new();
+    private readonly PointerEventHandler _rowsPointerPressedHandler;
+    private readonly PointerEventHandler _rowsPointerReleasedHandler;
+    private List<double> _autoColumnWidths = new();
+    private List<double> _columnWidths = new();
+    private double _lastMeasuredAvailableWidth = double.NaN;
     private Border? _headerHost;
     private StackPanel? _headerPanel;
     private SelectingItemsRepeater? _rowsRepeater;
     private ScrollViewer? _scroller;
+    private bool _autoMeasureQueued;
+    private bool _autoMeasureCompleted;
+    private bool _pendingHeaderWidthUpdate;
+    private bool _updatingColumnIndices;
+    private bool _updatingColumnWidths;
+    private int _autoMeasuredRowCount;
 
     public RepeaterDataGrid()
     {
         DefaultStyleKey = typeof(RepeaterDataGrid);
         _columns.CollectionChanged += OnColumnsCollectionChanged;
         SizeChanged += OnSizeChanged;
+        _rowsPointerPressedHandler = OnRowsPointerPressed;
+        _rowsPointerReleasedHandler = OnRowsPointerReleased;
+        ResetAutoColumnWidths();
     }
 
     public AvaloniaList<RepeaterDataGridColumn> Columns => _columns;
@@ -110,9 +141,17 @@ public class RepeaterDataGrid : Control
         set => SetValue(AutoMeasureRowLimitProperty, value);
     }
 
-    public double TotalColumnWidth { get; private set; }
+    public double TotalColumnWidth
+    {
+        get => (double)GetValue(TotalColumnWidthProperty);
+        private set => SetValue(TotalColumnWidthProperty, value);
+    }
 
-    public double HeaderHeight { get; private set; }
+    public double HeaderHeight
+    {
+        get => (double)GetValue(HeaderHeightProperty);
+        private set => SetValue(HeaderHeightProperty, value);
+    }
 
     protected override void OnApplyTemplate()
     {
@@ -125,9 +164,7 @@ public class RepeaterDataGrid : Control
         _rowsRepeater = GetTemplateChild(RowsRepeaterPartName) as SelectingItemsRepeater;
 
         if (_scroller is not null)
-        {
             _scroller.ViewChanged += OnScrollViewChanged;
-        }
 
         if (_headerHost is not null)
         {
@@ -148,13 +185,16 @@ public class RepeaterDataGrid : Control
             _rowsRepeater.ElementClearing += OnRowClearing;
             _rowsRepeater.ElementIndexChanged += OnRowIndexChanged;
             _rowsRepeater.SelectionChanged += OnRowsSelectionChanged;
-            _rowsRepeater.AddHandler(PointerPressedEvent, new PointerEventHandler(OnRowsPointerPressed), true);
+            _rowsRepeater.AddHandler(PointerPressedEvent, _rowsPointerPressedHandler, true);
+            _rowsRepeater.AddHandler(PointerReleasedEvent, _rowsPointerReleasedHandler, true);
         }
 
         BuildHeader();
         UpdateColumnWidths();
+        RequestHeaderWidthUpdate();
+        RequestAutoColumnMeasurement();
         SyncHeaderScroll();
-        UpdateRealizedRows();
+        RebindRealizedRows();
     }
 
     private void DetachTemplateParts()
@@ -168,36 +208,94 @@ public class RepeaterDataGrid : Control
             _rowsRepeater.ElementClearing -= OnRowClearing;
             _rowsRepeater.ElementIndexChanged -= OnRowIndexChanged;
             _rowsRepeater.SelectionChanged -= OnRowsSelectionChanged;
-            _rowsRepeater.RemoveHandler(PointerPressedEvent, new PointerEventHandler(OnRowsPointerPressed));
+            _rowsRepeater.RemoveHandler(PointerPressedEvent, _rowsPointerPressedHandler);
+            _rowsRepeater.RemoveHandler(PointerReleasedEvent, _rowsPointerReleasedHandler);
         }
 
         if (_scroller is not null)
-        {
             _scroller.ViewChanged -= OnScrollViewChanged;
-        }
 
         _realizedRows.Clear();
         _headerHost = null;
         _headerPanel = null;
-        _headerTransform.X = 0;
         _rowsRepeater = null;
         _scroller = null;
+        _headerTransform.X = 0;
     }
 
     private void OnColumnsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        for (var i = 0; i < _columns.Count; ++i)
-            _columns[i].Index = i;
+        if (e.OldItems is not null)
+        {
+            foreach (var item in e.OldItems)
+            {
+                if (item is RepeaterDataGridColumn column)
+                    column.PropertyChanged -= OnColumnPropertyChanged;
+            }
+        }
 
+        if (e.NewItems is not null)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is RepeaterDataGridColumn column)
+                    column.PropertyChanged += OnColumnPropertyChanged;
+            }
+        }
+
+        UpdateColumnIndices();
+        ResetAutoColumnWidths();
+        ResetHeaderHeight();
         BuildHeader();
         UpdateColumnWidths();
-        UpdateRealizedRows();
+        RebindRealizedRows();
+        RequestHeaderWidthUpdate();
+        RequestAutoColumnMeasurement();
+    }
+
+    private void OnColumnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_updatingColumnIndices || _updatingColumnWidths)
+            return;
+
+        if (e.PropertyName is nameof(RepeaterDataGridColumn.Index) or nameof(RepeaterDataGridColumn.ActualWidth))
+            return;
+
+        if (e.PropertyName is nameof(RepeaterDataGridColumn.Header) or nameof(RepeaterDataGridColumn.HeaderTemplate))
+        {
+            ResetHeaderHeight();
+            BuildHeader();
+            RequestHeaderWidthUpdate();
+        }
+
+        ResetAutoColumnWidths();
+        UpdateColumnWidths();
+        if (e.PropertyName is nameof(RepeaterDataGridColumn.BindingPath) or nameof(RepeaterDataGridColumn.CellTemplate))
+            RebindRealizedRows();
+        RequestAutoColumnMeasurement();
+    }
+
+    private void UpdateColumnIndices()
+    {
+        _updatingColumnIndices = true;
+        try
+        {
+            for (var i = 0; i < _columns.Count; ++i)
+                _columns[i].Index = i;
+        }
+        finally
+        {
+            _updatingColumnIndices = false;
+        }
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
+        _ = sender;
+        _lastMeasuredAvailableWidth = e.NewSize.Width;
         UpdateHeaderClip();
         UpdateColumnWidths();
+        RequestHeaderWidthUpdate();
     }
 
     private void OnHeaderHostSizeChanged(object sender, SizeChangedEventArgs e)
@@ -215,6 +313,7 @@ public class RepeaterDataGrid : Control
         _realizedRows[args.Index] = row;
         row.Bind(row.DataContext, args.Index, _columns, RowHeightBindingPath);
         row.ApplySelectionState(IsRowSelected(args.Index), SelectedCell);
+        QueueAutoMeasureRow(row);
     }
 
     private void OnRowClearing(object? sender, ItemsRepeaterElementClearingEventArgs args)
@@ -238,32 +337,53 @@ public class RepeaterDataGrid : Control
         _realizedRows[args.NewIndex] = row;
         row.Bind(row.DataContext, args.NewIndex, _columns, RowHeightBindingPath);
         row.ApplySelectionState(IsRowSelected(args.NewIndex), SelectedCell);
+        QueueAutoMeasureRow(row);
     }
 
     private void OnRowsSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        _ = sender;
+        _ = e;
         UpdateRealizedRowsSelection();
     }
 
     private void OnRowsPointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        if (_rowsRepeater is null)
+        _ = sender;
+        HandlePointerSelection(e);
+    }
+
+    private void OnRowsPointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        _ = sender;
+        HandlePointerSelection(e);
+    }
+
+    private void HandlePointerSelection(PointerRoutedEventArgs e)
+    {
+        if (e.Handled || _rowsRepeater is null)
             return;
 
-        var row = FindAncestor<RepeaterDataGridRowControl>(e.OriginalSource as DependencyObject);
+        var source = e.OriginalSource as DependencyObject;
+        var cell = FindCellBorder(source);
+        var row = cell is not null
+            ? FindAncestor<RepeaterDataGridRowControl>(cell)
+            : FindAncestor<RepeaterDataGridRowControl>(source);
+
         if (row is null)
             return;
 
-        if (_rowsRepeater.UpdateSelectionFromEvent(row, e))
-        {
-            var cell = FindCellBorder(e.OriginalSource as DependencyObject);
-            if (cell?.Tag is int columnIndex)
-                SelectedCell = new RepeaterDataGridCellInfo(row.RowIndex, columnIndex);
-        }
+        if (!_rowsRepeater.UpdateSelectionFromEvent(row, e))
+            return;
+
+        if (cell?.Tag is int columnIndex)
+            SelectedCell = new RepeaterDataGridCellInfo(row.RowIndex, columnIndex);
     }
 
     private void OnScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
     {
+        _ = sender;
+        _ = e;
         SyncHeaderScroll();
     }
 
@@ -273,6 +393,7 @@ public class RepeaterDataGrid : Control
             return;
 
         _headerTransform.X = -_scroller.HorizontalOffset;
+        _headerTransform.Y = 0;
     }
 
     private void UpdateHeaderClip()
@@ -291,27 +412,31 @@ public class RepeaterDataGrid : Control
         _headerPanel.Children.Clear();
 
         foreach (var column in _columns)
-        {
-            var cell = CreateHeaderCell(column);
-            _headerPanel.Children.Add(cell);
-        }
+            _headerPanel.Children.Add(CreateHeaderCell(column));
 
-        HeaderHeight = 0;
-        foreach (var child in _headerPanel.Children)
-            HeaderHeight = Math.Max(HeaderHeight, child.DesiredSize.Height);
+        ApplyHeaderWidths();
+        UpdateHeaderHeight();
     }
 
     private void UpdateColumnWidths()
     {
+        EnsureAutoColumnWidths();
+
         if (_columns.Count == 0)
         {
+            _columnWidths = new List<double>();
             TotalColumnWidth = 0;
+            UpdateColumnActualWidths(Array.Empty<double>());
+            if (_rowsRepeater is not null)
+                _rowsRepeater.Width = double.NaN;
             return;
         }
 
+        var availableWidth = GetAvailableWidth();
+        var hasFiniteWidth = availableWidth > 0 && !double.IsInfinity(availableWidth);
         var widths = new double[_columns.Count];
-        var fixedWidth = 0d;
         var starColumns = new List<(int Index, double Weight, double MinWidth)>();
+        var fixedWidth = 0d;
 
         for (var i = 0; i < _columns.Count; ++i)
         {
@@ -321,12 +446,13 @@ public class RepeaterDataGrid : Control
 
             if (column.Width.IsAbsolute)
             {
-                widths[i] = Math.Max(minWidth, column.Width.Value);
+                widths[i] = Math.Max(column.Width.Value, minWidth);
                 fixedWidth += widths[i];
             }
             else if (column.Width.IsAuto)
             {
-                widths[i] = Math.Max(minWidth, MeasureHeaderWidth(column));
+                var autoWidth = Math.Max(MeasureHeaderWidth(i, column), GetAutoColumnWidth(i));
+                widths[i] = Math.Max(autoWidth, minWidth);
                 fixedWidth += widths[i];
             }
             else
@@ -335,32 +461,55 @@ public class RepeaterDataGrid : Control
             }
         }
 
-        var availableWidth = ActualWidth > 0 ? ActualWidth : double.NaN;
-        var remaining = !double.IsNaN(availableWidth) && !double.IsInfinity(availableWidth)
-            ? Math.Max(0, availableWidth - fixedWidth)
-            : 0;
-        var totalStar = 0d;
+        var remaining = hasFiniteWidth ? Math.Max(0, availableWidth - fixedWidth) : 0;
+        var totalStarWeight = 0d;
         foreach (var starColumn in starColumns)
-            totalStar += starColumn.Weight;
+            totalStarWeight += starColumn.Weight;
 
         foreach (var starColumn in starColumns)
         {
-            var starWidth = totalStar > 0 ? remaining * (starColumn.Weight / totalStar) : 0;
+            var starWidth = hasFiniteWidth && totalStarWeight > 0
+                ? remaining * (starColumn.Weight / totalStarWeight)
+                : 0;
             widths[starColumn.Index] = Math.Max(starColumn.MinWidth, starWidth);
         }
 
-        TotalColumnWidth = 0;
-        for (var i = 0; i < _columns.Count; ++i)
-        {
-            _columns[i].ActualWidth = widths[i];
-            TotalColumnWidth += widths[i];
-        }
+        for (var i = 0; i < widths.Length; ++i)
+            widths[i] = Math.Max(1, widths[i]);
 
+        if (AreColumnWidthsUnchanged(widths))
+            return;
+
+        _columnWidths = new List<double>(widths);
+
+        var totalWidth = 0d;
+        for (var i = 0; i < widths.Length; ++i)
+            totalWidth += widths[i];
+
+        TotalColumnWidth = totalWidth;
+        UpdateColumnActualWidths(_columnWidths);
         ApplyHeaderWidths();
-        UpdateRealizedRows();
+        ApplyRealizedRowColumnWidths();
 
         if (_rowsRepeater is not null)
             _rowsRepeater.Width = TotalColumnWidth;
+    }
+
+    private void UpdateColumnActualWidths(IReadOnlyList<double> widths)
+    {
+        _updatingColumnWidths = true;
+        try
+        {
+            for (var i = 0; i < _columns.Count; ++i)
+            {
+                var width = i < widths.Count ? widths[i] : 0;
+                _columns[i].ActualWidth = width;
+            }
+        }
+        finally
+        {
+            _updatingColumnWidths = false;
+        }
     }
 
     private void ApplyHeaderWidths()
@@ -375,14 +524,19 @@ public class RepeaterDataGrid : Control
         }
     }
 
-    private void UpdateRealizedRows()
+    private void RebindRealizedRows()
     {
         foreach (var pair in _realizedRows)
         {
             pair.Value.Bind(pair.Value.DataContext, pair.Key, _columns, RowHeightBindingPath);
-            pair.Value.ApplyColumnWidths(_columns);
             pair.Value.ApplySelectionState(IsRowSelected(pair.Key), SelectedCell);
         }
+    }
+
+    private void ApplyRealizedRowColumnWidths()
+    {
+        foreach (var pair in _realizedRows)
+            pair.Value.ApplyColumnWidths(_columns);
     }
 
     private void UpdateRealizedRowsSelection()
@@ -427,10 +581,226 @@ public class RepeaterDataGrid : Control
         return border;
     }
 
-    private double MeasureHeaderWidth(RepeaterDataGridColumn column)
+    private double MeasureHeaderWidth(int columnIndex, RepeaterDataGridColumn column)
     {
+        if (_headerPanel is not null &&
+            columnIndex >= 0 &&
+            columnIndex < _headerPanel.Children.Count &&
+            _headerPanel.Children[columnIndex] is FrameworkElement element)
+        {
+            element.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+            return Math.Max(element.DesiredSize.Width, column.MinWidth);
+        }
+
         var headerCell = CreateHeaderCell(column);
         return Math.Max(headerCell.DesiredSize.Width, column.MinWidth);
+    }
+
+    private void RequestAutoColumnMeasurement()
+    {
+        if (_autoMeasureQueued || !HasAutoColumns() || _autoMeasureCompleted || AutoMeasureRowLimit <= 0)
+            return;
+
+        if (_autoMeasureQueue.Count == 0)
+        {
+            QueueAutoMeasureRealizedRows();
+            if (_autoMeasureQueue.Count == 0)
+                return;
+        }
+
+        _autoMeasureQueued = true;
+        var dispatcherQueue = DispatcherQueue;
+        if (dispatcherQueue is not null && dispatcherQueue.TryEnqueue(ProcessAutoColumnMeasurement))
+            return;
+
+        ProcessAutoColumnMeasurement();
+    }
+
+    private void ProcessAutoColumnMeasurement()
+    {
+        _autoMeasureQueued = false;
+
+        if (!HasAutoColumns() || _autoMeasureCompleted || AutoMeasureRowLimit <= 0)
+        {
+            _autoMeasureQueue.Clear();
+            return;
+        }
+
+        if (_autoMeasureQueue.Count == 0)
+            return;
+
+        var rows = new List<RepeaterDataGridRowControl>(_autoMeasureQueue);
+        _autoMeasureQueue.Clear();
+
+        if (UpdateAutoColumnWidthsFromRows(rows))
+            UpdateColumnWidths();
+    }
+
+    private void RequestHeaderWidthUpdate()
+    {
+        if (_pendingHeaderWidthUpdate)
+            return;
+
+        _pendingHeaderWidthUpdate = true;
+        var dispatcherQueue = DispatcherQueue;
+        if (dispatcherQueue is not null && dispatcherQueue.TryEnqueue(ProcessHeaderWidthUpdate))
+            return;
+
+        ProcessHeaderWidthUpdate();
+    }
+
+    private void ProcessHeaderWidthUpdate()
+    {
+        _pendingHeaderWidthUpdate = false;
+        UpdateHeaderHeight();
+        UpdateColumnWidths();
+    }
+
+    private void ResetHeaderHeight()
+    {
+        HeaderHeight = 0;
+    }
+
+    private void UpdateHeaderHeight()
+    {
+        if (_headerPanel is null)
+            return;
+
+        var maxHeight = 0d;
+        foreach (var child in _headerPanel.Children)
+        {
+            if (child is FrameworkElement element)
+            {
+                element.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+                maxHeight = Math.Max(maxHeight, element.DesiredSize.Height);
+            }
+        }
+
+        if (Math.Abs(maxHeight - HeaderHeight) > WidthEpsilon)
+            HeaderHeight = maxHeight;
+    }
+
+    private void QueueAutoMeasureRealizedRows()
+    {
+        foreach (var row in _realizedRows.Values)
+            _autoMeasureQueue.Add(row);
+    }
+
+    private bool UpdateAutoColumnWidthsFromRows(IEnumerable<RepeaterDataGridRowControl> rows)
+    {
+        if (_columns.Count == 0 || _autoMeasureCompleted || AutoMeasureRowLimit <= 0)
+            return false;
+
+        EnsureAutoColumnWidths();
+
+        var updated = false;
+        var limit = AutoMeasureRowLimit;
+
+        foreach (var row in rows)
+        {
+            if (_autoMeasureCompleted)
+                break;
+
+            if (!row.IsLoaded && row.Parent is null)
+                continue;
+
+            for (var columnIndex = 0; columnIndex < _columns.Count; ++columnIndex)
+            {
+                if (!_columns[columnIndex].Width.IsAuto)
+                    continue;
+
+                var desiredWidth = row.GetDesiredCellWidth(columnIndex);
+                if (desiredWidth > _autoColumnWidths[columnIndex])
+                {
+                    _autoColumnWidths[columnIndex] = desiredWidth;
+                    updated = true;
+                }
+            }
+
+            ++_autoMeasuredRowCount;
+            if (_autoMeasuredRowCount >= limit)
+                _autoMeasureCompleted = true;
+        }
+
+        return updated;
+    }
+
+    private bool HasAutoColumns()
+    {
+        foreach (var column in _columns)
+        {
+            if (column.Width.IsAuto)
+                return true;
+        }
+
+        return false;
+    }
+
+    private void EnsureAutoColumnWidths()
+    {
+        if (_autoColumnWidths.Count != _columns.Count)
+            ResetAutoColumnWidths();
+    }
+
+    private void ResetAutoColumnWidths()
+    {
+        _autoColumnWidths = new List<double>(_columns.Count);
+        for (var i = 0; i < _columns.Count; ++i)
+            _autoColumnWidths.Add(0d);
+
+        _autoMeasureQueue.Clear();
+        _autoMeasuredRowCount = 0;
+        _autoMeasureCompleted = AutoMeasureRowLimit <= 0;
+    }
+
+    private double GetAutoColumnWidth(int columnIndex)
+    {
+        if (columnIndex < 0 || columnIndex >= _autoColumnWidths.Count)
+            return 0;
+
+        return _autoColumnWidths[columnIndex];
+    }
+
+    private void QueueAutoMeasureRow(RepeaterDataGridRowControl row)
+    {
+        if (!HasAutoColumns() || _autoMeasureCompleted || AutoMeasureRowLimit <= 0)
+            return;
+
+        _autoMeasureQueue.Add(row);
+        RequestAutoColumnMeasurement();
+    }
+
+    private bool AreColumnWidthsUnchanged(double[] widths)
+    {
+        if (_columnWidths.Count != widths.Length)
+            return false;
+
+        var totalWidth = 0d;
+        for (var i = 0; i < widths.Length; ++i)
+        {
+            totalWidth += widths[i];
+            if (Math.Abs(_columnWidths[i] - widths[i]) > WidthEpsilon)
+                return false;
+        }
+
+        return Math.Abs(TotalColumnWidth - totalWidth) <= WidthEpsilon;
+    }
+
+    private double GetAvailableWidth()
+    {
+        var width = ActualWidth;
+
+        if (width <= 0)
+            width = _scroller?.ActualWidth ?? 0;
+
+        if ((width <= 0 || double.IsInfinity(width)) &&
+            !double.IsNaN(_lastMeasuredAvailableWidth) &&
+            !double.IsInfinity(_lastMeasuredAvailableWidth))
+        {
+            width = _lastMeasuredAvailableWidth;
+        }
+
+        return width;
     }
 
     private static Border? FindCellBorder(DependencyObject? source)
@@ -457,11 +827,16 @@ public class RepeaterDataGrid : Control
 
     private static void OnItemsSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
-        if (sender is not RepeaterDataGrid grid || grid._rowsRepeater is null)
+        if (sender is not RepeaterDataGrid grid)
             return;
 
-        grid._rowsRepeater.ItemsSource = (IEnumerable?)args.NewValue;
+        if (grid._rowsRepeater is not null)
+            grid._rowsRepeater.ItemsSource = (IEnumerable?)args.NewValue;
+
         grid._realizedRows.Clear();
+        grid.ResetAutoColumnWidths();
+        grid.UpdateColumnWidths();
+        grid.RequestAutoColumnMeasurement();
     }
 
     private static void OnSelectionModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -473,13 +848,23 @@ public class RepeaterDataGrid : Control
     private static void OnRowHeightBindingPathChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is RepeaterDataGrid grid)
-            grid.UpdateRealizedRows();
+            grid.RebindRealizedRows();
     }
 
     private static void OnSelectedCellChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is RepeaterDataGrid grid)
             grid.UpdateRealizedRowsSelection();
+    }
+
+    private static void OnAutoMeasureRowLimitChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        if (sender is not RepeaterDataGrid grid)
+            return;
+
+        grid.ResetAutoColumnWidths();
+        grid.UpdateColumnWidths();
+        grid.RequestAutoColumnMeasurement();
     }
 
     private sealed class RowElementFactory : ElementFactory

@@ -8,6 +8,13 @@ namespace Avalonia.Controls;
 [ContentProperty(Name = nameof(ItemTemplate))]
 public class ItemsRepeater : Microsoft.UI.Xaml.Controls.ItemsRepeater
 {
+    public static readonly DependencyProperty IsLogicalScrollEnabledProperty =
+        DependencyProperty.Register(
+            nameof(IsLogicalScrollEnabled),
+            typeof(bool),
+            typeof(ItemsRepeater),
+            new PropertyMetadata(true));
+
     private ItemsRepeaterElementPreparedEventArgs? _preparedArgs;
     private ItemsRepeaterElementClearingEventArgs? _clearingArgs;
     private ItemsRepeaterElementIndexChangedEventArgs? _indexChangedArgs;
@@ -28,6 +35,12 @@ public class ItemsRepeater : Microsoft.UI.Xaml.Controls.ItemsRepeater
             _itemTemplate = value;
             base.ItemTemplate = NormalizeItemTemplate(value);
         }
+    }
+
+    public bool IsLogicalScrollEnabled
+    {
+        get => (bool)GetValue(IsLogicalScrollEnabledProperty);
+        set => SetValue(IsLogicalScrollEnabledProperty, value);
     }
 
     public new event EventHandler<ItemsRepeaterElementPreparedEventArgs>? ElementPrepared;
