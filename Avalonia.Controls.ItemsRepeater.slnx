@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/samples/">
     <Project Path="samples/Avalonia.Controls.ItemsRepeater.Samples/Avalonia.Controls.ItemsRepeater.Samples.csproj" />
+    <Project Path="samples/ItemsRepeaterUnoSample/ItemsRepeaterUnoSample.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
@@ -22,8 +23,10 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Avalonia.Controls.ItemsRepeater/Avalonia.Controls.ItemsRepeater.csproj" />
+    <Project Path="src/ItemsRepeater.Uno/ItemsRepeater.Uno.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Avalonia.Controls.ItemsRepeater.UnitTests/Avalonia.Controls.ItemsRepeater.UnitTests.csproj" />
+    <Project Path="tests/ItemsRepeater.Uno.UnitTests/ItemsRepeater.Uno.UnitTests.csproj" />
   </Folder>
 </Solution>
