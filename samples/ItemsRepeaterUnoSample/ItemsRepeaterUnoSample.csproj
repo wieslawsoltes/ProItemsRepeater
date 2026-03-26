@@ -1,0 +1,63 @@
+<Project Sdk="Uno.Sdk/6.5.31">
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+    <MSBuildEnableWorkloadResolver>true</MSBuildEnableWorkloadResolver>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>ItemsRepeaterUnoSample</RootNamespace>
+    <ApplicationTitle>ItemsRepeaterUnoSample</ApplicationTitle>
+    <ApplicationId>com.wieslawsoltes.itemsrepeaterunosample</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationPublisher>ItemsRepeaterUnoSample</ApplicationPublisher>
+    <Description>ItemsRepeaterUnoSample powered by Uno Platform.</Description>
+    <UnoFeatures>
+      SkiaRenderer;
+    </UnoFeatures>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ItemsRepeater.Uno\ItemsRepeater.Uno.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="GlobalUsings.cs" />
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="MainPage.xaml.cs" />
+    <Compile Include="ItemsRepeaterPage.xaml.cs" />
+    <Compile Include="NestedItemsRepeaterPage.xaml.cs" />
+    <Compile Include="RepeaterDataGridPage.xaml.cs" />
+    <Compile Include="SelectingItemsRepeaterPage.xaml.cs" />
+    <Compile Include="ViewModels/ItemsRepeaterPageViewModel.cs" />
+    <Compile Include="ViewModels/NestedItemsRepeaterPageViewModel.cs" />
+    <Compile Include="ViewModels/RepeaterDataGridPageViewModel.cs" />
+    <Compile Include="ViewModels/SelectingItemsRepeaterPageViewModel.cs" />
+    <Compile Include="Platforms/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ItemsRepeaterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NestedItemsRepeaterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RepeaterDataGridPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectingItemsRepeaterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>

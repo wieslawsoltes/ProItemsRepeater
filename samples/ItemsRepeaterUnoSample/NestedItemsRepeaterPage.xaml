@@ -1,0 +1,58 @@
+<UserControl
+    x:Class="ItemsRepeaterUnoSample.NestedItemsRepeaterPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Avalonia.Controls"
+    xmlns:layout="using:Avalonia.Layout"
+    xmlns:mux="using:Microsoft.UI.Xaml.Controls">
+    <Grid RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Nested ItemsRepeater virtualization with outer scrolling." />
+            <TextBlock Text="Inner repeaters virtualize using the parent scroller's effective viewport."
+                       TextWrapping="WrapWholeWords" />
+        </StackPanel>
+
+        <Border Grid.Row="1" BorderBrush="#FFD9D9D9" BorderThickness="1">
+            <mux:ItemsRepeaterScrollHost>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <controls:ItemsRepeater ItemsSource="{Binding Groups}">
+                        <controls:ItemsRepeater.Layout>
+                            <layout:StackLayout Orientation="Vertical" Spacing="12" />
+                        </controls:ItemsRepeater.Layout>
+                        <controls:ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#FFE5E7EB"
+                                        BorderThickness="1"
+                                        Padding="8">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="{Binding Title}" FontSize="18" />
+                                        <controls:ItemsRepeater ItemsSource="{Binding Items}">
+                                            <controls:ItemsRepeater.Layout>
+                                                <layout:StackLayout Orientation="Vertical" Spacing="4" />
+                                            </controls:ItemsRepeater.Layout>
+                                            <controls:ItemsRepeater.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#DBEAFE"
+                                                            CornerRadius="4"
+                                                            Padding="6,2">
+                                                        <TextBlock Text="{Binding Label}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </controls:ItemsRepeater.ItemTemplate>
+                                        </controls:ItemsRepeater>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </controls:ItemsRepeater.ItemTemplate>
+                    </controls:ItemsRepeater>
+                </ScrollViewer>
+            </mux:ItemsRepeaterScrollHost>
+        </Border>
+    </Grid>
+</UserControl>
