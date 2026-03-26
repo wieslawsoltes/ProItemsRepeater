@@ -1,8 +1,11 @@
 using System;
-using Microsoft.UI.Xaml;
 
 namespace Avalonia.Layout
 {
+    /// <summary>
+    /// Defines constants that specify whether to suppress automatic recycling of the retrieved
+    /// element or force creation of a new element.
+    /// </summary>
     [Flags]
     public enum ElementRealizationOptions
     {
@@ -11,35 +14,85 @@ namespace Avalonia.Layout
         SuppressAutoRecycle = 0x2,
     }
 
-    public class VirtualizingLayoutContext : LayoutContext
+    /// <summary>
+    /// Represents the base class for layout context types that support virtualization.
+    /// </summary>
+    public abstract class VirtualizingLayoutContext : LayoutContext
     {
-        internal VirtualizingLayoutContext(Microsoft.UI.Xaml.Controls.VirtualizingLayoutContext inner)
-            : base(inner)
-        {
-            Inner = inner;
-        }
+        private NonVirtualizingLayoutContext? _contextAdapter;
 
-        internal new Microsoft.UI.Xaml.Controls.VirtualizingLayoutContext Inner { get; }
-
-        public int ItemCount => Inner.ItemCount;
+        public int ItemCount => ItemCountCore();
 
         public Point LayoutOrigin
         {
-            get => Inner.LayoutOrigin.ToAvalonia();
-            set => Inner.LayoutOrigin = value.ToNative();
+            get => LayoutOriginCore;
+            set => LayoutOriginCore = value;
         }
 
-        public Rect RealizationRect => Inner.RealizationRect.ToAvalonia();
+        public Rect RealizationRect => RealizationRectCore();
 
-        public int RecommendedAnchorIndex => Inner.RecommendedAnchorIndex;
+        public int RecommendedAnchorIndex => RecommendedAnchorIndexCore;
 
-        public object GetItemAt(int index) => Inner.GetItemAt(index);
+        protected abstract Point LayoutOriginCore { get; set; }
 
-        public UIElement GetOrCreateElementAt(int index) => Inner.GetOrCreateElementAt(index);
+        protected virtual int RecommendedAnchorIndexCore { get; }
 
-        public UIElement GetOrCreateElementAt(int index, ElementRealizationOptions options) =>
-            Inner.GetOrCreateElementAt(index, (Microsoft.UI.Xaml.Controls.ElementRealizationOptions)(int)options);
+        public object GetItemAt(int index) => GetItemAtCore(index);
 
-        public void RecycleElement(UIElement element) => Inner.RecycleElement(element);
+        public Layoutable GetOrCreateElementAt(int index) =>
+            GetOrCreateElementAtCore(index, ElementRealizationOptions.None);
+
+        public Layoutable GetOrCreateElementAt(int index, ElementRealizationOptions options) =>
+            GetOrCreateElementAtCore(index, options);
+
+        public void RecycleElement(Layoutable element) => RecycleElementCore(element);
+
+        protected abstract int ItemCountCore();
+
+        protected abstract object GetItemAtCore(int index);
+
+        protected abstract Rect RealizationRectCore();
+
+        protected abstract Layoutable GetOrCreateElementAtCore(int index, ElementRealizationOptions options);
+
+        protected abstract void RecycleElementCore(Layoutable element);
+
+        internal NonVirtualizingLayoutContext GetNonVirtualizingContextAdapter() =>
+            _contextAdapter ??= new VirtualLayoutContextAdapter(this);
+    }
+
+    internal sealed class UnoVirtualizingLayoutContext : VirtualizingLayoutContext
+    {
+        private readonly Microsoft.UI.Xaml.Controls.VirtualizingLayoutContext _inner;
+
+        public UnoVirtualizingLayoutContext(Microsoft.UI.Xaml.Controls.VirtualizingLayoutContext inner)
+        {
+            _inner = inner;
+        }
+
+        protected override object? LayoutStateCore
+        {
+            get => _inner.LayoutState;
+            set => _inner.LayoutState = value;
+        }
+
+        protected override Point LayoutOriginCore
+        {
+            get => _inner.LayoutOrigin.ToAvalonia();
+            set => _inner.LayoutOrigin = value.ToNative();
+        }
+
+        protected override int RecommendedAnchorIndexCore => _inner.RecommendedAnchorIndex;
+
+        protected override int ItemCountCore() => _inner.ItemCount;
+
+        protected override object GetItemAtCore(int index) => _inner.GetItemAt(index);
+
+        protected override Rect RealizationRectCore() => _inner.RealizationRect.ToAvalonia();
+
+        protected override Layoutable GetOrCreateElementAtCore(int index, ElementRealizationOptions options) =>
+            (Layoutable)_inner.GetOrCreateElementAt(index, (Microsoft.UI.Xaml.Controls.ElementRealizationOptions)(int)options);
+
+        protected override void RecycleElementCore(Layoutable element) => _inner.RecycleElement(element);
     }
 }

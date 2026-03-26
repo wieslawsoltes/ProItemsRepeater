@@ -1,18 +1,24 @@
 namespace Avalonia.Layout
 {
-    public class LayoutContext
+    /// <summary>
+    /// Represents the base class for an object that facilitates communication between an attached
+    /// layout and its host container.
+    /// </summary>
+    public class LayoutContext : AvaloniaObject
     {
-        internal LayoutContext(Microsoft.UI.Xaml.Controls.LayoutContext inner)
-        {
-            Inner = inner;
-        }
-
-        internal Microsoft.UI.Xaml.Controls.LayoutContext Inner { get; }
-
+        /// <summary>
+        /// Gets or sets an object that represents the state of a layout.
+        /// </summary>
         public object? LayoutState
         {
-            get => Inner.LayoutState;
-            set => Inner.LayoutState = value;
+            get => LayoutStateCore;
+            set => LayoutStateCore = value;
         }
+
+        /// <summary>
+        /// Implements the behavior of <see cref="LayoutState"/> in a derived or custom
+        /// <see cref="LayoutContext"/>.
+        /// </summary>
+        protected virtual object? LayoutStateCore { get; set; }
     }
 }

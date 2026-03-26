@@ -15,13 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="GlobalUsings.cs" />
+    <Compile Include="Compatibility/AvaloniaObject.cs" />
     <Compile Include="Compatibility/AvaloniaCollections.cs" />
     <Compile Include="Compatibility/AvaloniaConverters.cs" />
     <Compile Include="Compatibility/AvaloniaData.cs" />
+    <Compile Include="Compatibility/AvaloniaLogging.cs" />
     <Compile Include="Compatibility/AvaloniaProperty.cs" />
     <Compile Include="Compatibility/AvaloniaPrimitives.cs" />
     <Compile Include="Compatibility/AvaloniaSelection.cs" />
     <Compile Include="Compatibility/AvaloniaTemplating.cs" />
+    <Compile Include="Compatibility/LayoutableExtensions.cs" />
     <Compile Include="Controls/ElementFactory.cs" />
     <Compile Include="Controls/IElementFactory.cs" />
     <Compile Include="Controls/ItemsRepeater.cs" />
@@ -30,17 +34,31 @@
     <Compile Include="Controls/ItemsRepeaterElementPreparedEventArgs.cs" />
     <Compile Include="Controls/RecyclePool.cs" />
     <Compile Include="Controls/RecyclingElementFactory.cs" />
+    <Compile Include="Controls/RepeaterLayoutContext.cs" />
     <Compile Include="Controls/SelectingItemsRepeater.cs" />
+    <Compile Include="Diagnostics/ItemsRepeaterDiagnostics.cs" />
     <Compile Include="Layout/Orientation.cs" />
     <Compile Include="Layout/AttachedLayout.cs" />
+    <Compile Include="Layout/ElementManager.cs" />
+    <Compile Include="Layout/FlowLayoutAlgorithm.cs" />
+    <Compile Include="Layout/IFlowLayoutAlgorithmDelegates.cs" />
+    <Compile Include="Layout/LayoutContextAdapter.cs" />
     <Compile Include="Layout/LayoutContext.cs" />
     <Compile Include="Layout/NonVirtualizingLayout.cs" />
     <Compile Include="Layout/NonVirtualizingLayoutContext.cs" />
+    <Compile Include="Layout/OrientationBasedMeasures.cs" />
     <Compile Include="Layout/StackLayout.cs" />
+    <Compile Include="Layout/StackLayoutState.cs" />
+    <Compile Include="Layout/UniformGridLayoutState.cs" />
+    <Compile Include="Layout/UvBounds.cs" />
+    <Compile Include="Layout/UvMeasure.cs" />
+    <Compile Include="Layout/Utils/ListUtils.cs" />
+    <Compile Include="Layout/VirtualLayoutContextAdapter.cs" />
     <Compile Include="Layout/UniformGridLayout.cs" />
     <Compile Include="Layout/VirtualizingLayout.cs" />
     <Compile Include="Layout/VirtualizingLayoutContext.cs" />
     <Compile Include="Layout/WrapLayout.cs" />
+    <Compile Include="Layout/WrapLayoutState.cs" />
     <Compile Include="Layout/NonVirtualizingStackLayout.cs" />
     <Compile Include="DataGrid/RepeaterDataGrid.cs" />
     <Compile Include="DataGrid/RepeaterDataGridCellInfo.cs" />

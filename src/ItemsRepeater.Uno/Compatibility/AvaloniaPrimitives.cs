@@ -51,6 +51,8 @@ namespace Avalonia
 
     public readonly struct Size : IEquatable<Size>
     {
+        public static Size Infinity { get; } = new(double.PositiveInfinity, double.PositiveInfinity);
+
         public Size(double width, double height)
         {
             Width = width;
@@ -65,6 +67,8 @@ namespace Avalonia
         public override int GetHashCode() => HashCode.Combine(Width, Height);
         public static bool operator ==(Size left, Size right) => left.Equals(right);
         public static bool operator !=(Size left, Size right) => !left.Equals(right);
+        public Size WithWidth(double width) => new(width, Height);
+        public Size WithHeight(double height) => new(Width, height);
     }
 
     public readonly struct Point : IEquatable<Point>
@@ -83,6 +87,7 @@ namespace Avalonia
         public override int GetHashCode() => HashCode.Combine(X, Y);
         public static bool operator ==(Point left, Point right) => left.Equals(right);
         public static bool operator !=(Point left, Point right) => !left.Equals(right);
+        public static Vector operator -(Point value) => new(-value.X, -value.Y);
     }
 
     public readonly struct Vector : IEquatable<Vector>
@@ -127,10 +132,13 @@ namespace Avalonia
         public double Y { get; }
         public double Width { get; }
         public double Height { get; }
+        public double Left => X;
+        public double Top => Y;
         public double Right => X + Width;
         public double Bottom => Y + Height;
         public Size Size => new(Width, Height);
         public Point TopLeft => new(X, Y);
+        public Point Position => new(X, Y);
 
         public bool Equals(Rect other) =>
             X.Equals(other.X) &&
@@ -142,6 +150,27 @@ namespace Avalonia
         public override int GetHashCode() => HashCode.Combine(X, Y, Width, Height);
         public static bool operator ==(Rect left, Rect right) => left.Equals(right);
         public static bool operator !=(Rect left, Rect right) => !left.Equals(right);
+        public Rect WithX(double x) => new(x, Y, Width, Height);
+        public Rect WithY(double y) => new(X, y, Width, Height);
+        public Rect WithWidth(double width) => new(X, Y, width, Height);
+        public Rect WithHeight(double height) => new(X, Y, Width, height);
+        public Rect Translate(Vector offset) => new(X + offset.X, Y + offset.Y, Width, Height);
+
+        public bool Intersects(Rect other)
+        {
+            return other.X < Right &&
+                   X < other.Right &&
+                   other.Y < Bottom &&
+                   Y < other.Bottom;
+        }
+
+        public bool Contains(Point point)
+        {
+            return point.X >= X &&
+                   point.X <= Right &&
+                   point.Y >= Y &&
+                   point.Y <= Bottom;
+        }
     }
 
     internal static class PrimitiveConversionExtensions

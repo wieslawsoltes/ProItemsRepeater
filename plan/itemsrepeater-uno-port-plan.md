@@ -11,86 +11,102 @@ Add a new Uno Platform implementation in `src/ItemsRepeater.Uno/` and a mirrored
 
 ## Porting stance
 
-This port should not re-implement Uno's own WinUI repeater engine when the platform already ships equivalent primitives. The Uno port therefore follows a hybrid strategy:
+This port must be a true source migration of the Avalonia implementation, not a wrapper layer over Uno's existing repeater controls.
 
-1. Reuse native Uno/WinUI primitives where they already match the Avalonia control surface closely.
-2. Keep the Avalonia-facing namespaces (`Avalonia.Controls`, `Avalonia.Layout`, `Avalonia.Controls.DataGrid`) so the port stays easy to understand and future diffs remain localized.
-3. Rebuild only the missing layers that do not exist in Uno out of the box:
-   - `SelectingItemsRepeater`
-   - `NonVirtualizingStackLayout`
-   - `WrapLayout` property aliases over Uno `FlowLayout`
-   - `RepeaterDataGrid`
+Required rules for the Uno lane:
+
+1. Start from the original source files in `src/Avalonia.Controls.ItemsRepeater/`.
+2. Copy the original Avalonia code into `src/ItemsRepeater.Uno/` on a one-to-one basis wherever practical.
+3. Replace only the framework-boundary pieces that are incompatible with Uno:
+   - Avalonia property system calls
+   - Avalonia visual tree and input APIs
+   - Avalonia layout invalidation and scrolling APIs
+   - Avalonia template/style application APIs
+4. Do not keep thin subclasses over `Microsoft.UI.Xaml.Controls.ItemsRepeater`, `StackLayout`, `UniformGridLayout`, `FlowLayout`, or related native repeater primitives as the implementation strategy.
+5. Uno-native types may still be used at the boundary where the port must integrate with the platform, but the control logic, layout logic, realization logic, and repeater state management should come from the migrated Avalonia source.
+
+This means the Uno project needs to carry the original repeater infrastructure:
+
+- `ItemsRepeater`
+- `ViewManager`
+- `ViewportManager`
+- `RepeaterLayoutContext`
+- `VirtualizationInfo`
+- source-ported layout algorithms and state objects
+- source-ported selection internals where the original control depends on them
 
 ## Source layout
 
 - `src/ItemsRepeater.Uno/`
-  - wrapper types over Uno repeater primitives
-  - missing layout implementations
-  - `SelectingItemsRepeater`
-  - `RepeaterDataGrid`
+  - migrated repeater control source from the Avalonia project
+  - migrated layout engine source from the Avalonia project
+  - migrated selection and virtualization helper source as needed
+  - Uno compatibility shims only where direct Avalonia APIs do not exist
   - Uno `Themes/Generic.xaml`
 - `samples/ItemsRepeaterUnoSample/`
   - Uno single-project multi-head sample
   - the same four sample pages as the Avalonia sample
   - shared view models ported from the Avalonia sample
 
-## Main design decisions
+## Migration sequence
 
-### 1. Base repeater surface
+### 1. Port missing core source files first
 
-Use thin wrapper classes for:
+Bring over the original Avalonia files that currently do not exist in the Uno project:
 
-- `Avalonia.Controls.ItemsRepeater`
-- `Avalonia.Controls.RecyclePool`
-- `Avalonia.Controls.RecyclingElementFactory`
-- `Avalonia.Layout.StackLayout`
-- `Avalonia.Layout.UniformGridLayout`
+- `Controls/ItemTemplateWrapper.cs`
+- `Controls/ItemsRepeater.LogicalScrollable.cs`
+- `Controls/RepeaterLayoutContext.cs`
+- `Controls/UniqueIdElementPool.cs`
+- `Controls/ViewManager.cs`
+- `Controls/ViewportManager.cs`
+- `Controls/VirtualizationInfo.cs`
+- `Diagnostics/ItemsRepeaterDiagnostics.cs`
+- `Layout/ElementManager.cs`
+- `Layout/FlowLayoutAlgorithm.cs`
+- `Layout/IFlowLayoutAlgorithmDelegates.cs`
+- `Layout/LayoutContextAdapter.cs`
+- `Layout/OrientationBasedMeasures.cs`
+- `Layout/StackLayoutState.cs`
+- `Layout/UniformGridLayoutState.cs`
+- `Layout/Utils/ListUtils.cs`
+- `Layout/UvBounds.cs`
+- `Layout/UvMeasure.cs`
+- `Layout/VirtualLayoutContextAdapter.cs`
+- `Layout/WrapItem.cs`
+- `Layout/WrapLayoutState.cs`
+- `Selection/InternalSelectionModel.cs`
+- `Utils/BindingEvaluator.cs`
 
-These types can directly inherit the Uno/WinUI equivalents because Uno already exposes:
+### 2. Replace wrapper-based layout types
+
+The current Uno implementations of these types should be replaced with migrated Avalonia logic:
 
 - `ItemsRepeater`
-- `StackLayout`
-- `UniformGridLayout`
-- `RecyclePool`
-- `RecyclingElementFactory`
+- `NonVirtualizingStackLayout`
+- `SelectingItemsRepeater`
 
-### 2. Missing layouts
+Status after the current corrective pass:
 
-- `NonVirtualizingStackLayout` remains custom because Uno exposes the non-virtualizing layout base but not the exact Avalonia helper layout.
-- `WrapLayout` should map onto Uno `FlowLayout` with Avalonia-compatible property names:
-  - `HorizontalSpacing` -> `MinColumnSpacing`
-  - `VerticalSpacing` -> `MinRowSpacing`
+- `StackLayout` is now on the migrated Avalonia flow-layout path.
+- `UniformGridLayout` is now on the migrated Avalonia flow-layout path.
+- `WrapLayout` is now on the migrated Avalonia flow-layout path.
+- `ItemsRepeater` and its realization/runtime infrastructure still need the same source-port treatment.
 
-### 3. Selection layer
+### 3. Adapt Avalonia API boundaries to Uno
 
-Implement `SelectingItemsRepeater` on top of Uno `ItemsRepeater` plus Uno `SelectionModel`.
+Expected adaptation zones:
 
-Required behavior:
+- `AvaloniaProperty` / `StyledProperty` / `DirectProperty` to Uno dependency properties or narrow compatibility helpers
+- `Layoutable`, `Control`, `Panel`, and templated-control lifecycle to Uno equivalents
+- `InvalidateMeasure`, `InvalidateArrange`, `SizeChanged`, and viewport updates to Uno layout lifecycle
+- `ScrollViewer`, bring-into-view, and scroll offset handling to Uno scrolling APIs
+- Avalonia visual tree traversal to Uno visual tree traversal
+- Avalonia pointer/keyboard events to Uno input events
 
-- single and multiple selection
-- click to select
-- ctrl/cmd-style toggle support where available
-- shift-range selection
-- `SelectedIndex`
-- `SelectedItem`
-- `SelectionChanged`
-- `AutoScrollToSelectedItem`
-- attached `IsSelected` state for realized elements
+### 4. Keep the sample and DataGrid on top of the ported repeater
 
-### 4. RepeaterDataGrid
-
-Keep `RepeaterDataGrid` as a custom Uno control built from:
-
-- a static header presenter
-- a scrolling `SelectingItemsRepeater` for rows
-- column-width calculation compatible with:
-  - absolute widths
-  - star widths
-  - auto widths
-- row selection and cell selection
-- row-height binding support
-
-The Uno version should avoid introducing new reflection-heavy code paths. Dynamic cell text and row-height behavior should prefer WinUI bindings and realized-element measurement over custom reflection helpers.
+`RepeaterDataGrid` and the sample pages should consume the migrated Uno repeater implementation, not a wrapper over Uno-native repeater controls.
 
 ## Sample scope
 
@@ -119,67 +135,19 @@ The Uno sample must include the same user-facing pages and actions as the Avalon
 - `dotnet build samples/ItemsRepeaterUnoSample/ItemsRepeaterUnoSample.csproj -c Release -f net9.0-desktop`
 - `cd samples/ItemsRepeaterUnoSample && dotnet run -c Release -f net9.0-desktop -- --exit`
 
-## Full parity expansion
+## Current corrective direction
 
-The initial Uno port shipped the sample-driven control surface. The parity expansion pass extends that with the broader Avalonia-facing API shape so downstream code is not forced onto raw Uno primitives.
+The existing Uno branch already added compatibility helpers and sample coverage, but it still diverges from the required source-port architecture because several core repeater and layout files are missing and some public types are thin wrappers over Uno-native implementations.
 
-Implemented additions:
+The corrective work must now:
 
-- compatibility primitives in `Avalonia.*`:
-  - `GridLength`
-  - `GridUnitType`
-  - `Point`
-  - `Rect`
-  - `Size`
-  - `Vector`
-  - `AvaloniaProperty.UnsetValue`
-- compatibility collections:
-  - `Avalonia.Collections.AvaloniaList<T>`
-- compatibility binding and converter contracts:
-  - `Avalonia.Data.BindingBase`
-  - `Avalonia.Data.Binding`
-  - `Avalonia.Data.Converters.IValueConverter`
-  - `Avalonia.Data.Converters.IMultiValueConverter`
-- compatibility templating contracts:
-  - `Avalonia.Controls.Templates.IDataTemplate`
-  - `Avalonia.Controls.Templates.FuncDataTemplate`
-- compatibility selection contracts:
-  - `Avalonia.Controls.SelectionMode`
-  - `Avalonia.Controls.SelectionChangedEventArgs`
-  - `Avalonia.Controls.Selection.ISelectionModel`
-  - `Avalonia.Controls.Selection.SelectionModel<T>`
-  - `Avalonia.Controls.Selection.SelectionModelIndexesChangedEventArgs`
-  - `Avalonia.Controls.Selection.SelectionModelSelectionChangedEventArgs`
-- expanded repeater surface:
-  - custom `ItemsRepeater` event wrappers for prepared/clearing/index-changed callbacks
-  - `IElementFactory`
-  - `ElementFactory`
-  - `RecyclePool`
-  - `RecyclingElementFactory`
-  - `SelectingItemsRepeater.SelectedValue`
-  - `SelectingItemsRepeater.SelectedValueBinding`
-  - `SelectingItemsRepeater.SelectedItems`
-  - `SelectingItemsRepeater.Selection`
-  - `SelectingItemsRepeater.WrapSelection`
-  - `SelectingItemsRepeater.BeginInit()`
-  - `SelectingItemsRepeater.EndInit()`
-- expanded layout surface:
-  - `Avalonia.Layout.Orientation`
-  - `Avalonia.Layout.UniformGridLayoutItemsJustification`
-  - `Avalonia.Layout.UniformGridLayoutItemsStretch`
-  - Avalonia-facing enum/property mapping on `StackLayout`, `UniformGridLayout`, `WrapLayout`, and `NonVirtualizingStackLayout`
-- expanded data grid surface:
-  - `RepeaterDataGrid.Columns` now uses `AvaloniaList<T>`
-  - `RepeaterDataGridColumn.Width` now uses Avalonia-compatible `GridLength`
-  - `RepeaterDataGridConverters` are compiled and available in the Uno package
-
-Tradeoff:
-
-- Uno XAML does not honor the Avalonia-style `GridLength` string conversion automatically, so the Uno sample configures the `RepeaterDataGrid` column widths in code-behind instead of inline XAML strings. The library API remains Avalonia-shaped.
-
-Additional validation:
-
-- `dotnet test tests/ItemsRepeater.Uno.UnitTests/ItemsRepeater.Uno.UnitTests.csproj -c Release`
+1. Keep the migrated layout engine as the active implementation path.
+2. Replace the remaining wrapper-based repeater/runtime implementations with migrated Avalonia source.
+3. Expand the compatibility layer only where the migrated source genuinely needs it.
+4. Keep validation green while moving one subsystem at a time:
+   - repeater realization engine
+   - selection layer
+   - datagrid and sample consumers
 
 ## Environment notes
 
