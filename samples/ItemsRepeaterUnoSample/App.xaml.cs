@@ -20,6 +20,10 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        var exitAfterLaunching = _exitAfterLaunching ||
+                                 (!string.IsNullOrWhiteSpace(args.Arguments) &&
+                                  args.Arguments.Contains("--exit", StringComparison.Ordinal));
+
         _window = new Window
         {
             Content = new MainPage(),
@@ -27,14 +31,17 @@ public partial class App : Application
         _window.SetWindowIcon();
         _window.Activate();
 
-        if (_exitAfterLaunching)
+        if (exitAfterLaunching)
             _ = ExitSoonAsync();
     }
 
     private async Task ExitSoonAsync()
     {
         await Task.Delay(1000);
+        _window?.Close();
         Exit();
+        await Task.Delay(250);
+        Environment.Exit(0);
     }
 
     public static void InitializeLogging()
