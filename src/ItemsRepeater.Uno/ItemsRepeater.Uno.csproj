@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>ItemsRepeater.Uno</RootNamespace>
+    <PackageId>ItemsRepeater.Uno</PackageId>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Uno.WinUI" Version="6.5.64" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Compatibility/AvaloniaCollections.cs" />
+    <Compile Include="Compatibility/AvaloniaConverters.cs" />
+    <Compile Include="Compatibility/AvaloniaData.cs" />
+    <Compile Include="Compatibility/AvaloniaProperty.cs" />
+    <Compile Include="Compatibility/AvaloniaPrimitives.cs" />
+    <Compile Include="Compatibility/AvaloniaSelection.cs" />
+    <Compile Include="Compatibility/AvaloniaTemplating.cs" />
+    <Compile Include="Controls/ElementFactory.cs" />
+    <Compile Include="Controls/IElementFactory.cs" />
+    <Compile Include="Controls/ItemsRepeater.cs" />
+    <Compile Include="Controls/ItemsRepeaterElementClearingEventArgs.cs" />
+    <Compile Include="Controls/ItemsRepeaterElementIndexChangedEventArgs.cs" />
+    <Compile Include="Controls/ItemsRepeaterElementPreparedEventArgs.cs" />
+    <Compile Include="Controls/RecyclePool.cs" />
+    <Compile Include="Controls/RecyclingElementFactory.cs" />
+    <Compile Include="Controls/SelectingItemsRepeater.cs" />
+    <Compile Include="Layout/Orientation.cs" />
+    <Compile Include="Layout/AttachedLayout.cs" />
+    <Compile Include="Layout/LayoutContext.cs" />
+    <Compile Include="Layout/NonVirtualizingLayout.cs" />
+    <Compile Include="Layout/NonVirtualizingLayoutContext.cs" />
+    <Compile Include="Layout/StackLayout.cs" />
+    <Compile Include="Layout/UniformGridLayout.cs" />
+    <Compile Include="Layout/VirtualizingLayout.cs" />
+    <Compile Include="Layout/VirtualizingLayoutContext.cs" />
+    <Compile Include="Layout/WrapLayout.cs" />
+    <Compile Include="Layout/NonVirtualizingStackLayout.cs" />
+    <Compile Include="DataGrid/RepeaterDataGrid.cs" />
+    <Compile Include="DataGrid/RepeaterDataGridCellInfo.cs" />
+    <Compile Include="DataGrid/RepeaterDataGridColumn.cs" />
+    <Compile Include="DataGrid/RepeaterDataGridConverters.cs" />
+    <Compile Include="DataGrid/RepeaterDataGridRowControl.cs" />
+    <Compile Include="Properties/InternalsVisibleTo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Themes/**/*.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
