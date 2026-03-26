@@ -14,6 +14,8 @@ public class CompatibilityTests
     {
         public object? Value { get; set; }
 
+        internal override Microsoft.UI.Xaml.Data.BindingBase CreateNativeBinding() => new Microsoft.UI.Xaml.Data.Binding();
+
         protected override object? EvaluateCore(object? dataContext) => Value ?? dataContext;
     }
 

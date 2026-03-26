@@ -1,5 +1,6 @@
 using System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Avalonia.Controls.Templates
 {
@@ -11,6 +12,20 @@ namespace Avalonia.Controls.Templates
 
     public sealed class FuncDataTemplate : IDataTemplate
     {
+        public static FuncDataTemplate Default { get; } = new(
+            static data =>
+            {
+                if (data is UIElement element)
+                {
+                    return element;
+                }
+
+                return new TextBlock
+                {
+                    Text = data?.ToString() ?? string.Empty,
+                };
+            });
+
         private readonly Func<object?, UIElement?> _build;
         private readonly Func<object?, bool> _match;
 

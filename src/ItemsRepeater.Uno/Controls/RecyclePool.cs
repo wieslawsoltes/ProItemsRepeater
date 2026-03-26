@@ -1,33 +1,51 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Avalonia.Controls.Templates;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace Avalonia.Controls
 {
-    public class RecyclePool
+    public partial class RecyclePool
     {
-        private static readonly ConditionalWeakTable<IDataTemplate, RecyclePool> Pools = new();
+        internal static readonly DependencyProperty ReuseKeyProperty =
+            DependencyProperty.RegisterAttached(
+                "ReuseKey",
+                typeof(string),
+                typeof(RecyclePool),
+                new PropertyMetadata(string.Empty));
+
+        internal static readonly DependencyProperty OriginTemplateProperty =
+            DependencyProperty.RegisterAttached(
+                "OriginTemplate",
+                typeof(object),
+                typeof(RecyclePool),
+                new PropertyMetadata(null));
+
+        public static readonly DependencyProperty PoolInstanceProperty =
+            DependencyProperty.RegisterAttached(
+                "PoolInstance",
+                typeof(RecyclePool),
+                typeof(RecyclePool),
+                new PropertyMetadata(null));
+
         private readonly Dictionary<string, List<ElementInfo>> _elements = new(StringComparer.Ordinal);
-        private readonly ConditionalWeakTable<UIElement, ReuseKeyHolder> _reuseKeys = new();
 
-        public static RecyclePool? GetPoolInstance(IDataTemplate dataTemplate)
-        {
-            Pools.TryGetValue(dataTemplate, out var pool);
-            return pool;
-        }
+        public static RecyclePool? GetPoolInstance(object dataTemplate) =>
+            dataTemplate is DependencyObject dependencyObject
+                ? (RecyclePool?)dependencyObject.GetValue(PoolInstanceProperty)
+                : null;
 
-        public static void SetPoolInstance(IDataTemplate dataTemplate, RecyclePool value)
+        public static void SetPoolInstance(object dataTemplate, RecyclePool value)
         {
-            Pools.Remove(dataTemplate);
-            Pools.Add(dataTemplate, value);
+            if (dataTemplate is not DependencyObject dependencyObject)
+                throw new InvalidOperationException("Pool instances can only be attached to dependency objects.");
+
+            dependencyObject.SetValue(PoolInstanceProperty, value);
         }
 
         public void PutElement(UIElement element, string key, UIElement? owner)
         {
-            var info = new ElementInfo(element, owner as Panel);
+            var ownerPanel = EnsureOwnerIsPanelOrNull(owner);
+            var info = new ElementInfo(element, ownerPanel);
             if (!_elements.TryGetValue(key, out var bucket))
             {
                 bucket = new List<ElementInfo>();
@@ -42,8 +60,8 @@ namespace Avalonia.Controls
             if (!_elements.TryGetValue(key, out var bucket) || bucket.Count == 0)
                 return null;
 
-            var ownerPanel = owner as Panel;
-            var index = bucket.FindIndex(x => ReferenceEquals(x.Owner, ownerPanel));
+            var ownerPanel = EnsureOwnerIsPanelOrNull(owner);
+            var index = bucket.FindIndex(x => ReferenceEquals(x.Owner, ownerPanel) || x.Owner is null);
             if (index < 0)
                 index = bucket.Count - 1;
 
@@ -58,15 +76,21 @@ namespace Avalonia.Controls
             return info.Element;
         }
 
-        internal string GetReuseKey(UIElement element)
-        {
-            return _reuseKeys.TryGetValue(element, out var holder) ? holder.Key : string.Empty;
-        }
+        public void Clear() => _elements.Clear();
 
-        internal void SetReuseKey(UIElement element, string value)
+        internal string GetReuseKey(UIElement element) => (string)element.GetValue(ReuseKeyProperty);
+
+        internal void SetReuseKey(UIElement element, string value) => element.SetValue(ReuseKeyProperty, value);
+
+        private static Panel? EnsureOwnerIsPanelOrNull(UIElement? owner)
         {
-            _reuseKeys.Remove(element);
-            _reuseKeys.Add(element, new ReuseKeyHolder(value));
+            if (owner is null)
+                return null;
+
+            if (owner is Panel panel)
+                return panel;
+
+            throw new InvalidOperationException("Owner must be a Panel or null.");
         }
 
         private sealed class ElementInfo
@@ -79,16 +103,6 @@ namespace Avalonia.Controls
 
             public UIElement Element { get; }
             public Panel? Owner { get; }
-        }
-
-        private sealed class ReuseKeyHolder
-        {
-            public ReuseKeyHolder(string key)
-            {
-                Key = key;
-            }
-
-            public string Key { get; }
         }
     }
 }

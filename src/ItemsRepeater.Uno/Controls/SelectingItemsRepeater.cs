@@ -108,7 +108,7 @@ public class SelectingItemsRepeater : ItemsRepeater
         Loaded += OnLoaded;
         AddHandler(PointerPressedEvent, new PointerEventHandler(OnPointerPressed), true);
         AddHandler(KeyDownEvent, new KeyEventHandler(OnKeyDownHandler), true);
-        RegisterPropertyChangedCallback(Microsoft.UI.Xaml.Controls.ItemsRepeater.ItemsSourceProperty, OnItemsSourcePropertyChanged);
+        RegisterPropertyChangedCallback(ItemsSourceProperty, OnItemsSourcePropertyChanged);
     }
 
     public event EventHandler<SelectionChangedEventArgs>? SelectionChanged;

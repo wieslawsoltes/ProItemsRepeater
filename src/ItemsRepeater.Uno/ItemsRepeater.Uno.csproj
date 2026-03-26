@@ -20,15 +20,20 @@
     <Compile Include="Compatibility/AvaloniaCollections.cs" />
     <Compile Include="Compatibility/AvaloniaConverters.cs" />
     <Compile Include="Compatibility/AvaloniaData.cs" />
+    <Compile Include="Compatibility/AvaloniaLogicalTree.cs" />
     <Compile Include="Compatibility/AvaloniaLogging.cs" />
+    <Compile Include="Compatibility/AvaloniaMetadata.cs" />
     <Compile Include="Compatibility/AvaloniaProperty.cs" />
     <Compile Include="Compatibility/AvaloniaPrimitives.cs" />
     <Compile Include="Compatibility/AvaloniaSelection.cs" />
     <Compile Include="Compatibility/AvaloniaTemplating.cs" />
     <Compile Include="Compatibility/LayoutableExtensions.cs" />
+    <Compile Include="Compatibility/VisualTreeExtensions.cs" />
     <Compile Include="Controls/ElementFactory.cs" />
     <Compile Include="Controls/IElementFactory.cs" />
+    <Compile Include="Controls/ItemTemplateWrapper.cs" />
     <Compile Include="Controls/ItemsRepeater.cs" />
+    <Compile Include="Controls/ItemsRepeater.LogicalScrollable.cs" />
     <Compile Include="Controls/ItemsRepeaterElementClearingEventArgs.cs" />
     <Compile Include="Controls/ItemsRepeaterElementIndexChangedEventArgs.cs" />
     <Compile Include="Controls/ItemsRepeaterElementPreparedEventArgs.cs" />
@@ -36,6 +41,10 @@
     <Compile Include="Controls/RecyclingElementFactory.cs" />
     <Compile Include="Controls/RepeaterLayoutContext.cs" />
     <Compile Include="Controls/SelectingItemsRepeater.cs" />
+    <Compile Include="Controls/UniqueIdElementPool.cs" />
+    <Compile Include="Controls/ViewManager.cs" />
+    <Compile Include="Controls/ViewportManager.cs" />
+    <Compile Include="Controls/VirtualizationInfo.cs" />
     <Compile Include="Diagnostics/ItemsRepeaterDiagnostics.cs" />
     <Compile Include="Layout/Orientation.cs" />
     <Compile Include="Layout/AttachedLayout.cs" />
@@ -64,8 +73,10 @@
     <Compile Include="DataGrid/RepeaterDataGridCellInfo.cs" />
     <Compile Include="DataGrid/RepeaterDataGridColumn.cs" />
     <Compile Include="DataGrid/RepeaterDataGridConverters.cs" />
+    <Compile Include="DataGrid/RepeaterDataGridHeaderCell.cs" />
     <Compile Include="DataGrid/RepeaterDataGridRowControl.cs" />
     <Compile Include="Properties/InternalsVisibleTo.cs" />
+    <Compile Include="Utils/BindingEvaluator.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -144,6 +144,33 @@ namespace Avalonia.Layout
 
         public bool HasInvalidMeasure()
         {
+            if (!IsVirtualizingContext)
+            {
+                return false;
+            }
+
+            for (var realizedIndex = 0; realizedIndex < _realizedElements.Count; ++realizedIndex)
+            {
+                var element = _realizedElements[realizedIndex];
+                if (element is null)
+                {
+                    continue;
+                }
+
+                var bounds = _realizedElementLayoutBounds[realizedIndex];
+                if (bounds == Avalonia.Controls.ItemsRepeater.InvalidRect)
+                {
+                    return true;
+                }
+
+                if ((bounds.Width > 0 || bounds.Height > 0) &&
+                    element.DesiredSize.Width == 0 &&
+                    element.DesiredSize.Height == 0)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 

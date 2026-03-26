@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls.Templates;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Avalonia.Controls
 {
@@ -14,7 +14,6 @@ namespace Avalonia.Controls
         public UIElement? Owner { get; internal set; }
     }
 
-    [ContentProperty(Name = nameof(Templates))]
     public class RecyclingElementFactory : ElementFactory
     {
         private RecyclePool? _recyclePool;
@@ -42,7 +41,7 @@ namespace Avalonia.Controls
 
         protected override UIElement GetElementCore(ElementFactoryGetArgs args)
         {
-            if (Templates.Count == 0)
+            if (_templates == null || _templates.Count == 0)
                 throw new InvalidOperationException("Templates cannot be empty.");
 
             var templateKey = Templates.Count == 1
@@ -55,16 +54,19 @@ namespace Avalonia.Controls
             var element = RecyclePool.TryGetElement(templateKey, args.Parent);
             if (element is null)
             {
-                if (!Templates.TryGetValue(templateKey, out var template))
-                    throw new InvalidOperationException($"No templates of key '{templateKey}' were found in the templates collection.");
+                IDataTemplate? template;
+                if (Templates.Count > 1)
+                {
+                    if (!Templates.TryGetValue(templateKey, out template) || template is null)
+                        throw new InvalidOperationException($"No templates of key '{templateKey}' were found in the templates collection.");
+                }
+                else
+                {
+                    template = Templates[templateKey];
+                }
 
                 element = template.Build(args.Data) ?? throw new InvalidOperationException("Templates must build a non-null UIElement.");
-                AssignDataContext(element, args.Data);
                 RecyclePool.SetReuseKey(element, templateKey);
-            }
-            else
-            {
-                AssignDataContext(element, args.Data);
             }
 
             return element;
@@ -87,19 +89,21 @@ namespace Avalonia.Controls
                 _selectTemplateArgs.TemplateKey = null;
                 _selectTemplateArgs.DataContext = dataContext;
                 _selectTemplateArgs.Owner = owner;
-                SelectTemplateKey(this, _selectTemplateArgs);
+                try
+                {
+                    SelectTemplateKey(this, _selectTemplateArgs);
+                }
+                finally
+                {
+                    _selectTemplateArgs.DataContext = null;
+                    _selectTemplateArgs.Owner = null;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(_selectTemplateArgs?.TemplateKey))
                 throw new InvalidOperationException("Please provide a valid template identifier in the handler for the SelectTemplateKey event.");
 
             return _selectTemplateArgs.TemplateKey!;
-        }
-
-        private static void AssignDataContext(UIElement element, object? data)
-        {
-            if (element is FrameworkElement frameworkElement)
-                frameworkElement.DataContext = data;
         }
     }
 }
