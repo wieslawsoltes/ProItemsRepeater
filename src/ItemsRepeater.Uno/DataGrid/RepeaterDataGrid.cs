@@ -17,15 +17,17 @@ namespace Avalonia.Controls.DataGrid;
 
 [ContentProperty(Name = nameof(Columns))]
 [TemplatePart(Name = HeaderHostPartName, Type = typeof(Border))]
-[TemplatePart(Name = HeaderPanelPartName, Type = typeof(StackPanel))]
+[TemplatePart(Name = HeaderRepeaterPartName, Type = typeof(Avalonia.Controls.ItemsRepeater))]
 [TemplatePart(Name = RowsRepeaterPartName, Type = typeof(Avalonia.Controls.SelectingItemsRepeater))]
 [TemplatePart(Name = BodyScrollViewerPartName, Type = typeof(ScrollViewer))]
 public class RepeaterDataGrid : Control
 {
     private const double WidthEpsilon = 0.25;
     private const string HeaderHostPartName = "PART_HeaderHost";
-    private const string HeaderPanelPartName = "PART_HeaderPanel";
+    private const string HeaderRepeaterPartName = "PART_HeaderRepeater";
     private const string RowsRepeaterPartName = "PART_RowsRepeater";
+    // Uno's ScrollViewer already owns an internal PART_Scroller. Reusing that external part
+    // name here breaks template application, so the host keeps a distinct name.
     private const string BodyScrollViewerPartName = "PART_BodyScrollViewer";
 
     public static readonly DependencyProperty ItemsSourceProperty =
@@ -80,6 +82,7 @@ public class RepeaterDataGrid : Control
     private readonly AvaloniaList<RepeaterDataGridColumn> _columns = new();
     private readonly Dictionary<int, RepeaterDataGridRowControl> _realizedRows = new();
     private readonly HashSet<RepeaterDataGridRowControl> _autoMeasureQueue = new();
+    private readonly HeaderElementFactory _headerFactory = new();
     private readonly RowElementFactory _rowFactory = new();
     private readonly RectangleGeometry _headerClip = new();
     private readonly TranslateTransform _headerTransform = new();
@@ -89,7 +92,7 @@ public class RepeaterDataGrid : Control
     private List<double> _columnWidths = new();
     private double _lastMeasuredAvailableWidth = double.NaN;
     private Border? _headerHost;
-    private StackPanel? _headerPanel;
+    private ItemsRepeater? _headerRepeater;
     private SelectingItemsRepeater? _rowsRepeater;
     private ScrollViewer? _scroller;
     private bool _autoMeasureQueued;
@@ -159,9 +162,17 @@ public class RepeaterDataGrid : Control
         base.OnApplyTemplate();
 
         _headerHost = GetTemplateChild(HeaderHostPartName) as Border;
-        _headerPanel = GetTemplateChild(HeaderPanelPartName) as StackPanel;
+        _headerRepeater = GetTemplateChild(HeaderRepeaterPartName) as ItemsRepeater;
         _scroller = GetTemplateChild(BodyScrollViewerPartName) as ScrollViewer;
         _rowsRepeater = GetTemplateChild(RowsRepeaterPartName) as SelectingItemsRepeater;
+
+        if (_headerRepeater is not null)
+        {
+            _headerRepeater.ItemTemplate = _headerFactory;
+            _headerRepeater.ItemsSource = _columns;
+            _headerRepeater.ElementPrepared += OnHeaderPrepared;
+            _headerRepeater.RenderTransform = _headerTransform;
+        }
 
         if (_scroller is not null)
             _scroller.ViewChanged += OnScrollViewChanged;
@@ -172,9 +183,6 @@ public class RepeaterDataGrid : Control
             _headerHost.SizeChanged += OnHeaderHostSizeChanged;
             UpdateHeaderClip();
         }
-
-        if (_headerPanel is not null)
-            _headerPanel.RenderTransform = _headerTransform;
 
         if (_rowsRepeater is not null)
         {
@@ -189,11 +197,11 @@ public class RepeaterDataGrid : Control
             _rowsRepeater.AddHandler(PointerReleasedEvent, _rowsPointerReleasedHandler, true);
         }
 
-        BuildHeader();
         UpdateColumnWidths();
         RequestHeaderWidthUpdate();
         RequestAutoColumnMeasurement();
         SyncHeaderScroll();
+        RefreshRealizedHeaders();
         RebindRealizedRows();
     }
 
@@ -201,6 +209,9 @@ public class RepeaterDataGrid : Control
     {
         if (_headerHost is not null)
             _headerHost.SizeChanged -= OnHeaderHostSizeChanged;
+
+        if (_headerRepeater is not null)
+            _headerRepeater.ElementPrepared -= OnHeaderPrepared;
 
         if (_rowsRepeater is not null)
         {
@@ -217,7 +228,7 @@ public class RepeaterDataGrid : Control
 
         _realizedRows.Clear();
         _headerHost = null;
-        _headerPanel = null;
+        _headerRepeater = null;
         _rowsRepeater = null;
         _scroller = null;
         _headerTransform.X = 0;
@@ -246,9 +257,11 @@ public class RepeaterDataGrid : Control
         UpdateColumnIndices();
         ResetAutoColumnWidths();
         ResetHeaderHeight();
-        BuildHeader();
+        if (_headerRepeater is not null)
+            _headerRepeater.ItemsSource = _columns;
         UpdateColumnWidths();
         RebindRealizedRows();
+        RefreshRealizedHeaders();
         RequestHeaderWidthUpdate();
         RequestAutoColumnMeasurement();
     }
@@ -264,7 +277,7 @@ public class RepeaterDataGrid : Control
         if (e.PropertyName is nameof(RepeaterDataGridColumn.Header) or nameof(RepeaterDataGridColumn.HeaderTemplate))
         {
             ResetHeaderHeight();
-            BuildHeader();
+            RefreshRealizedHeaders();
             RequestHeaderWidthUpdate();
         }
 
@@ -303,6 +316,17 @@ public class RepeaterDataGrid : Control
         _ = sender;
         _ = e;
         UpdateHeaderClip();
+    }
+
+    private void OnHeaderPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs args)
+    {
+        if (args.Index < 0 || args.Index >= _columns.Count)
+            return;
+
+        if (args.Element is RepeaterDataGridHeaderCell cell)
+            cell.Bind(_columns[args.Index]);
+
+        RequestHeaderWidthUpdate();
     }
 
     private void OnRowPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs args)
@@ -389,7 +413,7 @@ public class RepeaterDataGrid : Control
 
     private void SyncHeaderScroll()
     {
-        if (_headerPanel is null || _scroller is null)
+        if (_headerRepeater is null || _scroller is null)
             return;
 
         _headerTransform.X = -_scroller.HorizontalOffset;
@@ -404,18 +428,20 @@ public class RepeaterDataGrid : Control
         _headerClip.Rect = new Windows.Foundation.Rect(0, 0, Math.Max(0, _headerHost.ActualWidth), Math.Max(0, _headerHost.ActualHeight));
     }
 
-    private void BuildHeader()
+    private void RefreshRealizedHeaders()
     {
-        if (_headerPanel is null)
+        if (_headerRepeater is null)
             return;
 
-        _headerPanel.Children.Clear();
+        foreach (var child in _headerRepeater.Children)
+        {
+            if (child is not RepeaterDataGridHeaderCell cell)
+                continue;
 
-        foreach (var column in _columns)
-            _headerPanel.Children.Add(CreateHeaderCell(column));
-
-        ApplyHeaderWidths();
-        UpdateHeaderHeight();
+            var index = _headerRepeater.GetElementIndex(cell);
+            if (index >= 0 && index < _columns.Count)
+                cell.Bind(_columns[index]);
+        }
     }
 
     private void UpdateColumnWidths()
@@ -451,7 +477,7 @@ public class RepeaterDataGrid : Control
             }
             else if (column.Width.IsAuto)
             {
-                var autoWidth = Math.Max(MeasureHeaderWidth(i, column), GetAutoColumnWidth(i));
+                var autoWidth = Math.Max(MeasureHeaderWidth(i), GetAutoColumnWidth(i));
                 widths[i] = Math.Max(autoWidth, minWidth);
                 fixedWidth += widths[i];
             }
@@ -514,13 +540,13 @@ public class RepeaterDataGrid : Control
 
     private void ApplyHeaderWidths()
     {
-        if (_headerPanel is null)
+        if (_headerRepeater is null)
             return;
 
-        for (var i = 0; i < _headerPanel.Children.Count && i < _columns.Count; ++i)
+        for (var i = 0; i < _headerRepeater.Children.Count && i < _columns.Count; ++i)
         {
-            if (_headerPanel.Children[i] is FrameworkElement element)
-                element.Width = _columns[i].ActualWidth;
+            if (_headerRepeater.Children[i] is RepeaterDataGridHeaderCell cell)
+                cell.Bind(_columns[i]);
         }
     }
 
@@ -550,50 +576,25 @@ public class RepeaterDataGrid : Control
         return _rowsRepeater?.Selection.IsSelected(rowIndex) == true;
     }
 
-    private Border CreateHeaderCell(RepeaterDataGridColumn column)
+    private double MeasureHeaderWidth(int columnIndex)
     {
-        var border = new Border
+        if (_headerRepeater is not null)
         {
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xD9, 0xD9, 0xD9)),
-            BorderThickness = new Thickness(1, 1, 1, 1),
-            Padding = new Thickness(8, 6, 8, 6),
-            Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xF4, 0xF4, 0xF4)),
-            HorizontalAlignment = HorizontalAlignment.Left,
-        };
-
-        if (column.HeaderTemplate is not null)
-        {
-            border.Child = new ContentControl
+            var element = _headerRepeater.TryGetElement(columnIndex) as FrameworkElement;
+            if (element is not null && columnIndex >= 0 && columnIndex < _columns.Count)
             {
-                Content = column.Header,
-                ContentTemplate = column.HeaderTemplate,
-            };
-        }
-        else
-        {
-            border.Child = new TextBlock
-            {
-                Text = column.Header?.ToString() ?? string.Empty,
-            };
+                element.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+                return Math.Max(element.DesiredSize.Width, _columns[columnIndex].MinWidth);
+            }
         }
 
-        border.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
-        return border;
-    }
+        if (columnIndex < 0 || columnIndex >= _columns.Count)
+            return 0;
 
-    private double MeasureHeaderWidth(int columnIndex, RepeaterDataGridColumn column)
-    {
-        if (_headerPanel is not null &&
-            columnIndex >= 0 &&
-            columnIndex < _headerPanel.Children.Count &&
-            _headerPanel.Children[columnIndex] is FrameworkElement element)
-        {
-            element.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
-            return Math.Max(element.DesiredSize.Width, column.MinWidth);
-        }
-
-        var headerCell = CreateHeaderCell(column);
-        return Math.Max(headerCell.DesiredSize.Width, column.MinWidth);
+        var headerCell = new RepeaterDataGridHeaderCell();
+        headerCell.Bind(_columns[columnIndex]);
+        headerCell.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+        return Math.Max(headerCell.DesiredSize.Width, _columns[columnIndex].MinWidth);
     }
 
     private void RequestAutoColumnMeasurement()
@@ -663,11 +664,11 @@ public class RepeaterDataGrid : Control
 
     private void UpdateHeaderHeight()
     {
-        if (_headerPanel is null)
+        if (_headerRepeater is null)
             return;
 
         var maxHeight = 0d;
-        foreach (var child in _headerPanel.Children)
+        foreach (var child in _headerRepeater.Children)
         {
             if (child is FrameworkElement element)
             {
@@ -882,6 +883,26 @@ public class RepeaterDataGrid : Control
         {
             if (args.Element is RepeaterDataGridRowControl row)
                 _pool.Enqueue(row);
+        }
+    }
+
+    private sealed class HeaderElementFactory : ElementFactory
+    {
+        private readonly Queue<RepeaterDataGridHeaderCell> _pool = new();
+
+        protected override UIElement GetElementCore(ElementFactoryGetArgs args)
+        {
+            var cell = _pool.Count > 0 ? _pool.Dequeue() : new RepeaterDataGridHeaderCell();
+            if (args.Data is RepeaterDataGridColumn column)
+                cell.Bind(column);
+
+            return cell;
+        }
+
+        protected override void RecycleElementCore(ElementFactoryRecycleArgs args)
+        {
+            if (args.Element is RepeaterDataGridHeaderCell cell)
+                _pool.Enqueue(cell);
         }
     }
 }

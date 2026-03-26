@@ -18,10 +18,15 @@
                                 Grid.Row="0"
                                 BorderBrush="#FFD9D9D9"
                                 BorderThickness="1,1,1,0">
-                            <StackPanel x:Name="PART_HeaderPanel"
-                                        Orientation="Horizontal"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top" />
+                            <controls:ItemsRepeater x:Name="PART_HeaderRepeater"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    Height="{Binding HeaderHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                                <controls:ItemsRepeater.Layout>
+                                    <layout:StackLayout Orientation="Horizontal"
+                                                        DisableVirtualization="True" />
+                                </controls:ItemsRepeater.Layout>
+                            </controls:ItemsRepeater>
                         </Border>
 
                         <ScrollViewer x:Name="PART_BodyScrollViewer"
