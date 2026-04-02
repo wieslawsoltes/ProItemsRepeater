@@ -131,7 +131,7 @@ namespace Avalonia.Controls
         private bool _ignoreContainerSelectionChanged;
         private UpdateState? _updateState;
         private bool _hasScrolledToSelectedItem;
-        private BindingEvaluator<object?>? _selectedValueBindingEvaluator;
+        private ItemsRepeaterBindingEvaluator<object?>? _selectedValueBindingEvaluator;
         private bool _isSelectionChangeActive;
 
         public SelectingItemsRepeater()
@@ -1395,7 +1395,7 @@ namespace Avalonia.Controls
             }
         }
 
-        private BindingEvaluator<object?> GetSelectedValueBindingEvaluator(IBinding binding)
+        private ItemsRepeaterBindingEvaluator<object?> GetSelectedValueBindingEvaluator(IBinding binding)
         {
             _selectedValueBindingEvaluator ??= new();
             _selectedValueBindingEvaluator.UpdateBinding(binding);

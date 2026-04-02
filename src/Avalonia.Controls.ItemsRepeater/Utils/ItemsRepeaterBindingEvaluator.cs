@@ -7,9 +7,9 @@ namespace Avalonia.Controls.Utils
     /// <summary>
     /// Helper class for evaluating a binding from an Item and IBinding instance.
     /// </summary>
-    internal sealed class BindingEvaluator<T> : StyledElement, IDisposable
+    internal sealed class ItemsRepeaterBindingEvaluator<T> : StyledElement, IDisposable
     {
-        private IDisposable? _expression;
+        private BindingExpressionBase? _expression;
         private IBinding? _lastBinding;
 
         [SuppressMessage(
@@ -17,7 +17,7 @@ namespace Avalonia.Controls.Utils
             "AVP1002:AvaloniaProperty objects should not be owned by a generic type",
             Justification = "This property is not supposed to be used from XAML.")]
         public static readonly StyledProperty<T> ValueProperty =
-            AvaloniaProperty.Register<BindingEvaluator<T>, T>("Value");
+            AvaloniaProperty.Register<ItemsRepeaterBindingEvaluator<T>, T>("Value");
 
         /// <summary>
         /// Gets or sets the data item value.
@@ -42,13 +42,7 @@ namespace Avalonia.Controls.Utils
                 return;
 
             _expression?.Dispose();
-            _expression = null;
-
-            var instanced = binding.Initiate(this, ValueProperty);
-            if (instanced is not null)
-            {
-                _expression = BindingOperations.Apply(this, ValueProperty, instanced, null);
-            }
+            _expression = Bind(ValueProperty, binding);
             _lastBinding = binding;
         }
 
@@ -63,12 +57,12 @@ namespace Avalonia.Controls.Utils
             DataContext = null;
         }
 
-        public static BindingEvaluator<T>? TryCreate(IBinding? binding)
+        public static ItemsRepeaterBindingEvaluator<T>? TryCreate(IBinding? binding)
         {
             if (binding is null)
                 return null;
 
-            var evaluator = new BindingEvaluator<T>();
+            var evaluator = new ItemsRepeaterBindingEvaluator<T>();
             evaluator.UpdateBinding(binding);
             return evaluator;
         }
