@@ -9,7 +9,7 @@ using Avalonia;
 using Avalonia.Controls.Templates;
 using Avalonia.Data.Converters;
 
-namespace Avalonia.Controls.DataGrid;
+namespace Avalonia.Controls;
 
 public sealed class RepeaterDataGridCellTextConverter : IMultiValueConverter
 {

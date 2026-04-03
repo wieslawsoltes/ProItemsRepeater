@@ -1,6 +1,6 @@
 using System;
 
-namespace Avalonia.Controls.DataGrid;
+namespace Avalonia.Controls;
 
 public readonly struct RepeaterDataGridCellInfo : IEquatable<RepeaterDataGridCellInfo>
 {

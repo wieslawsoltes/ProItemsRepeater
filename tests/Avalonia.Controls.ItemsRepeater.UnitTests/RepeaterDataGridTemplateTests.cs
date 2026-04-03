@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Linq;
-using Avalonia.Controls.DataGrid;
 using Avalonia.Controls.Samples;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;

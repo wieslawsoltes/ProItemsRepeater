@@ -13,7 +13,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
-namespace Avalonia.Controls.DataGrid;
+namespace Avalonia.Controls;
 
 public class RepeaterDataGrid : TemplatedControl
 {
