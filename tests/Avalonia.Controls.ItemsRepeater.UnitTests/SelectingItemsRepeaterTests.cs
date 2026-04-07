@@ -2,6 +2,7 @@ using Avalonia;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
@@ -137,6 +138,11 @@ public class SelectingItemsRepeaterTests
 
 public class SelectingItemsRepeaterHeadlessTests
 {
+    private static readonly AttachedProperty<bool> s_isSelectedManagedProperty =
+        (AttachedProperty<bool>)typeof(SelectingItemsRepeater)
+            .GetField("IsSelectedManagedProperty", BindingFlags.NonPublic | BindingFlags.Static)!
+            .GetValue(null)!;
+
     private static (Window window, SelectingItemsRepeater repeater) CreateRepeater(IList items)
     {
         var repeater = new SelectingItemsRepeater
@@ -233,6 +239,29 @@ public class SelectingItemsRepeaterHeadlessTests
         var element = repeater.GetOrCreateElement(0);
         Dispatcher.UIThread.RunJobs();
 
+        Assert.False(element.IsSet(SelectingItemsRepeater.IsSelectedProperty));
+        Assert.False(SelectingItemsRepeater.GetIsSelected(element));
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Deselecting_Managed_Container_Releases_Internal_Selection_State()
+    {
+        var (window, repeater) = CreateRepeater(new[] { "a", "b", "c" });
+
+        repeater.SelectedIndex = 1;
+        Dispatcher.UIThread.RunJobs();
+
+        var element = repeater.GetOrCreateElement(1);
+
+        Assert.True(GetIsSelectedManaged(element));
+        Assert.True(element.IsSet(SelectingItemsRepeater.IsSelectedProperty));
+
+        repeater.SelectedIndex = -1;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.False(GetIsSelectedManaged(element));
         Assert.False(element.IsSet(SelectingItemsRepeater.IsSelectedProperty));
         Assert.False(SelectingItemsRepeater.GetIsSelected(element));
 
@@ -429,6 +458,8 @@ public class SelectingItemsRepeaterHeadlessTests
 
         return result;
     }
+
+    private static bool GetIsSelectedManaged(Control container) => container.GetValue(s_isSelectedManagedProperty);
 
     private sealed class SizedSelectionItem
     {

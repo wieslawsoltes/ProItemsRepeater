@@ -1234,7 +1234,9 @@ namespace Avalonia.Controls
                 return;
             }
 
-            var isExternallyManaged = !GetIsSelectedManaged(container) && container.IsSet(IsSelectedProperty);
+            var wasManaged = GetIsSelectedManaged(container);
+            var hasLocalSelection = container.IsSet(IsSelectedProperty);
+            var isExternallyManaged = !wasManaged && hasLocalSelection;
 
             if (isExternallyManaged)
             {
@@ -1244,37 +1246,59 @@ namespace Avalonia.Controls
             }
             else
             {
-                MarkContainerSelected(container, Selection.IsSelected(index));
+                var selected = Selection.IsSelected(index);
+
+                if (!selected && !wasManaged && !hasLocalSelection)
+                {
+                    return;
+                }
+
+                MarkContainerSelected(container, selected);
             }
         }
 
         private void MarkContainerSelected(Control container, bool selected)
         {
+            var wasManaged = GetIsSelectedManaged(container);
+            var hasLocalSelection = container.IsSet(IsSelectedProperty);
+
+            if (!selected && !wasManaged && !hasLocalSelection)
+            {
+                return;
+            }
+
             _ignoreContainerSelectionChanged = true;
 
             try
             {
-                var wasManaged = GetIsSelectedManaged(container);
-                var isExternallyManaged = !wasManaged && container.IsSet(IsSelectedProperty);
+                var isExternallyManaged = !wasManaged && hasLocalSelection;
 
                 if (isExternallyManaged)
                 {
                     container.SetCurrentValue(IsSelectedProperty, selected);
                 }
+                else if (selected)
+                {
+                    if (!wasManaged)
+                    {
+                        SetIsSelectedManaged(container, true);
+                    }
+
+                    if (!GetIsSelected(container) || !hasLocalSelection)
+                    {
+                        container.SetCurrentValue(IsSelectedProperty, true);
+                    }
+                }
                 else
                 {
-                    SetIsSelectedManaged(container, true);
-
-                    if (selected)
-                    {
-                        if (!GetIsSelected(container) || !container.IsSet(IsSelectedProperty))
-                        {
-                            container.SetCurrentValue(IsSelectedProperty, true);
-                        }
-                    }
-                    else if (container.IsSet(IsSelectedProperty))
+                    if (hasLocalSelection)
                     {
                         container.ClearValue(IsSelectedProperty);
+                    }
+
+                    if (wasManaged)
+                    {
+                        SetIsSelectedManaged(container, false);
                     }
                 }
 
@@ -1288,9 +1312,17 @@ namespace Avalonia.Controls
 
         private void ClearContainerSelection(Control container)
         {
+            var wasManaged = GetIsSelectedManaged(container);
+            var hasLocalSelection = container.IsSet(IsSelectedProperty);
+
+            if (!wasManaged && !hasLocalSelection)
+            {
+                return;
+            }
+
             SetContainerPseudoClass(container, false);
 
-            if (!GetIsSelectedManaged(container))
+            if (!wasManaged)
             {
                 return;
             }
@@ -1299,7 +1331,11 @@ namespace Avalonia.Controls
 
             try
             {
-                container.ClearValue(IsSelectedProperty);
+                if (hasLocalSelection)
+                {
+                    container.ClearValue(IsSelectedProperty);
+                }
+
                 SetIsSelectedManaged(container, false);
             }
             finally
