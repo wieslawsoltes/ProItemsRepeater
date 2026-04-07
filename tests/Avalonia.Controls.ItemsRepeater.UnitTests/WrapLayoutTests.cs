@@ -419,6 +419,87 @@ public class WrapLayoutTests
         window.Close();
     }
 
+    [AvaloniaFact]
+    public void WrapLayout_Variable_Heights_Scroll_RoundTrip_Reaches_Extents()
+    {
+        var random = new Random(314159);
+        const int itemCount = 5000;
+        const double itemWidth = 80;
+        const double horizontalSpacing = 10;
+        const double verticalSpacing = 10;
+        var items = Enumerable.Range(0, itemCount)
+            .Select(_ => new SizedItem(itemWidth, 20 + random.Next(220)))
+            .ToList();
+
+        var repeater = new ItemsRepeater
+        {
+            Layout = new WrapLayout
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalSpacing = horizontalSpacing,
+                VerticalSpacing = verticalSpacing
+            },
+            ItemsSource = items,
+            ItemTemplate = new FuncDataTemplate<SizedItem>((item, _) => new Border
+            {
+                Width = item.Width,
+                Height = item.Height
+            })
+        };
+
+        var window = new Window
+        {
+            Width = 320,
+            Height = 240,
+            Content = repeater
+        };
+
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        var logical = (ILogicalScrollable)repeater;
+        logical.ScrollInvalidated += (_, _) => { };
+        logical.CanVerticallyScroll = true;
+
+        var viewportHeight = logical.Viewport.Height;
+        var itemsPerLine = Math.Max(
+            1,
+            Math.Min(
+                itemCount,
+                (int)Math.Floor((logical.Viewport.Width + horizontalSpacing) / (itemWidth + horizontalSpacing))));
+        var totalHeight = GetVerticalWrapTotalHeight(items, itemsPerLine, verticalSpacing);
+        var expectedMaxOffset = Math.Max(0, totalHeight - viewportHeight);
+        var reportedMaxOffset = Math.Max(0, logical.Extent.Height - viewportHeight);
+
+        ((IScrollable)repeater).Offset = new Vector(0, reportedMaxOffset);
+        Dispatcher.UIThread.RunJobs();
+
+        var actualOffset = ((IScrollable)repeater).Offset.Y;
+        Assert.True(actualOffset + viewportHeight >= totalHeight - 1);
+
+        var lastLineStartIndex = ((itemCount - 1) / itemsPerLine) * itemsPerLine;
+        var bottomVisibleIndices = repeater.Children
+            .Where(child => child.Bounds.Bottom >= 0 && child.Bounds.Y <= viewportHeight)
+            .Select(repeater.GetElementIndex)
+            .ToList();
+        Assert.Contains(bottomVisibleIndices, index => index >= lastLineStartIndex);
+        Assert.True(actualOffset >= expectedMaxOffset - 1);
+
+        ((IScrollable)repeater).Offset = default;
+        Dispatcher.UIThread.RunJobs();
+
+        actualOffset = ((IScrollable)repeater).Offset.Y;
+        Assert.True(actualOffset <= 1);
+
+        var topVisibleIndices = repeater.Children
+            .Where(child => child.Bounds.Bottom >= 0 && child.Bounds.Y <= viewportHeight)
+            .Select(repeater.GetElementIndex)
+            .ToList();
+        Assert.Contains(topVisibleIndices, index => index < itemsPerLine);
+
+        window.Close();
+    }
+
     private static (Window window, ItemsRepeater repeater) CreateRepeater(
         WrapLayout layout,
         ScrollBarVisibility horizontalScrollBarVisibility,
@@ -604,5 +685,28 @@ public class WrapLayoutTests
         }
 
         return result;
+    }
+
+    private static double GetVerticalWrapTotalHeight(IReadOnlyList<SizedItem> items, int itemsPerLine, double verticalSpacing)
+    {
+        var lineCount = (int)Math.Ceiling((double)items.Count / itemsPerLine);
+        var totalHeight = 0.0;
+
+        for (var lineIndex = 0; lineIndex < lineCount; lineIndex++)
+        {
+            var startIndex = lineIndex * itemsPerLine;
+            var count = Math.Min(itemsPerLine, items.Count - startIndex);
+            totalHeight += items
+                .Skip(startIndex)
+                .Take(count)
+                .Max(item => item.Height);
+
+            if (lineIndex < lineCount - 1)
+            {
+                totalHeight += verticalSpacing;
+            }
+        }
+
+        return totalHeight;
     }
 }

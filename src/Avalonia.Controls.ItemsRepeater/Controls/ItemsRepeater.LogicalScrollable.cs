@@ -197,9 +197,22 @@ namespace Avalonia.Controls
                 return;
             }
 
+            var preserveTrailingX = IsAtTrailingEdge(_offset.X, _extent.Width, _viewport.Width);
+            var preserveTrailingY = IsAtTrailingEdge(_offset.Y, _extent.Height, _viewport.Height);
             _extent = extent;
             _scrollSizeCacheValid = false;
-            if (SetLogicalOffset(_offset, raiseInvalidated: false) != default)
+            var targetOffset = _offset;
+            if (preserveTrailingX)
+            {
+                targetOffset = targetOffset.WithX(Math.Max(_extent.Width - _viewport.Width, 0));
+            }
+
+            if (preserveTrailingY)
+            {
+                targetOffset = targetOffset.WithY(Math.Max(_extent.Height - _viewport.Height, 0));
+            }
+
+            if (SetLogicalOffset(targetOffset, raiseInvalidated: false) != default)
             {
                 _scrollInvalidated?.Invoke(this, EventArgs.Empty);
                 return;
@@ -220,9 +233,22 @@ namespace Avalonia.Controls
                 return;
             }
 
+            var preserveTrailingX = IsAtTrailingEdge(_offset.X, _extent.Width, _viewport.Width);
+            var preserveTrailingY = IsAtTrailingEdge(_offset.Y, _extent.Height, _viewport.Height);
             _viewport = viewport;
             _scrollSizeCacheValid = false;
-            var coerced = CoerceOffset(_offset);
+            var targetOffset = _offset;
+            if (preserveTrailingX)
+            {
+                targetOffset = targetOffset.WithX(Math.Max(_extent.Width - _viewport.Width, 0));
+            }
+
+            if (preserveTrailingY)
+            {
+                targetOffset = targetOffset.WithY(Math.Max(_extent.Height - _viewport.Height, 0));
+            }
+
+            var coerced = CoerceOffset(targetOffset);
             _offset = coerced;
             if (UsesLogicalScrolling || !_viewportManager.HasScroller)
             {
@@ -288,6 +314,12 @@ namespace Avalonia.Controls
             }
 
             return value > max ? max : value;
+        }
+
+        private static bool IsAtTrailingEdge(double offset, double extent, double viewport)
+        {
+            var maxOffset = Math.Max(extent - viewport, 0);
+            return maxOffset > 1 && Math.Abs(offset - maxOffset) <= 1;
         }
 
         private void OnCanScrollChanged()
