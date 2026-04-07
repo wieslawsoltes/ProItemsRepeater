@@ -25,9 +25,12 @@ namespace Avalonia.Controls
     /// </summary>
     public class SelectingItemsRepeater : ItemsRepeater
     {
+        private static readonly Point s_invalidPoint = new(double.NaN, double.NaN);
+
         static SelectingItemsRepeater()
         {
             FocusableProperty.OverrideDefaultValue<SelectingItemsRepeater>(true);
+            IsSelectedProperty.Changed.AddClassHandler<Control>(OnContainerIsSelectedChanged);
         }
 
         /// <summary>
@@ -123,7 +126,6 @@ namespace Avalonia.Controls
         private static readonly AttachedProperty<bool> IsSelectedManagedProperty =
             AvaloniaProperty.RegisterAttached<SelectingItemsRepeater, Control, bool>("IsSelectedManaged");
 
-        private readonly HashSet<Control> _selectionSubscriptions = new();
         private ISelectionModel? _selection;
         private int _oldSelectedIndex;
         private WeakReference _oldSelectedItem = new(null);
@@ -133,6 +135,8 @@ namespace Avalonia.Controls
         private bool _hasScrolledToSelectedItem;
         private RepeaterBindingEvaluator<object?>? _selectedValueBindingEvaluator;
         private bool _isSelectionChangeActive;
+        private Point _pointerDownPoint = s_invalidPoint;
+        private Control? _pointerDownContainer;
 
         public SelectingItemsRepeater()
         {
@@ -545,10 +549,27 @@ namespace Avalonia.Controls
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
+            ResetPointerDownState();
 
             if (!e.Handled)
             {
-                e.Handled = UpdateSelectionFromEventSource(e.Source, e);
+                var container = GetContainerFromEventSource(e.Source);
+                if (container is not null)
+                {
+                    var point = e.GetCurrentPoint(container);
+                    if (point.Properties.PointerUpdateKind is PointerUpdateKind.LeftButtonPressed or PointerUpdateKind.RightButtonPressed)
+                    {
+                        if (ShouldSelectOnPointerRelease(container, point))
+                        {
+                            _pointerDownContainer = container;
+                            _pointerDownPoint = point.Position;
+                        }
+                        else
+                        {
+                            e.Handled = UpdateSelectionFromEvent(container, e);
+                        }
+                    }
+                }
             }
         }
 
@@ -557,10 +578,24 @@ namespace Avalonia.Controls
         {
             base.OnPointerReleased(e);
 
-            if (!e.Handled)
+            if (!e.Handled &&
+                _pointerDownContainer is { } container &&
+                container.Parent == this &&
+                !double.IsNaN(_pointerDownPoint.X) &&
+                e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
             {
-                e.Handled = UpdateSelectionFromEventSource(e.Source, e);
+                var point = e.GetCurrentPoint(container);
+                var tapSize = TopLevel.GetTopLevel(container)?.PlatformSettings?.GetTapSize(point.Pointer.Type) ?? new Size(4, 4);
+                var tapRect = new Rect(_pointerDownPoint, new Size()).Inflate(new Thickness(tapSize.Width, tapSize.Height));
+
+                if (new Rect(container.Bounds.Size).ContainsExclusive(point.Position) &&
+                    tapRect.ContainsExclusive(point.Position))
+                {
+                    e.Handled = UpdateSelectionFromEvent(container, e);
+                }
             }
+
+            ResetPointerDownState();
         }
 
         private void OnItemsSourceViewCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -1219,8 +1254,30 @@ namespace Avalonia.Controls
 
             try
             {
-                SetIsSelectedManaged(container, true);
-                container.SetCurrentValue(IsSelectedProperty, selected);
+                var wasManaged = GetIsSelectedManaged(container);
+                var isExternallyManaged = !wasManaged && container.IsSet(IsSelectedProperty);
+
+                if (isExternallyManaged)
+                {
+                    container.SetCurrentValue(IsSelectedProperty, selected);
+                }
+                else
+                {
+                    SetIsSelectedManaged(container, true);
+
+                    if (selected)
+                    {
+                        if (!GetIsSelected(container) || !container.IsSet(IsSelectedProperty))
+                        {
+                            container.SetCurrentValue(IsSelectedProperty, true);
+                        }
+                    }
+                    else if (container.IsSet(IsSelectedProperty))
+                    {
+                        container.ClearValue(IsSelectedProperty);
+                    }
+                }
+
                 SetContainerPseudoClass(container, selected);
             }
             finally
@@ -1406,53 +1463,39 @@ namespace Avalonia.Controls
 
         private void OnElementPrepared(object? sender, ItemsRepeaterElementPreparedEventArgs e)
         {
+            GetOrCreateSelectionModel();
             EnsureContainerFocusable(e.Element);
-            RegisterContainerSelection(e.Element);
             ApplyContainerSelection(e.Element, e.Index);
         }
 
         private void OnElementClearing(object? sender, ItemsRepeaterElementClearingEventArgs e)
         {
-            UnregisterContainerSelection(e.Element);
             ClearContainerSelection(e.Element);
         }
 
         private void OnElementIndexChanged(object? sender, ItemsRepeaterElementIndexChangedEventArgs e)
         {
-            ApplyContainerSelection(e.Element, e.NewIndex);
+            MarkContainerSelected(e.Element, Selection.IsSelected(e.NewIndex));
         }
 
-        private void RegisterContainerSelection(Control element)
+        private static void OnContainerIsSelectedChanged(Control control, AvaloniaPropertyChangedEventArgs e)
         {
-            if (_selectionSubscriptions.Add(element))
+            if (control.Parent is SelectingItemsRepeater owner && owner.IndexFromContainer(control) != -1)
             {
-                element.PropertyChanged += OnContainerPropertyChanged;
+                owner.OnContainerSelectionChanged(control, e);
             }
         }
 
-        private void UnregisterContainerSelection(Control element)
+        private void OnContainerSelectionChanged(Control control, AvaloniaPropertyChangedEventArgs e)
         {
-            if (_selectionSubscriptions.Remove(element))
-            {
-                element.PropertyChanged -= OnContainerPropertyChanged;
-            }
-        }
-
-        private void OnContainerPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-        {
-            if (e.Property != IsSelectedProperty || sender is not Control control)
-            {
-                return;
-            }
-
             var isSelected = e.GetNewValue<bool>();
-            ((IPseudoClasses)control.Classes).Set(":selected", isSelected);
 
             if (_ignoreContainerSelectionChanged)
             {
                 return;
             }
 
+            ((IPseudoClasses)control.Classes).Set(":selected", isSelected);
             SetIsSelectedManaged(control, false);
 
             var index = IndexFromContainer(control);
@@ -1486,6 +1529,17 @@ namespace Avalonia.Controls
             {
                 container.SetCurrentValue(FocusableProperty, true);
             }
+        }
+
+        private static bool ShouldSelectOnPointerRelease(Control container, PointerPoint point)
+        {
+            return point.Pointer.Type switch
+            {
+                PointerType.Mouse => Gestures.GetIsHoldWithMouseEnabled(container),
+                PointerType.Pen => !point.Properties.IsRightButtonPressed,
+                PointerType.Touch => true,
+                _ => false
+            };
         }
 
         private static bool ShouldTriggerSelectionInternal(Visual selectable, PointerEventArgs eventArgs)
@@ -1564,6 +1618,12 @@ namespace Avalonia.Controls
         private static bool HasAllFlags(SelectionMode value, SelectionMode flags) => (value & flags) == flags;
 
         private static bool HasAllFlags(KeyModifiers value, KeyModifiers flags) => (value & flags) == flags;
+
+        private void ResetPointerDownState()
+        {
+            _pointerDownContainer = null;
+            _pointerDownPoint = s_invalidPoint;
+        }
 
         private class UpdateState
         {
