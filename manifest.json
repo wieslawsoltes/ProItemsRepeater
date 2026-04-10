@@ -4,132 +4,6 @@
   "files": [
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.IsNotNullConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.IsNotNullConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.IsNotNullConverter",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.IsNullConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.IsNullConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.IsNullConverter",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGrid.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGrid.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGrid",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellContentConverter",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellInfo",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridCellTextConverter",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridColumn.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridColumn",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid.RepeaterDataGridRowHeightConverter",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Avalonia.Controls.DataGrid.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Avalonia.Controls.DataGrid.html"
-        }
-      },
-      "version": "",
-      "Uid": null,
-      "IsMRef": true,
-      "Title": "Avalonia.Controls.DataGrid",
-      "Summary": null
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.ElementFactory.yml",
       "output": {
         ".html": {
@@ -183,6 +57,34 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.IElementFactory",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.IElementFactory.yml\" sourcestartlinenumber=\"1\">A data template that supports creating and recycling elements for an <xref href=\"Avalonia.Controls.ItemsRepeater\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IsNotNullConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IsNotNullConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IsNotNullConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IsNullConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IsNullConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IsNullConverter",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -266,6 +168,90 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Avalonia.Controls.RecyclingElementFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGrid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGrid.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGrid",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGridCellContentConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGridCellContentConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGridCellContentConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGridCellInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGridCellInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGridCellInfo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGridCellTextConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGridCellTextConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGridCellTextConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGridColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGridColumn.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGridColumn",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.RepeaterDataGridRowHeightConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.RepeaterDataGridRowHeightConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.RepeaterDataGridRowHeightConverter",
       "Summary": null
     },
     {
