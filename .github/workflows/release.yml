@@ -86,7 +86,13 @@ jobs:
 
       - name: Test
         run: |
-          ./tests/Avalonia.Controls.ItemsRepeater.UnitTests/bin/Release/net8.0/ProItemsRepeater.UnitTests \
+          test_host="$(find ./tests/Avalonia.Controls.ItemsRepeater.UnitTests/bin/Release -type f -name ProItemsRepeater.UnitTests | head -n 1)"
+          if [ -z "$test_host" ]; then
+            echo "Release test host not found under ./tests/Avalonia.Controls.ItemsRepeater.UnitTests/bin/Release"
+            exit 1
+          fi
+
+          "$test_host" \
             --results-directory artifacts/test \
             --report-xunit-trx \
             --report-xunit-trx-filename results.trx
