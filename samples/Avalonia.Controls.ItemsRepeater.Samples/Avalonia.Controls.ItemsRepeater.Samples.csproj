@@ -13,6 +13,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaSampleVersion)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaSampleVersion)" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaSampleVersion)" />
+    <PackageReference Include="ProDiagnostics" Version="$(ProDiagnosticsVersion)" />
   </ItemGroup>
 
   <ItemGroup>

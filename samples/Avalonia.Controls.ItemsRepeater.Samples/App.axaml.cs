@@ -1,4 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Diagnostics;
 using Avalonia.Markup.Xaml;
 
 namespace Avalonia.Controls.Samples;
@@ -18,5 +19,9 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+
+#if DEBUG
+        this.AttachDevTools();
+#endif
     }
 }
