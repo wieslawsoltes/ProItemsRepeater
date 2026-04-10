@@ -585,7 +585,7 @@ namespace Avalonia.Controls
                 e.InitialPressMouseButton is MouseButton.Left or MouseButton.Right)
             {
                 var point = e.GetCurrentPoint(container);
-                var tapSize = TopLevel.GetTopLevel(container)?.PlatformSettings?.GetTapSize(point.Pointer.Type) ?? new Size(4, 4);
+                var tapSize = (container.GetPlatformSettings() ?? Application.Current?.PlatformSettings)?.GetTapSize(point.Pointer.Type) ?? new Size(4, 4);
                 var tapRect = new Rect(_pointerDownPoint, new Size()).Inflate(new Thickness(tapSize.Width, tapSize.Height));
 
                 if (new Rect(container.Bounds.Size).ContainsExclusive(point.Position) &&
@@ -1571,7 +1571,7 @@ namespace Avalonia.Controls
         {
             return point.Pointer.Type switch
             {
-                PointerType.Mouse => Gestures.GetIsHoldWithMouseEnabled(container),
+                PointerType.Mouse => InputElement.GetIsHoldWithMouseEnabled(container),
                 PointerType.Pen => !point.Properties.IsRightButtonPressed,
                 PointerType.Touch => true,
                 _ => false

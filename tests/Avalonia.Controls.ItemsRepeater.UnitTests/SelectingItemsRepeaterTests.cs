@@ -300,7 +300,7 @@ public class SelectingItemsRepeaterHeadlessTests
                     Width = 100,
                     Height = 40
                 };
-                Gestures.SetIsHoldWithMouseEnabled(border, true);
+                InputElement.SetIsHoldWithMouseEnabled(border, true);
                 return border;
             })
         };
