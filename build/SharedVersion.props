@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Product>ProItemsRepeater</Product>
     <VersionPrefix>12.0.0</VersionPrefix>
-    <VersionSuffix>rc1</VersionSuffix>
+    <VersionSuffix></VersionSuffix>
     <Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) &#169; Wiesław Šoltés</Copyright>
     <Authors>Wiesław Šoltés</Authors>
     <Description>ItemsRepeater is a light-weight control to generate and present a collection of items.</Description>
