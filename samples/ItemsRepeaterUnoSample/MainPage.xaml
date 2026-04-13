@@ -1,0 +1,23 @@
+<Page
+    x:Class="ItemsRepeaterUnoSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ItemsRepeaterUnoSample"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Padding="12">
+        <TabView>
+            <TabViewItem Header="ItemsRepeater">
+                <local:ItemsRepeaterPage />
+            </TabViewItem>
+            <TabViewItem Header="RepeaterDataGrid">
+                <local:RepeaterDataGridPage />
+            </TabViewItem>
+            <TabViewItem Header="Nested ItemsRepeater">
+                <local:NestedItemsRepeaterPage />
+            </TabViewItem>
+            <TabViewItem Header="SelectingItemsRepeater">
+                <local:SelectingItemsRepeaterPage />
+            </TabViewItem>
+        </TabView>
+    </Grid>
+</Page>
